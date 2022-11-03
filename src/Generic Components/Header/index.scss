@@ -1,0 +1,38 @@
+.header-container {
+  border-bottom: 1px solid #b1b1b1;
+  padding: 0 45px;
+  background-color: white;
+  width: inherit;
+  .breadcrumb {
+    width: 100%;
+    top: 0;
+
+    a {
+      color: #0b2057;
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      padding: 5px 5px 5px 0;
+      display: flex;
+      text-decoration: none;
+      align-items: center;
+    }
+    p {
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      padding: 5px 5px 5px 0;
+      display: flex;
+      align-items: center;
+    }
+  }
+  .page-header {
+    margin-bottom: 10px;
+    h1 {
+      font-weight: 800;
+      font-size: 36px;
+      color: #0b2057;
+      margin: 0;
+    }
+  }
+}

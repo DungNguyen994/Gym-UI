@@ -1,0 +1,23 @@
+.well-container {
+  margin-bottom: 20px;
+  .well-header {
+    h2 {
+      font-size: 18px;
+      line-height: 34px;
+      font-weight: 700;
+      color: #0b2057;
+      text-transform: uppercase;
+      margin-top: 30px;
+      margin-bottom: 0;
+    }
+  }
+  .well {
+    padding-bottom: 12px;
+    background-color: white;
+    min-height: 20px;
+    border: 1px solid #e3e3e3;
+    position: relative;
+    box-shadow: none;
+    padding: 12px;
+  }
+}

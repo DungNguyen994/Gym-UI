@@ -1,0 +1,14 @@
+.member-info {
+  background-color: white;
+  padding: 20px;
+  margin-left: 20px;
+  max-width: 900px;
+  .header {
+    border-bottom: 1px solid #e3e3e3;
+  }
+  .edit-btn {
+    height: 50px;
+    justify-content: flex-end;
+    margin-top: 40px;
+  }
+}
