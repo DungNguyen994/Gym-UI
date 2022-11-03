@@ -36,3 +36,7 @@ export enum ToolbarSelection {
   POS = "pos",
   Notes = "notes",
 }
+export enum Gender {
+  Male = "Male",
+  Female = "Female",
+}
