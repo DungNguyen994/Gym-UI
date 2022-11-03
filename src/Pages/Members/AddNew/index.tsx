@@ -1,11 +1,13 @@
 import { useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FormControl, Stack } from "@mui/material";
+import { FormControl, Stack, Grid } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import { useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import LoadingSpinner from "../../../Generic Components/LoadingSpinner";
+import SaleSummary from "../../../Generic Components/SaleSummary";
 import { ADD_MEMBER } from "../../../graphql/mutations/addMember";
 import { addMember } from "../../../Redux-toolkit/features/Members/memberSlice";
 import { useAppDispatch } from "../../../Redux-toolkit/hooks";
@@ -20,6 +22,9 @@ import { mapMemberPayload } from "./utils";
 export default function AddNew() {
   const methods = useForm<Member>({
     resolver: yupResolver(validationSchema),
+    defaultValues: {
+      startDate: dayjs(),
+    },
   });
   const { handleSubmit } = methods;
   const [add, { loading }] = useMutation(ADD_MEMBER);
@@ -51,18 +56,24 @@ export default function AddNew() {
           onSubmit={handleSubmit(onSubmit)}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Stack className="details-container" direction="row">
-              <LeftPanel />
-              <Stack className="details-content" direction="row">
-                <MemberToolbar />
-                <Information
-                  member={{}}
-                  editing={editing}
-                  isAddNew={true}
-                  setEditing={setEditing}
-                />
-              </Stack>
-            </Stack>
+            <Grid container className="details-container" direction="row">
+              <Grid item xs={2.5}>
+                <LeftPanel />
+              </Grid>
+              <Grid item xs={7}>
+                <Stack className="details-content" direction="row">
+                  <MemberToolbar />
+                  <Information
+                    editing={editing}
+                    isAddNew={true}
+                    setEditing={setEditing}
+                  />
+                </Stack>
+              </Grid>
+              <Grid item xs={2.5}>
+                <SaleSummary />
+              </Grid>
+            </Grid>
           </LocalizationProvider>
         </FormControl>
       </FormProvider>

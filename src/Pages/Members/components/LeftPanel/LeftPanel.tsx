@@ -9,17 +9,22 @@ import "./index.scss";
 
 export default function LeftPanel() {
   const member = useAppSelector(getSelectedMember);
-  const photo = member?.photo as string;
   const fullName = member?.firstName + " " + member?.lastName;
   const navigate = useNavigate();
   const location = useLocation();
   const isAddNew = location.pathname === "/members/new";
-  const { register } = useFormContext();
+  const { register, watch } = useFormContext();
+  const photoValue = watch("photo");
+  let photoUrl;
+  if (photoValue && photoValue instanceof FileList && photoValue.length > 0) {
+    photoUrl = URL.createObjectURL(photoValue[0]);
+  }
+  const photo = isAddNew ? photoUrl : (member?.photo as string);
   return (
     <Box className="member-left-panel">
       <Stack sx={{ alignItems: "center" }} spacing={2}>
         <Image
-          src={photo || "./blank-profile.png"}
+          src={photo || "/blank-profile.png"}
           showLoading
           width={300}
           height={300}

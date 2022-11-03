@@ -36,7 +36,6 @@ export const ToolbarItem = ({ Icon, active, onClick }: Props) => {
 
 export default function MemberToolbar() {
   const selectedToolbar = useAppSelector(getToolbarSelection);
-  console.log(selectedToolbar);
   const dispatch = useAppDispatch();
   const handleClick = (selection: ToolbarSelection) => {
     dispatch(setToolbarSelection(selection));

@@ -3,10 +3,11 @@ import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Controller, useFormContext } from "react-hook-form";
 import { CommonFieldProps } from "../../types";
 
-export const GridDatePicker = ({
+export const DateInput = ({
   fieldName,
   label,
   readonly,
+  prefix,
 }: CommonFieldProps) => {
   const {
     control,
@@ -23,6 +24,7 @@ export const GridDatePicker = ({
             onChange={(date) => field.onChange(date)}
             value={field.value ? field.value : ""}
             label={label}
+            InputProps={{ startAdornment: prefix }}
             inputFormat="DD/MM/YYYY"
             readOnly={readonly}
             renderInput={(params) => (

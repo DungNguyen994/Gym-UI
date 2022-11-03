@@ -1,153 +1,104 @@
 import {
-  AccessTime,
   Badge,
   Cake,
   EventBusy,
   LocalPhone,
   LocationOn,
-  Loyalty,
   Mail,
   Start,
   Wc,
 } from "@mui/icons-material";
-import {
-  Button,
-  FormControlLabel,
-  Grid,
-  Radio,
-  RadioGroup,
-  Stack,
-} from "@mui/material";
+import { Button, Grid, Stack } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Dayjs } from "dayjs";
 import { useFormContext } from "react-hook-form";
-import { Member } from "../../../../types";
+import {
+  GENDER_OPTIONS,
+  membershipTypes,
+  periodOptions,
+} from "../../../../constants";
+import AutoComplete from "../../../../Generic Components/Form/AutoComplete";
+import { DateInput } from "../../../../Generic Components/Form/DateInput";
+import RadioInput from "../../../../Generic Components/Form/RadioInput";
+import TextInput from "../../../../Generic Components/Form/TextInput";
+import { Gender, Member } from "../../../../types";
 import "./index.scss";
-import { InfoItem } from "./InfoItem";
 
 interface Props {
   editing: boolean;
-  member: Member;
+  member?: Member;
   isAddNew?: boolean;
   setEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Information({
-  editing,
-  member,
-  isAddNew,
-  setEditing,
-}: Props) {
-  const { register, reset } = useFormContext();
-  const fullName = member.firstName
-    ? `${member.firstName} ${member.lastName}`
-    : "";
-  const birthDate = member?.birthDate as string;
-  const startDate = member?.startDate as string;
-  const endDate = member?.endDate as string;
+export default function Information({ editing, member, setEditing }: Props) {
+  const { reset, watch, setValue } = useFormContext();
+  const startDate = watch("startDate") as Dayjs;
+  const endDate = startDate.add(1, "month");
+  setValue("endDate", endDate);
   return (
     <div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Stack className="member-info" component="form">
           <h1 className="header">Information</h1>
-          <h2>{fullName}</h2>
           <Grid container spacing={4}>
-            <InfoItem
+            <TextInput
               label="First Name"
-              value={member?.firstName}
-              Icon={Badge}
+              prefix={<Badge />}
+              defaultValue="Dung"
               fieldName="firstName"
-              editing={editing}
             />
-            <InfoItem
+            <TextInput
               label="Last Name"
-              value={member?.lastName}
-              Icon={Badge}
+              prefix={<Badge />}
               fieldName="lastName"
-              editing={editing}
             />
-            <InfoItem
+            <TextInput
               label="Phone Number"
-              value={member?.phoneNumber}
-              Icon={LocalPhone}
-              fieldName="phoneNumber"
-              editing={editing}
+              prefix={<LocalPhone />}
+              fieldName="lastName"
             />
-            <InfoItem
+            <TextInput
               label="Address"
-              fieldName="address"
-              value={member?.address}
-              Icon={LocationOn}
-              editing={editing}
+              prefix={<LocationOn />}
+              fieldName="lastName"
             />
-            <InfoItem
-              label="Email"
-              fieldName="email"
-              value={member?.email}
-              Icon={Mail}
-              editing={editing}
-            />
-            <Grid item md={12} xs={12}>
-              <Stack direction="row" spacing={3}>
-                <Stack direction="row" spacing={2} alignItems="center">
-                  <Wc />
-                  <p>Gender:</p>
-                </Stack>
-                <RadioGroup
-                  aria-labelledby="radio-buttons-group-label"
-                  defaultValue="Male"
-                  {...register("gender")}
-                >
-                  <Stack direction="row">
-                    <FormControlLabel
-                      value="Male"
-                      control={<Radio />}
-                      label="Male"
-                    />
-                    <FormControlLabel
-                      value="Female"
-                      control={<Radio />}
-                      label="Female"
-                    />
-                  </Stack>
-                </RadioGroup>
-              </Stack>
-            </Grid>
-            <InfoItem
+            <TextInput label="Email" prefix={<Mail />} fieldName="email" />
+            <DateInput
               label="Date of Birth"
               fieldName="birthDate"
-              value={birthDate}
-              Icon={Cake}
-              editing={editing}
+              prefix={<Cake />}
             />
-            {!isAddNew && (
-              <>
-                <InfoItem
-                  label="Membership Type"
-                  value={member?.membershipType}
-                  Icon={Loyalty}
-                  fieldName="membershipType"
-                />
-                <InfoItem
-                  label="Term"
-                  fieldName="term"
-                  value={member?.term}
-                  Icon={AccessTime}
-                />
-                <InfoItem
-                  label="Start Date"
-                  fieldName="startDate"
-                  value={startDate}
-                  Icon={Start}
-                />
-                <InfoItem
-                  label="End Date"
-                  fieldName="endDate"
-                  value={endDate}
-                  Icon={EventBusy}
-                />
-              </>
-            )}
+            <RadioInput
+              label="Gender"
+              prefix={<Wc />}
+              fieldName="gender"
+              options={GENDER_OPTIONS}
+              defaultValue={Gender.Male}
+            />
+            <AutoComplete
+              label="Term"
+              fieldName="term"
+              options={periodOptions}
+              defaultValue={periodOptions[0]}
+            />
+            <AutoComplete
+              label="Membership Type"
+              fieldName="membershipType"
+              options={membershipTypes}
+              defaultValue={membershipTypes[0]}
+            />
+            <DateInput
+              label="Start Date"
+              fieldName="startDate"
+              prefix={<Start />}
+            />
+            <DateInput
+              label="End Date"
+              fieldName="endDate"
+              prefix={<EventBusy />}
+            />
           </Grid>
           {/* <Stack
             direction="row"

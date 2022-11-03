@@ -1,7 +1,7 @@
 import { Grid, Stack } from "@mui/material";
-import { GridDatePicker } from "../../../Generic Components/Form/GridDatePicker";
-import GridItemRadio from "../../../Generic Components/Form/GridItemRadio";
+import { GENDER_OPTIONS } from "../../../constants";
 import GridItemTextField from "../../../Generic Components/Form/GridItemTextField";
+import RadioInput from "../../../Generic Components/Form/RadioInput";
 import Well from "../../../Generic Components/Well";
 import MemberPhoto from "../AddNew/MemberPhoto";
 
@@ -23,13 +23,13 @@ export default function MemberInfo() {
             required
           />
           <GridItemTextField label="Email" fieldName="email" />
-          <GridDatePicker label="Birth Date" fieldName="birthDate" />
           <GridItemTextField label="Address" fieldName="address" />
           <GridItemTextField label="Note" fieldName="note" />
-          <GridItemRadio
+          <RadioInput
             label="Gender"
             fieldName="gender"
             defaultValue="male"
+            options={GENDER_OPTIONS}
           />
         </Grid>
       </Stack>

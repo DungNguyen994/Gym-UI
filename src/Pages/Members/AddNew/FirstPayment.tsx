@@ -7,7 +7,6 @@ import {
   periodOptions,
 } from "../../../constants";
 import AutoComplete from "../../../Generic Components/Form/AutoComplete";
-import { GridDatePicker } from "../../../Generic Components/Form/GridDatePicker";
 import GridItemTextField from "../../../Generic Components/Form/GridItemTextField";
 import Discount from "../../../Generic Components/Icons/Discount";
 import Well from "../../../Generic Components/Well";
@@ -53,8 +52,6 @@ export default function FirstPayment() {
           options={PAYMENT_TYPES}
           defaultValue={PAYMENT_TYPES[0]}
         />
-        <GridDatePicker fieldName="startDate" label="Start Date" />
-        <GridDatePicker fieldName="endDate" label="End Date" readonly />
       </Grid>
     </Well>
   );
