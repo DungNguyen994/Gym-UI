@@ -17,3 +17,19 @@ export const BootstrapTooltip = styled(
     margin: "auto",
   },
 }));
+export const DarkTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: theme.palette.common.black,
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "black",
+    height: "25px",
+    color: "white",
+    fontSize: "20px",
+    width: "fit-content",
+    textAlign: "center",
+    margin: "auto",
+  },
+}));

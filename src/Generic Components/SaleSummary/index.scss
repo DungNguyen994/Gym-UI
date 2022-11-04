@@ -2,4 +2,21 @@
   border-left: 1px solid #e3e3e3;
   height: 100vh;
   padding: 10px;
+  .table-header {
+    th {
+      color: #2596be;
+      font-size: 1rem;
+    }
+  }
+  svg {
+    color: red;
+    cursor: pointer;
+  }
+  td {
+    font-weight: 600;
+  }
+  p {
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
 }

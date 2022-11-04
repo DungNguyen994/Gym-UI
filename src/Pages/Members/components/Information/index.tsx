@@ -35,7 +35,7 @@ interface Props {
 export default function Information({ editing, member, setEditing }: Props) {
   const { reset, watch, setValue } = useFormContext();
   const startDate = watch("startDate") as Dayjs;
-  const endDate = startDate.add(1, "month");
+  const endDate = startDate?.add(1, "month");
   setValue("endDate", endDate);
   return (
     <div>

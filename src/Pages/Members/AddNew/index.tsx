@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FormControl, Stack, Grid } from "@mui/material";
+import { FormControl, Grid, Stack } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -57,7 +57,7 @@ export default function AddNew() {
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Grid container className="details-container" direction="row">
-              <Grid item xs={2.5}>
+              <Grid item xs={2}>
                 <LeftPanel />
               </Grid>
               <Grid item xs={7}>
@@ -70,7 +70,7 @@ export default function AddNew() {
                   />
                 </Stack>
               </Grid>
-              <Grid item xs={2.5}>
+              <Grid item xs={3}>
                 <SaleSummary />
               </Grid>
             </Grid>

@@ -26,8 +26,8 @@ export default function LeftPanel() {
         <Image
           src={photo || "/blank-profile.png"}
           showLoading
-          width={300}
-          height={300}
+          width={250}
+          height={250}
         />
         {isAddNew && (
           <label htmlFor="btn-upload">
