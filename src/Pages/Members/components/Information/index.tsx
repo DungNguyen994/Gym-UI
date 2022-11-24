@@ -32,7 +32,7 @@ interface Props {
   setEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Information({ editing, member, setEditing }: Props) {
+export default function Information({ editing, setEditing }: Props) {
   const { reset, watch, setValue } = useFormContext();
   const startDate = watch("startDate") as Dayjs;
   const endDate = startDate?.add(1, "month");
@@ -79,13 +79,13 @@ export default function Information({ editing, member, setEditing }: Props) {
             />
             <AutoComplete
               label="Term"
-              fieldName="term"
+              fieldName="payment.term"
               options={periodOptions}
               defaultValue={periodOptions[0]}
             />
             <AutoComplete
               label="Membership Type"
-              fieldName="membershipType"
+              fieldName="payment.productName"
               options={membershipTypes}
               defaultValue={membershipTypes[0]}
             />

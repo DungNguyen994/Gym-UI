@@ -35,8 +35,6 @@ h4 {
 }
 p,
 svg {
-  font-size: 1rem;
-  font-weight: 400;
   margin: 0;
 }
 .divider {
@@ -57,4 +55,13 @@ svg {
 }
 .text-center {
   text-align: center;
+}
+.mt-20 {
+  margin-top: 20px;
+}
+.bold {
+  font-weight: 700;
+}
+.size-l {
+  font-size: 1.1rem;
 }

@@ -1,6 +1,6 @@
-import { Autocomplete, Grid, TextField, Stack } from "@mui/material";
+import { Autocomplete, Grid, Stack, SxProps, TextField } from "@mui/material";
 import { ReactNode } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 interface Props {
   label: string;
@@ -9,6 +9,7 @@ interface Props {
   options: string[];
   readonly?: boolean;
   prefix?: ReactNode;
+  sx?: SxProps;
 }
 
 export default function AutoComplete({
@@ -18,8 +19,11 @@ export default function AutoComplete({
   fieldName,
   readonly,
   prefix,
+  sx,
 }: Props) {
-  const { register, control } = useFormContext();
+  const { watch, setValue } = useFormContext();
+  const value = watch(fieldName);
+
   return (
     <Grid item xs={12} md={6}>
       {readonly ? (
@@ -31,28 +35,17 @@ export default function AutoComplete({
           <p>{defaultValue}</p>
         </Stack>
       ) : (
-        <Controller
-          control={control}
-          name={fieldName}
-          render={({ field }) => (
-            <Autocomplete
-              disablePortal
-              onSelect={field.onChange}
-              id="combo-box"
-              options={options}
-              fullWidth
-              defaultValue={defaultValue}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={label}
-                  defaultValue={defaultValue}
-                  fullWidth
-                  variant="standard"
-                  {...register(fieldName)}
-                />
-              )}
-            />
+        <Autocomplete
+          value={value}
+          disablePortal
+          onChange={(e, newValue) => setValue(fieldName, newValue)}
+          id="combo-box"
+          options={options}
+          fullWidth
+          sx={sx}
+          defaultValue={defaultValue}
+          renderInput={(params) => (
+            <TextField {...params} label={label} fullWidth variant="standard" />
           )}
         />
       )}

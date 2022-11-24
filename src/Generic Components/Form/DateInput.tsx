@@ -10,34 +10,34 @@ export const DateInput = ({
   prefix,
 }: CommonFieldProps) => {
   const {
-    control,
     formState: { errors },
   } = useFormContext();
   const errorMessage = errors[fieldName]?.message as string | undefined;
   return (
     <Grid item xs={9} md={6}>
       <Controller
-        control={control}
         name={fieldName}
-        render={({ field }) => (
-          <DesktopDatePicker
-            onChange={(date) => field.onChange(date)}
-            value={field.value ? field.value : ""}
-            label={label}
-            InputProps={{ startAdornment: prefix }}
-            inputFormat="DD/MM/YYYY"
-            readOnly={readonly}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="standard"
-                fullWidth
-                error={Boolean(errors[fieldName])}
-                helperText={errorMessage}
-              />
-            )}
-          />
-        )}
+        render={({ field }) => {
+          return (
+            <DesktopDatePicker
+              onChange={(date) => field.onChange(date)}
+              value={field.value ? field.value : ""}
+              label={label}
+              InputProps={{ startAdornment: prefix }}
+              inputFormat="DD/MM/YYYY"
+              readOnly={readonly}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  fullWidth
+                  error={Boolean(errors[fieldName])}
+                  helperText={errorMessage}
+                />
+              )}
+            />
+          );
+        }}
       />
     </Grid>
   );

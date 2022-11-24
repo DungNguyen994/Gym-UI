@@ -19,5 +19,6 @@ export const validationSchema = yup
     startDate: yup
       .date()
       .min(dayjs().add(-1, "day"), "Start Date must be on or after today"),
+    collected: yup.number().min(Number(yup.ref("total"))),
   })
   .required();

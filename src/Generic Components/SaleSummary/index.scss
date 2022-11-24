@@ -2,6 +2,7 @@
   border-left: 1px solid #e3e3e3;
   height: 100vh;
   padding: 10px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   .table-header {
     th {
       color: #2596be;
@@ -15,8 +16,10 @@
   td {
     font-weight: 600;
   }
-  p {
-    font-weight: 700;
-    font-size: 1.1rem;
+  .collected {
+    margin-top: 20px;
+  }
+  h2 {
+    margin-bottom: 0;
   }
 }

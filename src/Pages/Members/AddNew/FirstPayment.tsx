@@ -10,7 +10,7 @@ import AutoComplete from "../../../Generic Components/Form/AutoComplete";
 import GridItemTextField from "../../../Generic Components/Form/GridItemTextField";
 import Discount from "../../../Generic Components/Icons/Discount";
 import Well from "../../../Generic Components/Well";
-import { calculateAmount } from "./utils";
+import { calculateAmount } from "../../../utils";
 
 export default function FirstPayment() {
   const { watch, setValue } = useFormContext();

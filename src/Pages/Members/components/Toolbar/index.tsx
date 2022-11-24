@@ -7,10 +7,7 @@ import {
 import { Stack } from "@mui/material";
 import { ElementType } from "react";
 import { useLocation } from "react-router-dom";
-import {
-  BootstrapTooltip,
-  DarkTooltip,
-} from "../../../../Generic Components/Sidebar/Tooltip";
+import { DarkTooltip } from "../../../../Generic Components/Sidebar/Tooltip";
 import {
   getToolbarSelection,
   setToolbarSelection,

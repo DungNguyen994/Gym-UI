@@ -6,6 +6,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import {
+  PAYMENT_TYPES,
+  membershipTypes,
+  periodOptions,
+} from "../../../constants";
 import LoadingSpinner from "../../../Generic Components/LoadingSpinner";
 import SaleSummary from "../../../Generic Components/SaleSummary";
 import { ADD_MEMBER } from "../../../graphql/mutations/addMember";
@@ -14,7 +19,6 @@ import { useAppDispatch } from "../../../Redux-toolkit/hooks";
 import { Member } from "../../../types";
 import Information from "../components/Information";
 import LeftPanel from "../components/LeftPanel/LeftPanel";
-import MemberToolbar from "../components/Toolbar";
 import { validationSchema } from "../validationSchema";
 import "./index.scss";
 import { mapMemberPayload } from "./utils";
@@ -24,6 +28,11 @@ export default function AddNew() {
     resolver: yupResolver(validationSchema),
     defaultValues: {
       startDate: dayjs(),
+      payment: {
+        paymentMethod: PAYMENT_TYPES[0],
+        productName: membershipTypes[0],
+        term: periodOptions[0],
+      },
     },
   });
   const { handleSubmit } = methods;
@@ -45,6 +54,7 @@ export default function AddNew() {
     if (editing) onSave(data);
     else setEditing((prev) => !prev);
   };
+
   return (
     <div className="new-member">
       <h1>New Member</h1>
@@ -62,7 +72,6 @@ export default function AddNew() {
               </Grid>
               <Grid item xs={7}>
                 <Stack className="details-content" direction="row">
-                  <MemberToolbar />
                   <Information
                     editing={editing}
                     isAddNew={true}
