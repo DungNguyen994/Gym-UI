@@ -13,6 +13,7 @@ import { Dayjs } from "dayjs";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import {
+  DATE_FORMAT,
   GENDER_OPTIONS,
   membershipTypes,
   periodOptions,
@@ -36,8 +37,12 @@ export default function Information({ editing, setEditing }: Props) {
   const startDate = watch("membership.startDate") as Dayjs;
   const endDate = startDate?.add(1, "month");
   useEffect(() => {
-    setValue("membership.endDate", endDate);
-  }, [endDate, setValue]);
+    if (
+      endDate.format(DATE_FORMAT) !==
+      watch("membership.endDate")?.format(DATE_FORMAT)
+    )
+      setValue("membership.endDate", endDate);
+  }, [endDate, setValue, watch]);
   return (
     <div>
       <Stack className="member-info">

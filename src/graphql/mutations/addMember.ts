@@ -1,38 +1,37 @@
 import { gql } from "@apollo/client";
 
 export const ADD_MEMBER = gql`
-  mutation AddMember(
-    $gender: String
+  mutation (
     $firstName: String!
     $lastName: String!
     $phoneNumber: String!
+    $payment: NewPayment!
+    $membership: NewMembership!
     $birthDate: String
     $email: String
     $address: String
-    $payment: PaymentInput!
-    $startDate: String!
-    $endDate: String!
-    $notes: [NoteInput]
+    $note: String
+    $gender: String
     $photo: String
   ) {
     addMember(
-      gender: $gender
       firstName: $firstName
       lastName: $lastName
       phoneNumber: $phoneNumber
+      payment: $payment
+      membership: $membership
       birthDate: $birthDate
       email: $email
       address: $address
-      payment: $payment
-      startDate: $startDate
-      endDate: $endDate
-      notes: $notes
+      note: $note
+      gender: $gender
       photo: $photo
     ) {
       data
       errors {
         message
         pointer
+        type
       }
     }
   }

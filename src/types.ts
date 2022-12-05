@@ -3,10 +3,11 @@ import { ReactNode } from "react";
 
 interface Payment {
   productName: string;
+  membershipType: string;
   unitPrice: number;
   total: number;
-  collected: string;
-  change: string;
+  collected: number;
+  change: number;
   term: string;
   paymentMethod: string;
 }

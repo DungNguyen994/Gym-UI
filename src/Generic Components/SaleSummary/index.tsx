@@ -33,6 +33,7 @@ export default function SaleSummary() {
       ? round(subtract(Number(collected), Number(amount)), 2)
       : undefined;
   setValue("payment.change", change);
+  setValue("payment.total", amount ? Number(amount) : 0);
   return (
     <div className="sale-summary">
       <h1 className="text-center">Sale Summary</h1>

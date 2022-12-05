@@ -16,7 +16,7 @@ import SaleSummary from "../../../Generic Components/SaleSummary";
 import { ADD_MEMBER } from "../../../graphql/mutations/addMember";
 import { addMember } from "../../../Redux-toolkit/features/Members/memberSlice";
 import { useAppDispatch } from "../../../Redux-toolkit/hooks";
-import { Member, NewMember } from "../../../types";
+import { NewMember } from "../../../types";
 import { uploadPhoto } from "../../../utils";
 import Information from "../components/Information";
 import LeftPanel from "../components/LeftPanel/LeftPanel";
@@ -42,22 +42,22 @@ export default function AddNew() {
   const [add, { loading }] = useMutation(ADD_MEMBER);
   const [editing, setEditing] = useState(true);
   const dispatch = useAppDispatch();
-  const photoUrl = "";
-  const onSave = (data: NewMember) => {
-    const newMember = mapMemberPayload(data, photoUrl) as Member;
-
+  const onSave = (data: NewMember, photoUrl: string) => {
+    const newMember = mapMemberPayload(data, photoUrl) as NewMember;
     add({
       variables: newMember,
     }).then(() => {
       dispatch(addMember(newMember));
       setEditing(false);
+      methods.reset();
     });
   };
   const onSubmit: SubmitHandler<NewMember> = (data) => {
     if (data.photo instanceof FileList && data.photo.length > 0) {
-      uploadPhoto(data.photo[0], () =>
-        console.log("upload photo successfully")
-      );
+      uploadPhoto(data.photo[0], (photoUrl: string) => {
+        console.log("upload photo successfully");
+        onSave(data, photoUrl);
+      });
     }
   };
 

@@ -20,7 +20,7 @@ export const memberSlice = createSlice({
   initialState,
   reducers: {
     addMember: (state, action: PayloadAction<Member>) => {
-      state.members = [action.payload, ...state.members];
+      state.members = [action.payload, ...(state.members || [])];
     },
     updateMember: (state, action: PayloadAction<Member>) => {
       const foundMemberIndex = state.members.findIndex(

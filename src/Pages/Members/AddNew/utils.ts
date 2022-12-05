@@ -3,14 +3,17 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import produce from "immer";
 import { storage } from "../../../config/firebase";
 import { DATE_FORMAT } from "../../../constants";
-import { Member } from "../../../types";
+import { NewMember } from "../../../types";
 
-export const mapMemberPayload = (data: Member, photoUrl?: string) => {
+export const mapMemberPayload = (data: NewMember, photoUrl?: string) => {
   const newData = produce(data, (draftState) => {
     if (draftState.birthDate instanceof Date) {
       draftState.birthDate = dayjs(draftState.birthDate).format(DATE_FORMAT);
     }
     draftState.photo = photoUrl;
+    draftState.payment.membershipType = draftState.membership.membershipType;
+    draftState.payment.term = draftState.membership.term;
+    draftState.payment.collected = Number(draftState.payment.collected);
   });
   return newData;
 };

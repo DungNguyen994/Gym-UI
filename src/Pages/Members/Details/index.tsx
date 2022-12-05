@@ -26,19 +26,8 @@ export default function Details() {
   const { handleSubmit } = methods;
   const [update, { loading }] = useMutation(UPDATE_MEMBER);
   const photoUrl = "";
-  const onSave = (data: Member) => {
-    const newMember = mapMemberPayload(data, photoUrl) as Member;
-    update({
-      variables: newMember,
-    }).then(() => {
-      dispatch(updateMember(newMember));
-      setEditing(false);
-    });
-  };
-  const onSubmit: SubmitHandler<Member> = (data) => {
-    if (editing) onSave(data);
-    else setEditing((prev) => !prev);
-  };
+
+  const onSubmit: SubmitHandler<Member> = (data) => {};
   return (
     <FormProvider {...methods}>
       {loading && <LoadingSpinner />}
@@ -48,12 +37,6 @@ export default function Details() {
             <LeftPanel />
             <Stack className="details-content" direction="row">
               <MemberToolbar />
-              <Information
-                isAddNew={false}
-                editing={editing}
-                member={member}
-                setEditing={setEditing}
-              />
             </Stack>
           </Stack>
         </LocalizationProvider>
