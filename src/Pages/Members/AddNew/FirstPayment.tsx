@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
 import {
   membershipTypes,
-  PAYMENT_TYPES,
+  PAYMENT_METHODS,
   periodOptions,
 } from "../../../constants";
 import AutoComplete from "../../../Generic Components/Form/AutoComplete";
@@ -49,8 +49,8 @@ export default function FirstPayment() {
         <AutoComplete
           fieldName="paymentType"
           label="Payment Type"
-          options={PAYMENT_TYPES}
-          defaultValue={PAYMENT_TYPES[0]}
+          options={PAYMENT_METHODS}
+          defaultValue={PAYMENT_METHODS[0]}
         />
       </Grid>
     </Well>

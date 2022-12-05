@@ -2,15 +2,34 @@ import { Dayjs } from "dayjs";
 import { ReactNode } from "react";
 
 interface Payment {
-  productId: string;
   productName: string;
   unitPrice: number;
   total: number;
-  collected: number;
-  change: number;
+  collected: string;
+  change: string;
   term: string;
   paymentMethod: string;
 }
+export type Membership = {
+  membershipType: string;
+  term: string;
+  startDate?: Dayjs | string;
+  endDate?: Dayjs | string;
+};
+
+export type NewMember = {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  gender?: string;
+  birthDate?: Dayjs | string;
+  email?: string;
+  address?: string;
+  photo?: FileList | string;
+  note?: string;
+  membership: Membership;
+  payment: Payment;
+};
 
 export type Member = {
   id?: string;

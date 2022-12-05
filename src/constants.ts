@@ -5,7 +5,7 @@ export const VALID_PHONE_REGEX =
 export const membershipTypes = ["Standard", "Premimum"];
 export const periodOptions = ["1 Month", "3 Months", "6 Months", "1 Year"];
 export const BASIC_PRICE = 100;
-export const PAYMENT_TYPES = [
+export const PAYMENT_METHODS = [
   "Cash",
   "Checks",
   "Debit Cards",

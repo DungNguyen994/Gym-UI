@@ -35,7 +35,7 @@ export default function PersitLogin() {
     };
     if (persit && !token) getToken();
   }, [dispatch, persit, refresh, navigate, token]);
-  if (!persit)
+  if (!persit && !user)
     return <Navigate to="/login" state={{ from: location }} replace />;
   return (
     <>

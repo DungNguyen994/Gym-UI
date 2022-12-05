@@ -18,6 +18,7 @@ import {
   togglePersit,
 } from "../Redux-toolkit/features/Persit/persitSlice";
 import { client } from "../config/publicClient";
+import { useEffect } from "react";
 
 interface Inputs {
   username: string;
@@ -60,18 +61,22 @@ export default function Login() {
   const dispatch = useAppDispatch();
 
   // user has loggin successfully
-  if (token) {
-    const { user } = jwt_decode(token) as TokenPayload;
-    const { username, role, fullName } = user;
-    const authUser = { username, role, accessToken: token, fullName };
-    dispatch(setUser(authUser));
-    navigate(from, { replace: true });
-    reset();
-  }
+  useEffect(() => {
+    if (token) {
+      const { user } = jwt_decode(token) as TokenPayload;
+      const { username, role, fullName } = user;
+      const authUser = { username, role, accessToken: token, fullName };
+      dispatch(setUser(authUser));
+      navigate(from, { replace: true });
+      reset();
+    }
+  }, [token]);
 
   const authUser = useAppSelector(getAuthUser);
 
-  if (authUser) navigate(from, { replace: true });
+  useEffect(() => {
+    if (authUser) navigate(from, { replace: true });
+  }, []);
   const persit = useAppSelector(getPersit);
   return (
     <div className="bg">
