@@ -1,7 +1,16 @@
-.page-content {
-  margin-left: 5.4%;
-  background-color: #f7f7f7;
+.page-container {
+  position: relative;
+  width: 100vw;
+  overflow-x: hidden;
   height: 100vh;
-  overflow: hidden;
-  width: 94.6%;
+}
+.page-content {
+  position: absolute;
+  left: 10%;
+  background-color: #f7f7f7;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  width: calc(100% - 10%);
+  height: calc(100% - 55px);
+  top: 55px;
 }

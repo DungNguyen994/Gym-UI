@@ -1,0 +1,102 @@
+.topbar {
+  position: static;
+  left: 0;
+  top: 0;
+  height: 55px;
+  background: #11101d;
+  z-index: 99;
+  transition: all 0.5s ease;
+  color: white;
+}
+.brand-name {
+  text-transform: uppercase;
+  background: linear-gradient(to right, #30cfd0 0%, white 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.brand-name-container {
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(121, 9, 102, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
+  );
+  width: 10%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.sidebar.open {
+  width: 250px;
+}
+.sidebar.open input {
+  padding: 0 20px 0 50px;
+  width: 100%;
+}
+.sidebar input {
+  font-size: 15px;
+  color: #fff;
+  font-weight: 400;
+  outline: none;
+  height: 50px;
+  width: 100%;
+  width: 50px;
+  border: none;
+  border-radius: 12px;
+  transition: all 0.5s ease;
+  background: #1d1b31;
+}
+.menu-item-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 5px;
+  padding: 5px;
+  color: white;
+}
+.menu-item:hover {
+  background-color: white;
+  border-radius: 5px;
+  color: #11101d;
+}
+.menu-item-search {
+  background: #1d1b31;
+  border-radius: 5px;
+}
+.menu-item.open {
+  width: 230px;
+}
+.menu-list-container {
+  justify-content: space-between;
+}
+.menu-text {
+  font-size: 20px;
+  font-weight: 400;
+  white-space: nowrap;
+  transition: 0.4s;
+  color: inherit;
+  text-align: center;
+  margin: auto 10px;
+}
+.logo-text {
+  font-size: 30px;
+  font-weight: 400;
+  white-space: nowrap;
+  transition: 0.4s;
+  color: white;
+}
+.icon {
+  color: inherit;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+}
+.logout {
+  margin-bottom: 40px;
+  cursor: pointer;
+}

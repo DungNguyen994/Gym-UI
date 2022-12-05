@@ -1,13 +1,25 @@
 .sidebar {
   position: fixed;
   left: 0;
-  top: 0;
+  top: 55px;
   height: 100%;
-  width: 4%;
+  width: 10%;
   background: #11101d;
-  padding: 6px 14px;
   z-index: 99;
   transition: all 0.5s ease;
+  svg {
+    color: white;
+  }
+  .menu-item-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    border-radius: 0;
+    width: 100%;
+    padding: 8px 0;
+  }
 }
 .sidebar.open {
   width: 250px;
@@ -25,30 +37,8 @@
   width: 100%;
   width: 50px;
   border: none;
-  border-radius: 12px;
   transition: all 0.5s ease;
   background: #1d1b31;
-}
-.menu-item-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 5px;
-  padding: 5px;
-  color: white;
-}
-.menu-item:hover {
-  background-color: white;
-  border-radius: 5px;
-  color: #11101d;
-}
-.menu-item-search {
-  background: #1d1b31;
-  border-radius: 5px;
-}
-.menu-item.open {
-  width: 230px;
 }
 .menu-list-container {
   justify-content: space-between;
@@ -69,13 +59,16 @@
   transition: 0.4s;
   color: white;
 }
-.icon {
-  color: inherit;
-  border-radius: 5px;
-  padding: 5px;
+.logout {
   cursor: pointer;
 }
-.logout {
-  margin-bottom: 40px;
-  cursor: pointer;
+.menu-item-container:hover,
+.selected {
+  background-color: whitesmoke;
+  transition: all 1s ease;
+  color: black;
+  svg,
+  span {
+    color: black;
+  }
 }

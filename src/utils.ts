@@ -48,7 +48,11 @@ export const calculateAmount = (
   return { amount: amount?.toString(), discountPercent };
 };
 
-export const uploadPhoto = (file: File, successCallBack: any) => {
+export const uploadPhoto = (
+  file: File,
+  successCallBack: any,
+  setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>
+) => {
   if (file) {
     const path = `/images/${file.name}`;
     const storageRef = ref(storage, path);
@@ -56,7 +60,10 @@ export const uploadPhoto = (file: File, successCallBack: any) => {
     uploadTask.on(
       "state_changed",
       (snapshot) => {},
-      (err) => console.log(err),
+      (err) => {
+        console.log(err);
+        setIsSubmitting(false);
+      },
       () => {
         // download url
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {

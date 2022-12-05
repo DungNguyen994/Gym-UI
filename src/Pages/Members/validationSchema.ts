@@ -14,5 +14,8 @@ export const validationSchema = yup
       .date()
       .typeError("Enter a valid date")
       .max(new Date(), "Birth Date can not be a future date"),
+    payment: yup.object({
+      collected: yup.string().required("Enter collected money"),
+    }),
   })
   .required();

@@ -18,7 +18,12 @@ import AutoComplete from "../Form/AutoComplete";
 import "./index.scss";
 
 export default function SaleSummary() {
-  const { register, watch, setValue } = useFormContext();
+  const {
+    register,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useFormContext();
   const term = watch("membership.term");
   const membershipType = watch("membership.membershipType");
   const paymentMethod = watch("payment.paymentMethod");
@@ -34,6 +39,8 @@ export default function SaleSummary() {
       : undefined;
   setValue("payment.change", change);
   setValue("payment.total", amount ? Number(amount) : 0);
+  const errorMessage = (errors["payment.collected"]?.message ||
+    "Please collect more money") as string;
   return (
     <div className="sale-summary">
       <h1 className="text-center">Sale Summary</h1>
@@ -80,7 +87,8 @@ export default function SaleSummary() {
               sx={{ marginTop: "20px" }}
               error={hasCollectedError}
               type="number"
-              helperText={hasCollectedError && "Please collect more money"}
+              helperText={hasCollectedError && errorMessage}
+              required
             />
             <TextField
               label="Change"

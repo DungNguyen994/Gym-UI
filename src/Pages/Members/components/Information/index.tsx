@@ -108,24 +108,18 @@ export default function Information({ editing, setEditing }: Props) {
           />
         </Grid>
         <Stack className="edit-btn" spacing={2} direction="row">
-          {editing && (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                reset();
-                setEditing(false);
-              }}
-            >
-              Cancel
-            </Button>
-          )}
           <Button
             variant="contained"
-            color={editing ? "warning" : "primary"}
-            type="submit"
+            color="primary"
+            onClick={() => {
+              reset();
+              setEditing(false);
+            }}
           >
-            {editing ? "Save" : "Edit"}
+            Cancel
+          </Button>
+          <Button variant="contained" color="warning" type="submit">
+            Save
           </Button>
         </Stack>
       </Stack>

@@ -41,30 +41,39 @@ export default function AddNew() {
   const { handleSubmit } = methods;
   const [add, { loading }] = useMutation(ADD_MEMBER);
   const [editing, setEditing] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useAppDispatch();
   const onSave = (data: NewMember, photoUrl: string) => {
     const newMember = mapMemberPayload(data, photoUrl) as NewMember;
     add({
       variables: newMember,
-    }).then(() => {
-      dispatch(addMember(newMember));
-      setEditing(false);
-      methods.reset();
-    });
+    })
+      .then(() => {
+        dispatch(addMember(newMember));
+        setEditing(false);
+        methods.reset();
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
   const onSubmit: SubmitHandler<NewMember> = (data) => {
     if (data.photo instanceof FileList && data.photo.length > 0) {
-      uploadPhoto(data.photo[0], (photoUrl: string) => {
-        console.log("upload photo successfully");
-        onSave(data, photoUrl);
-      });
+      setIsSubmitting(true);
+      uploadPhoto(
+        data.photo[0],
+        (photoUrl: string) => {
+          console.log("upload photo successfully");
+          onSave(data, photoUrl);
+        },
+        setIsSubmitting
+      );
     }
   };
 
   return (
     <div className="new-member">
-      <h1>New Member</h1>
-      {loading && <LoadingSpinner />}
+      {(loading || isSubmitting) && <LoadingSpinner />}
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>

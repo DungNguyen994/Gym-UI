@@ -12,7 +12,7 @@ export default function LeftPanel() {
   const fullName = member?.firstName + " " + member?.lastName;
   const navigate = useNavigate();
   const location = useLocation();
-  const isAddNew = location.pathname === "/members/new";
+  const isAddNew = location.pathname === "/add-member";
   const { register, watch } = useFormContext();
   const photoValue = watch("photo");
   let photoUrl;

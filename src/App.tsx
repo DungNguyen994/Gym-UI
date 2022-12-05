@@ -24,7 +24,7 @@ export default function App() {
             <Route path="/" element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="/members" element={<Member />} />
-              <Route path="/members/new" element={<AddNew />} />
+              <Route path="/add-member" element={<AddNew />} />
             </Route>
           </Route>
         </Route>
