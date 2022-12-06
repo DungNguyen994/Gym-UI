@@ -7,8 +7,8 @@ import RequiredAuth from "./Authentication/RequiredAuth";
 import Layout from "./Generic Components/Layout";
 import { usePrivateClient } from "./hooks/usePrivateClient";
 import Home from "./Pages/Home";
-import Member from "./Pages/Members";
 import AddNew from "./Pages/Members/AddNew";
+import FindMember from "./Pages/Members/FindMember";
 
 export default function App() {
   const client = usePrivateClient();
@@ -23,7 +23,7 @@ export default function App() {
           <Route element={<RequiredAuth />}>
             <Route path="/" element={<Layout />}>
               <Route path="/" element={<Home />} />
-              <Route path="/members" element={<Member />} />
+              <Route path="/find-member" element={<FindMember />} />
               <Route path="/add-member" element={<AddNew />} />
             </Route>
           </Route>

@@ -2,7 +2,6 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/Auth/authSlice";
 import persitReducer from "./features/Persit/persitSlice";
 import memberReducer from "./features/Members/memberSlice";
-import sidebarReducer from "./features/Sidebar/sidebarSlice";
 import storage from "redux-persist/lib/storage";
 import {
   persistReducer,
@@ -18,7 +17,6 @@ const reducers = combineReducers({
   auth: authReducer,
   persit: persitReducer,
   member: memberReducer,
-  sidebar: sidebarReducer,
 });
 const persistConfig = {
   key: "root",

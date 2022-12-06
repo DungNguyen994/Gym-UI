@@ -14,7 +14,7 @@ export const PAYMENT_METHODS = [
   "Electronic Bank Transfers",
 ];
 export const SHOW_OPTIONS = ["All", "Active", "Inactive"];
-export const DATE_FORMAT = "DD/MM/YYYY";
+export const DATE_FORMAT = "MMMM DD, YYYY";
 export const products = [
   "Water (sm)",
   "Water (lg)",

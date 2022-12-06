@@ -34,7 +34,6 @@ export type NewMember = {
 
 export type Member = {
   id?: string;
-  _id?: string;
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
@@ -44,9 +43,7 @@ export type Member = {
   address?: string;
   photo?: FileList | string;
   note?: string;
-  payment?: Payment;
-  startDate?: Dayjs | string;
-  endDate?: Dayjs | string;
+  memberships?: Membership[];
 };
 
 export interface CommonFieldProps {

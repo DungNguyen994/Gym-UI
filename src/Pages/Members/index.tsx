@@ -5,7 +5,7 @@ import { GET_MEMBERS } from "../../graphql/queries/members";
 import { setMembers } from "../../Redux-toolkit/features/Members/memberSlice";
 import { useAppDispatch } from "../../Redux-toolkit/hooks";
 import { Member } from "../../types";
-import Details from "./Details";
+import FindMember from "./FindMember";
 import "./index.scss";
 import MemberList from "./MemberList/MemberList";
 
@@ -23,7 +23,7 @@ export default function Members() {
   return (
     <Grid container className="members">
       <Grid item xs={9}>
-        <Details />
+        <FindMember />
       </Grid>
       <Grid item xs={3}>
         <MemberList />

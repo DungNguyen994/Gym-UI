@@ -22,13 +22,6 @@ export const memberSlice = createSlice({
     addMember: (state, action: PayloadAction<Member>) => {
       state.members = [action.payload, ...(state.members || [])];
     },
-    updateMember: (state, action: PayloadAction<Member>) => {
-      const foundMemberIndex = state.members.findIndex(
-        (m) => m._id === action.payload._id
-      );
-      state.members[foundMemberIndex] = action.payload;
-      state.seletedMember = action.payload;
-    },
     setMembers: (state, action: PayloadAction<Member[]>) => {
       state.members = action.payload;
     },
@@ -40,13 +33,8 @@ export const memberSlice = createSlice({
     },
   },
 });
-export const {
-  addMember,
-  setMembers,
-  setSelectedMember,
-  updateMember,
-  setToolbarSelection,
-} = memberSlice.actions;
+export const { addMember, setMembers, setSelectedMember, setToolbarSelection } =
+  memberSlice.actions;
 
 export const getMembers = (state: RootState) => state.member.members;
 export const getToolbarSelection = (state: RootState) =>

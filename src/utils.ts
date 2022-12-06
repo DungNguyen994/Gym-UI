@@ -1,6 +1,13 @@
+import dayjs from "dayjs";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "./config/firebase";
-import { BASIC_PRICE, membershipTypes, periodOptions } from "./constants";
+import {
+  BASIC_PRICE,
+  DATE_FORMAT,
+  membershipTypes,
+  periodOptions,
+} from "./constants";
+import { Member } from "./types";
 
 export const getUniqueObjArray = (array: any[], key: string) => [
   ...new Map(array.map((item) => [item[key], item])).values(),
@@ -73,3 +80,32 @@ export const uploadPhoto = (
     );
   }
 };
+export const formatMemberTableData = (data: Member[] | undefined) => {
+  if (!data) return [];
+  return data.map((member) => ({
+    ...member,
+    name: member.firstName + " " + member.lastName,
+    membershipType: member.memberships && member.memberships[0].membershipType,
+    expiredDate:
+      member.memberships &&
+      dayjs(member.memberships[0].endDate).format(DATE_FORMAT),
+    status:
+      member.memberships &&
+      dayjs(member.memberships[0].endDate).isBefore(dayjs())
+        ? "expired"
+        : "active",
+  }));
+};
+export const searchData = (data: any[], value: string, blacklist: string[]) =>
+  data.reduce((result, item) => {
+    const listKey = Object.keys(item);
+    const isValid = listKey.some(
+      (key) =>
+        item[key]
+          ?.toString()
+          .toUpperCase()
+          .includes(value?.toUpperCase() ?? "") && !blacklist.includes(key)
+    );
+    if (isValid) result.push(item);
+    return result;
+  }, []);
