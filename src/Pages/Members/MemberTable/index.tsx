@@ -1,93 +1,53 @@
-import { useQuery } from "@apollo/client";
-import { Delete, Edit, Login } from "@mui/icons-material";
+import { useMutation, useQuery } from "@apollo/client";
+import { List, Window } from "@mui/icons-material";
 import { Stack } from "@mui/joy";
 import {
-  Button,
+  ButtonGroup,
   FormControl,
   FormControlLabel,
+  IconButton,
   Radio,
   RadioGroup,
-  Tooltip,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import { GridRenderCellParams } from "@mui/x-data-grid/models";
+import { GridRowParams } from "@mui/x-data-grid/models";
 import SearchBar from "material-ui-search-bar";
 import { useEffect, useMemo, useState } from "react";
+import DialogModal from "../../../Generic Components/Dialog";
+import { DELETE_MEMBER } from "../../../graphql/mutations/deleteMember";
 import { GET_MEMBERS } from "../../../graphql/queries/members";
 import { Member } from "../../../types";
 import { formatMemberTableData, searchData } from "../../../utils";
+import GridView from "./GridView";
+import TableView from "./TableView";
+
+interface SelectedRow {
+  id?: string;
+  name?: string;
+}
 
 export default function MemberTable() {
   const { loading, data } = useQuery(GET_MEMBERS);
-  const rows = useMemo(
-    () => formatMemberTableData(data?.members?.data as Member[]),
-    [data]
+  const [deleteMember, { loading: deleteLoading }] = useMutation(
+    DELETE_MEMBER,
+    {
+      refetchQueries: [{ query: GET_MEMBERS }, "members"],
+    }
   );
+  const tableData = data?.members?.data as Member[];
+  const rows = useMemo(() => formatMemberTableData(tableData), [tableData]);
   const [searchedRows, setSearchedRows] = useState(rows);
   const [initSearchedRows, setInitSearchedRows] = useState(() => searchedRows);
-  const columns = [
-    { field: "name", headerName: "Name", width: 230 },
-    {
-      field: "phoneNumber",
-      headerName: "Phone Number",
-      width: 230,
-      type: "number",
-    },
-    { field: "membershipType", headerName: "Membership Type", width: 230 },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 230,
-      renderCell: (params: GridRenderCellParams<string>) =>
-        params.value === "active" ? (
-          <Button
-            variant="contained"
-            color="success"
-            size="small"
-            sx={{ cursor: "default" }}
-          >
-            Active
-          </Button>
-        ) : (
-          <Button
-            variant="contained"
-            color="error"
-            size="small"
-            sx={{ cursor: "default" }}
-          >
-            Expired
-          </Button>
-        ),
-    },
-    {
-      field: "expiredDate",
-      headerName: "Expired Date",
-      width: 230,
-      type: "date",
-    },
-    {
-      field: "note",
-      headerName: "Note",
-      width: 230,
-    },
-    {
-      field: "action",
-      headerName: "Actions",
-      width: 250,
-      type: "actions",
-      getActions: () => [
-        <Tooltip title="Check In">
-          <Login color="success" sx={{ cursor: "pointer" }} />
-        </Tooltip>,
-        <Tooltip title="Edit Member">
-          <Edit onClick={() => {}} color="warning" sx={{ cursor: "pointer" }} />
-        </Tooltip>,
-        <Tooltip title="Delete Member">
-          <Delete color="error" sx={{ cursor: "pointer" }} />
-        </Tooltip>,
-      ],
-    },
-  ];
+  const [openDialog, setOpenDialog] = useState(false);
+  const [isGridView, setIsGridView] = useState(true);
+  const [selectedRow, setSelectedRow] = useState<SelectedRow>({});
+  const handleDeleteMember = () => {
+    deleteMember({ variables: { deleteMemberId: selectedRow.id } });
+    setOpenDialog(false);
+  };
+  const onDelete = (params: GridRowParams) => {
+    setOpenDialog(true);
+    setSelectedRow(params.row);
+  };
   useEffect(() => {
     setSearchedRows(rows);
   }, [rows]);
@@ -99,14 +59,36 @@ export default function MemberTable() {
   };
   return (
     <Stack spacing={2}>
-      <SearchBar
-        placeholder="Search Member..."
-        style={{ width: "50%" }}
-        onChange={onSearch}
-        onCancelSearch={() => {
-          setSearchedRows(rows);
-        }}
-      />
+      <Stack
+        direction="row"
+        sx={{ justifyContent: "space-between", alignItems: "center" }}
+      >
+        <SearchBar
+          placeholder="Search Member..."
+          style={{ width: "50%" }}
+          onChange={onSearch}
+          onCancelSearch={() => {
+            setSearchedRows(rows);
+          }}
+        />
+        <ButtonGroup aria-label="view-selection">
+          <IconButton
+            aria-label="grid-view"
+            color="info"
+            onClick={() => setIsGridView(true)}
+          >
+            <Window sx={{ fontSize: "40px" }} />
+          </IconButton>
+          <IconButton
+            aria-label="list-view"
+            size="large"
+            onClick={() => setIsGridView(false)}
+            color="info"
+          >
+            <List sx={{ fontSize: "40px" }} />
+          </IconButton>
+        </ButtonGroup>
+      </Stack>
       <FormControl>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"
@@ -145,14 +127,24 @@ export default function MemberTable() {
           />
         </RadioGroup>
       </FormControl>
-      <div style={{ height: 600, width: "100%" }}>
-        <DataGrid
-          rows={searchedRows}
-          columns={columns}
-          loading={loading}
-          disableSelectionOnClick
+      {isGridView ? (
+        <GridView data={searchedRows} />
+      ) : (
+        <TableView
+          loading={loading || deleteLoading}
+          onDelete={onDelete}
+          data={searchedRows}
         />
-      </div>
+      )}
+      <DialogModal
+        open={openDialog}
+        title="Delete"
+        content={`Do you want to delete member: ${selectedRow.name} ?`}
+        handleClose={() => {
+          setOpenDialog(false);
+        }}
+        handleContinue={handleDeleteMember}
+      />
     </Stack>
   );
 }

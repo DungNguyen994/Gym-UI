@@ -14,6 +14,7 @@ import {
 import LoadingSpinner from "../../../Generic Components/LoadingSpinner";
 import SaleSummary from "../../../Generic Components/SaleSummary";
 import { ADD_MEMBER } from "../../../graphql/mutations/addMember";
+import { GET_MEMBERS } from "../../../graphql/queries/members";
 import { addMember } from "../../../Redux-toolkit/features/Members/memberSlice";
 import { useAppDispatch } from "../../../Redux-toolkit/hooks";
 import { NewMember } from "../../../types";
@@ -39,7 +40,9 @@ export default function AddNew() {
     },
   });
   const { handleSubmit } = methods;
-  const [add, { loading }] = useMutation(ADD_MEMBER);
+  const [add, { loading }] = useMutation(ADD_MEMBER, {
+    refetchQueries: [{ query: GET_MEMBERS }, "members"],
+  });
   const [editing, setEditing] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useAppDispatch();

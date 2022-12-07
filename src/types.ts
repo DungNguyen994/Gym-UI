@@ -44,6 +44,8 @@ export type Member = {
   photo?: FileList | string;
   note?: string;
   memberships?: Membership[];
+  name?: string;
+  status?: string;
 };
 
 export interface CommonFieldProps {
