@@ -1,5 +1,4 @@
 import {
-  AppBar,
   Badge,
   Box,
   IconButton,
@@ -10,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
+import AppBar from "@material-ui/core/AppBar";
 import SearchIcon from "@mui/icons-material/Search";
 import { alpha, styled } from "@mui/material/styles";
 import { useLocation } from "react-router-dom";
@@ -175,7 +175,7 @@ export default function Topbar() {
         <p className="brand-name">Gym Bot</p>
       </div>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" sx={{ backgroundColor: "#11101d" }}>
+        <AppBar position="static">
           <Toolbar className="tool-bar">
             <Typography
               variant="h6"
