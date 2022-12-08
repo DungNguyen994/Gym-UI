@@ -1,0 +1,23 @@
+.new-member {
+  height: 100%;
+  padding: 12px;
+  .personal-details {
+    flex-direction: row;
+  }
+  input {
+    padding-left: 10px;
+  }
+  .member-photo {
+    width: 200px !important;
+    height: 200px !important;
+  }
+  @media only screen and (max-width: 400px) {
+    .personal-details {
+      flex-direction: column;
+    }
+    .member-photo {
+      width: 100px !important;
+      height: 100px !important;
+    }
+  }
+}
