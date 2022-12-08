@@ -74,7 +74,7 @@ export default function MemberTable() {
         <ButtonGroup aria-label="view-selection">
           <IconButton
             aria-label="grid-view"
-            color="info"
+            color={isGridView ? "info" : "default"}
             onClick={() => setIsGridView(true)}
           >
             <Window sx={{ fontSize: "40px" }} />
@@ -83,7 +83,7 @@ export default function MemberTable() {
             aria-label="list-view"
             size="large"
             onClick={() => setIsGridView(false)}
-            color="info"
+            color={!isGridView ? "info" : "default"}
           >
             <List sx={{ fontSize: "40px" }} />
           </IconButton>

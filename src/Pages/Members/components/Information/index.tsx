@@ -22,23 +22,20 @@ import AutoComplete from "../../../../Generic Components/Form/AutoComplete";
 import { DateInput } from "../../../../Generic Components/Form/DateInput";
 import RadioInput from "../../../../Generic Components/Form/RadioInput";
 import TextInput from "../../../../Generic Components/Form/TextInput";
-import { Gender, Member } from "../../../../types";
+import { Gender } from "../../../../types";
 import "./index.scss";
 
 interface Props {
-  editing: boolean;
-  member?: Member;
   isAddNew?: boolean;
-  setEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Information({ editing, setEditing }: Props) {
+export default function Information({ isAddNew }: Props) {
   const { reset, watch, setValue } = useFormContext();
   const startDate = watch("membership.startDate") as Dayjs;
   const endDate = startDate?.add(1, "month");
   useEffect(() => {
     if (
-      endDate.format(DATE_FORMAT) !==
+      endDate?.format(DATE_FORMAT) !==
       watch("membership.endDate")?.format(DATE_FORMAT)
     )
       setValue("membership.endDate", endDate);
@@ -84,28 +81,32 @@ export default function Information({ editing, setEditing }: Props) {
             options={GENDER_OPTIONS}
             defaultValue={Gender.Male}
           />
-          <AutoComplete
-            label="Term"
-            fieldName="membership.term"
-            options={periodOptions}
-            defaultValue={periodOptions[0]}
-          />
-          <AutoComplete
-            label="Membership Type"
-            fieldName="membership.membershipType"
-            options={membershipTypes}
-            defaultValue={membershipTypes[0]}
-          />
-          <DateInput
-            label="Start Date"
-            fieldName="membership.startDate"
-            prefix={<Start />}
-          />
-          <DateInput
-            label="End Date"
-            fieldName="membership.endDate"
-            prefix={<EventBusy />}
-          />
+          {isAddNew && (
+            <>
+              <AutoComplete
+                label="Term"
+                fieldName="membership.term"
+                options={periodOptions}
+                defaultValue={periodOptions[0]}
+              />
+              <AutoComplete
+                label="Membership Type"
+                fieldName="membership.membershipType"
+                options={membershipTypes}
+                defaultValue={membershipTypes[0]}
+              />
+              <DateInput
+                label="Start Date"
+                fieldName="membership.startDate"
+                prefix={<Start />}
+              />
+              <DateInput
+                label="End Date"
+                fieldName="membership.endDate"
+                prefix={<EventBusy />}
+              />
+            </>
+          )}
         </Grid>
         <Stack className="edit-btn" spacing={2} direction="row">
           <Button
@@ -113,7 +114,6 @@ export default function Information({ editing, setEditing }: Props) {
             color="primary"
             onClick={() => {
               reset();
-              setEditing(false);
             }}
           >
             Cancel

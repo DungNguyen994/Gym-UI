@@ -16,22 +16,27 @@ import { useLocation } from "react-router-dom";
 import "./index.scss";
 import { AccountCircle, Mail, More, Notifications } from "@mui/icons-material";
 import React from "react";
+import { ROUTES } from "../../routes";
 
 export default function Topbar() {
   const location = useLocation();
   let workItem;
+  console.log(location.pathname);
   switch (location.pathname) {
-    case "/":
+    case ROUTES.HOME:
       workItem = "Home";
       break;
-    case "/add-member":
+    case ROUTES.ADDMEMBER:
       workItem = "New Member";
       break;
-    case "/find-member":
+    case ROUTES.FINDMEMBER:
       workItem = "Find Member";
       break;
     default:
       workItem = "Home";
+  }
+  if (location.pathname.includes("/edit-member")) {
+    workItem = "Edit Member";
   }
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -170,10 +175,7 @@ export default function Topbar() {
         <p className="brand-name">Gym Bot</p>
       </div>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar
-          position="static"
-          sx={{ background: "#11101d", height: "100px" }}
-        >
+        <AppBar position="static" sx={{ backgroundColor: "#11101d" }}>
           <Toolbar className="tool-bar">
             <Typography
               variant="h6"

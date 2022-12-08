@@ -1,11 +1,12 @@
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Grid, Stack } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { useLocation, useParams } from "react-router-dom";
 import {
   membershipTypes,
   PAYMENT_METHODS,
@@ -14,18 +15,38 @@ import {
 import LoadingSpinner from "../../../Generic Components/LoadingSpinner";
 import SaleSummary from "../../../Generic Components/SaleSummary";
 import { ADD_MEMBER } from "../../../graphql/mutations/addMember";
+import { GET_MEMBER } from "../../../graphql/queries/member";
 import { GET_MEMBERS } from "../../../graphql/queries/members";
 import { addMember } from "../../../Redux-toolkit/features/Members/memberSlice";
 import { useAppDispatch } from "../../../Redux-toolkit/hooks";
-import { NewMember } from "../../../types";
+import { Member, NewMember } from "../../../types";
 import { uploadPhoto } from "../../../utils";
 import Information from "../components/Information";
 import LeftPanel from "../components/LeftPanel/LeftPanel";
+import { mapMemberPayload } from "../utils";
 import { validationSchema } from "../validationSchema";
 import "./index.scss";
-import { mapMemberPayload } from "./utils";
 
-export default function AddNew() {
+export default function MemberDetails() {
+  const { id } = useParams();
+  const [fetchMember, { data, loading: getMemberLoading }] =
+    useLazyQuery(GET_MEMBER);
+  const member = data?.member?.data as Member;
+  const location = useLocation();
+  const isAddNew = location.pathname === "/add-member";
+  useEffect(() => {
+    if (!isAddNew) fetchMember({ variables: { memberId: id } });
+  }, []);
+  const addNewDefaultValues = {
+    membership: {
+      startDate: dayjs(),
+      membershipType: membershipTypes[0],
+      term: periodOptions[0],
+    },
+    payment: {
+      paymentMethod: PAYMENT_METHODS[0],
+    },
+  };
   const methods = useForm<NewMember>({
     resolver: yupResolver(validationSchema),
     defaultValues: {
@@ -43,7 +64,6 @@ export default function AddNew() {
   const [add, { loading }] = useMutation(ADD_MEMBER, {
     refetchQueries: [{ query: GET_MEMBERS }, "members"],
   });
-  const [editing, setEditing] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useAppDispatch();
   const onSave = (data: NewMember, photoUrl: string) => {
@@ -53,7 +73,6 @@ export default function AddNew() {
     })
       .then(() => {
         dispatch(addMember(newMember));
-        setEditing(false);
         methods.reset();
       })
       .finally(() => {
@@ -82,21 +101,18 @@ export default function AddNew() {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Grid container className="details-container" direction="row">
               <Grid item xs={2}>
-                <LeftPanel />
+                <LeftPanel member={member} isAddNew={isAddNew} />
               </Grid>
               <Grid item xs={7}>
                 <Stack className="details-content" direction="row">
-                  <Information
-                    editing={editing}
-                    isAddNew={true}
-                    setEditing={setEditing}
-                  />
+                  <Information isAddNew={isAddNew} />
                 </Stack>
               </Grid>
-
-              <Grid item xs={3}>
-                <SaleSummary />
-              </Grid>
+              {isAddNew && (
+                <Grid item xs={3}>
+                  <SaleSummary />
+                </Grid>
+              )}
             </Grid>
           </LocalizationProvider>
         </form>

@@ -10,6 +10,8 @@ import {
   Typography,
 } from "@mui/material";
 import Image from "mui-image";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../../routes";
 import { Member } from "../../../types";
 import "./index.scss";
 interface Props {
@@ -17,9 +19,15 @@ interface Props {
 }
 export default function MemberCard({ member }: Props) {
   const { photo, name, phoneNumber, status } = member;
+  const navigate = useNavigate();
   return (
     <div>
-      <Card className="card-container">
+      <Card
+        className="card-container"
+        onClick={() =>
+          member.id && navigate(ROUTES.EDITMEMBER.replace(":id", member.id))
+        }
+      >
         <Image
           src={photo as string}
           width={100}

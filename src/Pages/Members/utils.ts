@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import produce from "immer";
-import { storage } from "../../../config/firebase";
-import { DATE_FORMAT } from "../../../constants";
-import { NewMember } from "../../../types";
+import { storage } from "../../config/firebase";
+import { DATE_FORMAT } from "../../constants";
+import { NewMember } from "../../types";
 
 export const mapMemberPayload = (data: NewMember, photoUrl?: string) => {
   const newData = produce(data, (draftState) => {
