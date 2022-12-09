@@ -15,7 +15,6 @@ export default function Home() {
     const fetch = async () => {
       const { data } = await getMembers();
       const members: Member[] = data?.members?.data;
-      console.log(data);
       dispatch(setMembers(members));
     };
     fetch();

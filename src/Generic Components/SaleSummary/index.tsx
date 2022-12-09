@@ -24,8 +24,8 @@ export default function SaleSummary() {
     setValue,
     formState: { errors },
   } = useFormContext();
-  const term = watch("membership.term");
-  const membershipType = watch("membership.membershipType");
+  const term = watch("newMembership.term");
+  const membershipType = watch("newMembership.membershipType");
   const paymentMethod = watch("payment.paymentMethod");
   const { amount, discountPercent } = calculateAmount(term, membershipType);
   const total = formatCurrency(amount);

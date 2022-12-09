@@ -1,6 +1,7 @@
 import { Grid, TextField } from "@mui/material";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Controller, useFormContext } from "react-hook-form";
+import { DATE_FORMAT } from "../../constants";
 import { CommonFieldProps } from "../../types";
 
 export const DateInput = ({
@@ -8,13 +9,16 @@ export const DateInput = ({
   label,
   readonly,
   prefix,
+  xs = 12,
+  md = 6,
+  lg = 6,
 }: CommonFieldProps) => {
   const {
     formState: { errors },
   } = useFormContext();
   const errorMessage = errors[fieldName]?.message as string | undefined;
   return (
-    <Grid item xs={9} md={6}>
+    <Grid item xs={xs} md={md} lg={lg}>
       <Controller
         name={fieldName}
         render={({ field }) => {
@@ -24,7 +28,7 @@ export const DateInput = ({
               value={field.value ? field.value : ""}
               label={label}
               InputProps={{ startAdornment: prefix }}
-              inputFormat="DD/MM/YYYY"
+              inputFormat={DATE_FORMAT}
               readOnly={readonly}
               renderInput={(params) => (
                 <TextField

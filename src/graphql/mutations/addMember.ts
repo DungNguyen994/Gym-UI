@@ -6,7 +6,7 @@ export const ADD_MEMBER = gql`
     $lastName: String!
     $phoneNumber: String!
     $payment: NewPayment!
-    $membership: NewMembership!
+    $newMembership: NewMembership!
     $birthDate: String
     $email: String
     $address: String
@@ -19,7 +19,7 @@ export const ADD_MEMBER = gql`
       lastName: $lastName
       phoneNumber: $phoneNumber
       payment: $payment
-      membership: $membership
+      membership: $newMembership
       birthDate: $birthDate
       email: $email
       address: $address

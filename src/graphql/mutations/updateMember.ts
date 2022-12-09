@@ -12,9 +12,11 @@ export const UPDATE_MEMBER = gql`
     $note: String
     $gender: String
     $photo: String
+    $memberships: [NewMembership]
+    $payment: NewPayment
   ) {
     updateMember(
-      _id: $id
+      id: $id
       firstName: $firstName
       lastName: $lastName
       phoneNumber: $phoneNumber
@@ -24,12 +26,14 @@ export const UPDATE_MEMBER = gql`
       note: $note
       gender: $gender
       photo: $photo
+      memberships: $memberships
+      payment: $payment
     ) {
       data
       errors {
-        type
-        pointer
         message
+        pointer
+        type
       }
     }
   }

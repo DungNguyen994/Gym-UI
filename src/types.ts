@@ -16,6 +16,7 @@ export type Membership = {
   term: string;
   startDate?: Dayjs | string;
   endDate?: Dayjs | string;
+  isNew?: boolean;
 };
 
 export type NewMember = {
@@ -43,6 +44,8 @@ export type Member = {
   address?: string;
   photo?: FileList | string;
   note?: string;
+  newMembership?: Membership;
+  payment?: Payment;
   memberships?: Membership[];
   name?: string;
   status?: string;
@@ -57,6 +60,9 @@ export interface CommonFieldProps {
   readonly?: boolean;
   prefix?: ReactNode;
   suffix?: ReactNode;
+  xs?: number;
+  md?: number;
+  lg?: number;
 }
 export enum ToolbarSelection {
   Info = "info",

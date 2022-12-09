@@ -21,7 +21,6 @@ import { ROUTES } from "../../routes";
 export default function Topbar() {
   const location = useLocation();
   let workItem;
-  console.log(location.pathname);
   switch (location.pathname) {
     case ROUTES.HOME:
       workItem = "Home";
@@ -175,7 +174,7 @@ export default function Topbar() {
         <p className="brand-name">Gym Bot</p>
       </div>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
+        <AppBar position="static" style={{ background: "#11101d" }}>
           <Toolbar className="tool-bar">
             <Typography
               variant="h6"

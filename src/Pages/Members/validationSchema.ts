@@ -12,10 +12,8 @@ export const validationSchema = yup
       .matches(VALID_PHONE_REGEX, "Phone number is not valid"),
     birthDate: yup
       .date()
+      .nullable()
       .typeError("Enter a valid date")
       .max(new Date(), "Birth Date can not be a future date"),
-    payment: yup.object({
-      collected: yup.string().required("Enter collected money"),
-    }),
   })
   .required();

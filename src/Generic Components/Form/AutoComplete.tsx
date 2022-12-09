@@ -10,6 +10,9 @@ interface Props {
   readonly?: boolean;
   prefix?: ReactNode;
   sx?: SxProps;
+  xs?: number;
+  md?: number;
+  lg?: number;
 }
 
 export default function AutoComplete({
@@ -20,12 +23,14 @@ export default function AutoComplete({
   readonly,
   prefix,
   sx,
+  xs = 12,
+  md = 6,
+  lg = 6,
 }: Props) {
   const { watch, setValue } = useFormContext();
   const value = watch(fieldName);
-
   return (
-    <Grid item xs={12} md={6}>
+    <Grid item xs={xs} md={md} lg={lg}>
       {readonly ? (
         <Stack direction="row" spacing={3} alignItems="center">
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -41,11 +46,11 @@ export default function AutoComplete({
           onChange={(e, newValue) => setValue(fieldName, newValue)}
           id="combo-box"
           options={options}
-          fullWidth
           sx={sx}
+          fullWidth
           defaultValue={defaultValue}
           renderInput={(params) => (
-            <TextField {...params} label={label} fullWidth variant="standard" />
+            <TextField {...params} label={label} variant="standard" />
           )}
         />
       )}

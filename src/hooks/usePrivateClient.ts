@@ -69,7 +69,9 @@ export const usePrivateClient = () => {
 
   const _client = new ApolloClient({
     link: authLink.concat(errorLink).concat(refreshLink).concat(httpLink),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      addTypename: false,
+    }),
   });
   return _client;
 };

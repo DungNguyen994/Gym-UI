@@ -19,9 +19,6 @@ export const memberSlice = createSlice({
   name: "member",
   initialState,
   reducers: {
-    addMember: (state, action: PayloadAction<Member>) => {
-      state.members = [action.payload, ...(state.members || [])];
-    },
     setMembers: (state, action: PayloadAction<Member[]>) => {
       state.members = action.payload;
     },
@@ -33,7 +30,7 @@ export const memberSlice = createSlice({
     },
   },
 });
-export const { addMember, setMembers, setSelectedMember, setToolbarSelection } =
+export const { setMembers, setSelectedMember, setToolbarSelection } =
   memberSlice.actions;
 
 export const getMembers = (state: RootState) => state.member.members;

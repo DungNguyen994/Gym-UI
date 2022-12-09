@@ -97,7 +97,6 @@ export default function MemberTable() {
           row
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             if (e.target.value !== "everyone") {
-              console.log(searchedRows, initSearchedRows);
               setInitSearchedRows(searchedRows);
               setSearchedRows((prev) =>
                 (prev.length > 0 ? prev : initSearchedRows).filter(

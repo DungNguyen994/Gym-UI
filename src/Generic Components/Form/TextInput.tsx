@@ -17,7 +17,7 @@ export default function TextInput({
   } = useFormContext();
   const errorMessage = errors[fieldName]?.message as string | undefined;
   return (
-    <Grid item xs={12}>
+    <Grid item xs={12} md={6}>
       <Stack direction="row" spacing={3} alignItems="flex-end">
         {readonly ? (
           <Stack direction="row" spacing={3} alignItems="center">
@@ -36,8 +36,8 @@ export default function TextInput({
             error={Boolean(errors[fieldName])}
             defaultValue={defaultValue}
             helperText={errorMessage}
+            sx={{ width: "100%" }}
             disabled={disabled}
-            fullWidth
             inputProps={{ readOnly: readonly }}
             InputProps={{ startAdornment: prefix }}
           />

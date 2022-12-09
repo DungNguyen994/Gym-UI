@@ -109,3 +109,8 @@ export const searchData = (data: any[], value: string, blacklist: string[]) =>
     if (isValid) result.push(item);
     return result;
   }, []);
+export const getEarliestDate = (dates: string[] | undefined) => {
+  return dates?.reduce((pre, cur) =>
+    Date.parse(pre) > Date.parse(cur) ? cur : pre
+  );
+};

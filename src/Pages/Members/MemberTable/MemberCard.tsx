@@ -1,7 +1,6 @@
 import { Delete, Login, Phone } from "@mui/icons-material";
 import {
   Box,
-  Button,
   Card,
   CardContent,
   IconButton,
@@ -10,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import Image from "mui-image";
+import { Button } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../routes";
 import { Member } from "../../../types";
@@ -51,12 +51,7 @@ export default function MemberCard({ member }: Props) {
                   {phoneNumber}
                 </Typography>
               </Stack>
-              <Button
-                variant="contained"
-                color="success"
-                size="small"
-                sx={{ mt: 1, cursor: "default" }}
-              >
+              <Button variant="contained" size="small" className="success">
                 {status?.toUpperCase()}
               </Button>
             </Box>

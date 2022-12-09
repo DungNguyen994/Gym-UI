@@ -17,7 +17,7 @@ export default function LeftPanel({ member, isAddNew }: Props) {
   if (photoValue && photoValue instanceof FileList && photoValue.length > 0) {
     photoUrl = URL.createObjectURL(photoValue[0]);
   }
-  const _photo = isAddNew ? photoUrl : (photo as string);
+  const _photo = photoUrl || (photo as string);
   const fullName = firstName + " " + lastName;
   return (
     <Box className="member-left-panel">
