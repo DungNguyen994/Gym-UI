@@ -1,7 +1,7 @@
 .sidebar {
   position: fixed;
   left: 0;
-  top: 55px;
+  top: 48px;
   height: 100%;
   width: 10%;
   background: #11101d;
@@ -41,7 +41,13 @@
   background: #1d1b31;
 }
 .menu-list-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   justify-content: space-between;
+  color: white;
+  border-radius: 0;
+  width: 100%;
 }
 .menu-text {
   font-size: 20px;

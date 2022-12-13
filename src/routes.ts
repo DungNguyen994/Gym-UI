@@ -3,4 +3,8 @@ export const ROUTES = {
   FINDMEMBER: "/find-member",
   ADDMEMBER: "/add-member",
   EDITMEMBER: "/edit-member/:id",
+  INVENTORY: "/inventory",
+  PRODUCTS: "/products",
+  NEWPRODUCT: "/products/new",
+  EDITPRODUCT: "/edit-product/:id",
 };

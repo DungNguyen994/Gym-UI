@@ -1,22 +1,19 @@
+import AppBar from "@material-ui/core/AppBar";
+import { AccountCircle, Mail, More, Notifications } from "@mui/icons-material";
 import {
   Badge,
   Box,
   IconButton,
-  InputBase,
   Menu,
   MenuItem,
   Toolbar,
   Typography,
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
-import AppBar from "@material-ui/core/AppBar";
-import SearchIcon from "@mui/icons-material/Search";
-import { alpha, styled } from "@mui/material/styles";
-import { useLocation } from "react-router-dom";
-import "./index.scss";
-import { AccountCircle, Mail, More, Notifications } from "@mui/icons-material";
 import React from "react";
+import { useLocation } from "react-router-dom";
 import { ROUTES } from "../../routes";
+import "./index.scss";
 
 export default function Topbar() {
   const location = useLocation();
@@ -31,51 +28,25 @@ export default function Topbar() {
     case ROUTES.FINDMEMBER:
       workItem = "Find Member";
       break;
+    case ROUTES.INVENTORY:
+      workItem = "Manage Inventory";
+      break;
+    case ROUTES.PRODUCTS:
+      workItem = "Manage Products";
+      break;
+    case ROUTES.NEWPRODUCT:
+      workItem = "New Product";
+      break;
     default:
       workItem = "Home";
   }
   if (location.pathname.includes("/edit-member")) {
     workItem = "Edit Member";
   }
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(3),
-      width: "auto",
-    },
-  }));
+  if (location.pathname.includes("/edit-product")) {
+    workItem = "Edit Product";
+  }
 
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "20ch",
-      },
-    },
-  }));
   const menuId = "primary-search-account-menu";
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -185,15 +156,6 @@ export default function Topbar() {
               {workItem}
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Find Member..."
-                inputProps={{ "aria-label": "search" }}
-              />
-            </Search>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <IconButton
                 size="large"

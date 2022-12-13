@@ -1,13 +1,14 @@
 import dayjs from "dayjs";
+import RelativeTime from "dayjs/plugin/relativeTime";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "./config/firebase";
 import {
   BASIC_PRICE,
-  DATE_FORMAT,
   membershipTypes,
+  MEMBERSHIP_STATUS,
   periodOptions,
 } from "./constants";
-import { Member } from "./types";
+import { Member, Membership } from "./types";
 
 export const getUniqueObjArray = (array: any[], key: string) => [
   ...new Map(array.map((item) => [item[key], item])).values(),
@@ -58,10 +59,11 @@ export const calculateAmount = (
 export const uploadPhoto = (
   file: File,
   successCallBack: any,
-  setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>
+  setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
+  folder?: string
 ) => {
   if (file) {
-    const path = `/images/${file.name}`;
+    const path = `/${folder || "images"}/${file.name}`;
     const storageRef = ref(storage, path);
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
@@ -80,20 +82,41 @@ export const uploadPhoto = (
     );
   }
 };
+const getMemberStatus = (memberships: Membership[]) => {
+  if (
+    memberships.some(
+      (membership) => membership.status === MEMBERSHIP_STATUS.ACTIVE
+    )
+  ) {
+    return "Active";
+  } else if (
+    memberships.every(
+      (membership) => membership.status === MEMBERSHIP_STATUS.EXPIRED
+    )
+  ) {
+    return "Expired";
+  } else {
+    return "On Hold";
+  }
+};
 export const formatMemberTableData = (data: Member[] | undefined) => {
   if (!data) return [];
+  dayjs.extend(RelativeTime);
   return data.map((member) => ({
     ...member,
     name: member.firstName + " " + member.lastName,
-    membershipType: member.memberships && member.memberships[0].membershipType,
-    expiredDate:
+    membershipType:
+      (member.memberships &&
+        member.memberships.find(
+          (membership) => membership.status === MEMBERSHIP_STATUS.ACTIVE
+        )?.membershipType) ||
+      "",
+    remainingTime:
       member.memberships &&
-      dayjs(member.memberships[0].endDate).format(DATE_FORMAT),
-    status:
-      member.memberships &&
-      dayjs(member.memberships[0].endDate).isBefore(dayjs())
-        ? "expired"
-        : "active",
+      dayjs(
+        getMaxDate(member.memberships.map((m) => m.endDate as string))
+      ).fromNow(),
+    status: member.memberships && getMemberStatus(member.memberships),
   }));
 };
 export const searchData = (data: any[], value: string, blacklist: string[]) =>
@@ -109,8 +132,15 @@ export const searchData = (data: any[], value: string, blacklist: string[]) =>
     if (isValid) result.push(item);
     return result;
   }, []);
-export const getEarliestDate = (dates: string[] | undefined) => {
+export const getMinDate = (dates: string[] | undefined) => {
+  if (dates?.length === 0) return;
   return dates?.reduce((pre, cur) =>
     Date.parse(pre) > Date.parse(cur) ? cur : pre
+  );
+};
+export const getMaxDate = (dates: string[] | undefined) => {
+  if (dates?.length === 0) return;
+  return dates?.reduce((pre, cur) =>
+    Date.parse(pre) < Date.parse(cur) ? cur : pre
   );
 };

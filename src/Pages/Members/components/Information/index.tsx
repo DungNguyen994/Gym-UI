@@ -32,9 +32,15 @@ interface Props {
   isAddNew?: boolean;
   memberships?: Membership[];
   member?: Member;
+  refetchMember: (id: string) => void;
 }
 
-export default function Information({ isAddNew, memberships, member }: Props) {
+export default function Information({
+  isAddNew,
+  memberships,
+  member,
+  refetchMember,
+}: Props) {
   const { reset, watch, setValue } = useFormContext();
   const startDate = watch("newMembership.startDate") as Dayjs;
   const endDate = startDate?.add(1, "month");
@@ -129,6 +135,7 @@ export default function Information({ isAddNew, memberships, member }: Props) {
               memberships={memberships}
               showAddMembershipButton={showAddMembershipButton}
               setShowAddMembershipButton={setShowAddMembershipButton}
+              refetchMember={refetchMember}
             />
           )}
         </Grid>

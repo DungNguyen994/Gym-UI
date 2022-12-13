@@ -51,7 +51,17 @@ export default function MemberCard({ member }: Props) {
                   {phoneNumber}
                 </Typography>
               </Stack>
-              <Button variant="contained" size="small" className="success">
+              <Button
+                variant="contained"
+                size="small"
+                className={
+                  status === "Active"
+                    ? "success-btn"
+                    : status === "Expired"
+                    ? "error-btn"
+                    : ""
+                }
+              >
                 {status?.toUpperCase()}
               </Button>
             </Box>

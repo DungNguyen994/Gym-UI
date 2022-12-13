@@ -33,6 +33,7 @@ export const mapUpdateMemberPayload = (data: Member, photoUrl?: string) => {
       draftState.payment.collected = Number(draftState.payment.collected);
     }
     if (draftState.newMembership) {
+      delete draftState.newMembership.isNew;
       if (draftState.memberships) {
         draftState.memberships = [
           ...draftState.memberships,

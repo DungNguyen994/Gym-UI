@@ -1,12 +1,17 @@
 import { useLazyQuery } from "@apollo/client";
-import { Add, Home, Logout, People } from "@mui/icons-material";
 import {
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+  Add,
+  Category,
+  Home,
+  Inventory,
+  Logout,
+  Search,
+} from "@mui/icons-material";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -25,14 +30,17 @@ export default function Sidebar() {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const [selected, setSelected] = useState(location.pathname);
+
   if (data?.logout?.data) {
     dispatch(setUser(undefined));
     navigate("/login", { replace: true });
   }
+
   const onMenuClick = (path: string) => {
     navigate(path);
     setSelected(path);
   };
+
   return (
     <div className="sidebar">
       {loading && <LoadingSpinner />}
@@ -42,7 +50,7 @@ export default function Sidebar() {
           height: "90%",
         }}
       >
-        <List sx={{ paddingTop: 0 }}>
+        <List style={{ paddingTop: 0 }}>
           <MenuItem
             Icon={Home}
             text="Home"
@@ -56,10 +64,26 @@ export default function Sidebar() {
             selected={selected === ROUTES.ADDMEMBER}
           />
           <MenuItem
-            Icon={People}
+            Icon={Search}
             text="Find Member"
             onClick={() => onMenuClick(ROUTES.FINDMEMBER)}
             selected={selected === ROUTES.FINDMEMBER}
+          />
+          <MenuItem
+            Icon={Inventory}
+            text="Inventory"
+            onClick={() => onMenuClick(ROUTES.INVENTORY)}
+            selected={selected === ROUTES.INVENTORY}
+          />
+          <MenuItem
+            Icon={Category}
+            text="Products"
+            onClick={() => onMenuClick(ROUTES.PRODUCTS)}
+            selected={
+              selected === ROUTES.PRODUCTS ||
+              selected === ROUTES.NEWPRODUCT ||
+              selected === ROUTES.EDITPRODUCT
+            }
           />
           {/* <MenuItem
             onClick={() => {

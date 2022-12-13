@@ -32,3 +32,15 @@ export const GENDER_OPTIONS = [
     label: Gender.Female,
   },
 ];
+export const PRODUCT_TYPES = [
+  "Drinks",
+  "Food",
+  "Clothes",
+  "Supplements",
+  "Others",
+];
+export const MEMBERSHIP_STATUS = {
+  ACTIVE: "A",
+  HOLD: "H",
+  EXPIRED: "E",
+};

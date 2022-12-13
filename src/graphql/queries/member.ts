@@ -16,6 +16,7 @@ export const GET_MEMBER = gql`
           membershipType
           startDate
           term
+          status
         }
         note
         phoneNumber

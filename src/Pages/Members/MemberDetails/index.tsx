@@ -49,7 +49,7 @@ export default function MemberDetails() {
   const location = useLocation();
   const isAddNew = location.pathname === "/add-member";
   useEffect(() => {
-    if (!isAddNew) fetchMember({ variables: { memberId: id } });
+    if (!isAddNew && id) fetchMember({ variables: { memberId: id } });
   }, []);
   const methods = useForm<Member>({
     resolver: yupResolver(validationSchema),
@@ -69,6 +69,13 @@ export default function MemberDetails() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const refetchMember = (id: string) => {
+    if (!isAddNew && id)
+      fetchMember({
+        variables: { memberId: id },
+        fetchPolicy: "network-only",
+      });
+  };
   const onSave = (data: Member, photoUrl: string) => {
     if (isAddNew) {
       const newMember = mapMemberPayload(data, photoUrl) as NewMember;
@@ -85,11 +92,9 @@ export default function MemberDetails() {
       const updatedMember = mapUpdateMemberPayload(data, photoUrl);
       update({ variables: updatedMember })
         .then(() => {
-          if (!isAddNew)
-            fetchMember({
-              variables: { memberId: id },
-              fetchPolicy: "network-only",
-            });
+          if (id) {
+            refetchMember(id);
+          }
         })
         .finally(() => setIsSubmitting(false));
     }
@@ -129,6 +134,7 @@ export default function MemberDetails() {
                     isAddNew={isAddNew}
                     memberships={member?.memberships}
                     member={member}
+                    refetchMember={refetchMember}
                   />
                 </Stack>
               </Grid>

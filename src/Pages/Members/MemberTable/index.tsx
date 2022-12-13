@@ -5,7 +5,6 @@ import {
   ButtonGroup,
   FormControl,
   FormControlLabel,
-  IconButton,
   Radio,
   RadioGroup,
 } from "@mui/material";
@@ -19,6 +18,7 @@ import { Member } from "../../../types";
 import { formatMemberTableData, searchData } from "../../../utils";
 import GridView from "./GridView";
 import TableView from "./TableView";
+import { IconButton } from "@material-ui/core";
 
 interface SelectedRow {
   id?: string;
@@ -74,18 +74,17 @@ export default function MemberTable() {
         <ButtonGroup aria-label="view-selection">
           <IconButton
             aria-label="grid-view"
-            color={isGridView ? "info" : "default"}
+            color={isGridView ? "primary" : "default"}
             onClick={() => setIsGridView(true)}
           >
-            <Window sx={{ fontSize: "40px" }} />
+            <Window fontSize="large" />
           </IconButton>
           <IconButton
             aria-label="list-view"
-            size="large"
             onClick={() => setIsGridView(false)}
-            color={!isGridView ? "info" : "default"}
+            color={!isGridView ? "primary" : "default"}
           >
-            <List sx={{ fontSize: "40px" }} />
+            <List fontSize="large" />
           </IconButton>
         </ButtonGroup>
       </Stack>

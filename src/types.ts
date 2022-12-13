@@ -17,6 +17,7 @@ export type Membership = {
   startDate?: Dayjs | string;
   endDate?: Dayjs | string;
   isNew?: boolean;
+  status?: String;
 };
 
 export type NewMember = {
@@ -51,6 +52,23 @@ export type Member = {
   status?: string;
 };
 
+export type Product = {
+  id?: string;
+  productName: string;
+  productType: string;
+  supplier?: string;
+  unitPrice: number;
+  discountPercent?: number;
+  photo?: FileList | string;
+};
+export type Inventory = {
+  id?: string;
+  productId: string;
+  productName: string;
+  productType: string;
+  supplier?: string;
+  quantity: number;
+};
 export interface CommonFieldProps {
   label: string;
   fieldName: string;
@@ -63,6 +81,7 @@ export interface CommonFieldProps {
   xs?: number;
   md?: number;
   lg?: number;
+  type?: React.HTMLInputTypeAttribute;
 }
 export enum ToolbarSelection {
   Info = "info",

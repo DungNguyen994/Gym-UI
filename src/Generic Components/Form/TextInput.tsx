@@ -10,6 +10,10 @@ export default function TextInput({
   readonly,
   prefix,
   defaultValue,
+  type,
+  xs,
+  md,
+  lg,
 }: CommonFieldProps) {
   const {
     register,
@@ -17,7 +21,7 @@ export default function TextInput({
   } = useFormContext();
   const errorMessage = errors[fieldName]?.message as string | undefined;
   return (
-    <Grid item xs={12} md={6}>
+    <Grid item xs={xs} md={md} lg={lg}>
       <Stack direction="row" spacing={3} alignItems="flex-end">
         {readonly ? (
           <Stack direction="row" spacing={3} alignItems="center">
@@ -40,6 +44,7 @@ export default function TextInput({
             disabled={disabled}
             inputProps={{ readOnly: readonly }}
             InputProps={{ startAdornment: prefix }}
+            type={type}
           />
         )}
       </Stack>

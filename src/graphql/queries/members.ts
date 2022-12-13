@@ -13,6 +13,7 @@ export const GET_MEMBERS = gql`
           endDate
           membershipType
           startDate
+          status
         }
       }
       errors {

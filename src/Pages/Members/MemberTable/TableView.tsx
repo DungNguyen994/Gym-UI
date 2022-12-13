@@ -13,6 +13,7 @@ interface Props {
 }
 export default function TableView({ loading, data, onDelete }: Props) {
   const navigate = useNavigate();
+  if (data.length === 0) return <h3>No Members Found!</h3>;
   const columns = [
     { field: "name", headerName: "Name", width: 230 },
     {
@@ -22,37 +23,36 @@ export default function TableView({ loading, data, onDelete }: Props) {
       type: "number",
       headerClassName: "super-app-theme--header",
     },
-    { field: "membershipType", headerName: "Membership Type", width: 230 },
     {
       field: "status",
       headerName: "Status",
       width: 230,
-      renderCell: (params: GridRenderCellParams<string>) =>
-        params.value === "active" ? (
-          <Button
-            variant="contained"
-            color="success"
-            size="small"
-            sx={{ cursor: "default" }}
-          >
-            Active
-          </Button>
-        ) : (
-          <Button
-            variant="contained"
-            color="error"
-            size="small"
-            sx={{ cursor: "default" }}
-          >
-            Expired
-          </Button>
-        ),
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <Button
+          variant="contained"
+          color="success"
+          size="small"
+          className={
+            params.value === "Active"
+              ? "success-btn"
+              : params.value === "Expired"
+              ? "error-btn"
+              : ""
+          }
+        >
+          {params.value?.toUpperCase()}
+        </Button>
+      ),
     },
     {
-      field: "expiredDate",
-      headerName: "Expired Date",
+      field: "membershipType",
+      headerName: "Current Membership Type",
       width: 230,
-      type: "date",
+    },
+    {
+      field: "remainingTime",
+      headerName: "Remaining Time",
+      width: 200,
     },
     {
       field: "note",
@@ -62,7 +62,7 @@ export default function TableView({ loading, data, onDelete }: Props) {
     {
       field: "action",
       headerName: "Actions",
-      width: 250,
+      width: 200,
       type: "actions",
       getActions: (params: GridRowParams) => [
         <Tooltip title="Check In">

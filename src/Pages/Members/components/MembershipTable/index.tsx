@@ -1,4 +1,5 @@
-import { Add, CancelScheduleSend, Delete } from "@mui/icons-material";
+import { useMutation } from "@apollo/client";
+import { Add, AlarmOn, CancelScheduleSend, Delete } from "@mui/icons-material";
 import { Box, Button, Stack } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import {
@@ -8,40 +9,52 @@ import {
   GridValueFormatterParams,
 } from "@mui/x-data-grid";
 import dayjs from "dayjs";
+import { useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import {
   DATE_FORMAT,
   membershipTypes,
+  MEMBERSHIP_STATUS,
   PAYMENT_METHODS,
   periodOptions,
 } from "../../../../constants";
+import DialogModal from "../../../../Generic Components/Dialog";
 import AutoComplete from "../../../../Generic Components/Form/AutoComplete";
 import { DateInput } from "../../../../Generic Components/Form/DateInput";
+import LoadingSpinner from "../../../../Generic Components/LoadingSpinner";
+import { ACTIVATE_MEMBERSHIP } from "../../../../graphql/mutations/activateMembership";
+import { HOLD_MEMBERSHIP } from "../../../../graphql/mutations/holdMembership";
 import { Membership } from "../../../../types";
-import { getEarliestDate } from "../../../../utils";
+import { getMaxDate } from "../../../../utils";
 
 interface Props {
   memberships: Membership[];
   showAddMembershipButton: boolean;
   setShowAddMembershipButton: React.Dispatch<React.SetStateAction<boolean>>;
+  refetchMember: (id: string) => void;
 }
 export default function MembershipTable({
   memberships,
   showAddMembershipButton,
   setShowAddMembershipButton,
+  refetchMember,
 }: Props) {
-  const earliestDate = getEarliestDate(
-    memberships.map((m) => m.endDate as string)
-  );
-
-  const isActive = dayjs(earliestDate).isAfter(dayjs());
+  const { id } = useParams();
+  const maxEndDate = getMaxDate(memberships.map((m) => m.endDate as string));
+  const [openHoldMembershipDialog, setOpenHoldMembershipDialog] =
+    useState(false);
+  const [openActivateMembershipDialog, setOpenActivateHoldMembershipDialog] =
+    useState(false);
   const { setValue, watch } = useFormContext();
   const onDeleteNewMembership = () => {
     setValue("newMembership", null);
     setValue("payment", null);
     setShowAddMembershipButton(true);
   };
+
+  const [selectedRow, setSelectedRow] = useState<Membership>();
   const columns = [
     {
       field: "membershipType",
@@ -108,45 +121,104 @@ export default function MembershipTable({
       field: "status",
       headerName: "Status",
       width: 100,
-      renderCell: (params: GridRenderCellParams<string>) => (
-        <Button
-          color={isActive ? "success" : "error"}
-          variant="contained"
-          size="small"
-        >
-          {isActive ? "Active" : "Expired"}
-        </Button>
-      ),
+      renderCell: (params: GridRenderCellParams<string>) => {
+        const { value } = params;
+        if (value === MEMBERSHIP_STATUS.EXPIRED) {
+          return (
+            <Button
+              color="error"
+              variant="contained"
+              size="small"
+              sx={{ cursor: "default" }}
+            >
+              Expired
+            </Button>
+          );
+        } else if (value === MEMBERSHIP_STATUS.ACTIVE) {
+          return (
+            <Button
+              color="success"
+              variant="contained"
+              sx={{ cursor: "default" }}
+              size="small"
+            >
+              Active
+            </Button>
+          );
+        }
+        return (
+          <Button
+            color="inherit"
+            sx={{ cursor: "default" }}
+            variant="contained"
+            size="small"
+          >
+            On Hold
+          </Button>
+        );
+      },
     },
     {
       field: "action",
       headerName: "Actions",
-      width: 90,
+      width: 110,
       type: "actions",
-      getActions: (params: GridRowParams) => [
-        <Tooltip
-          title={
-            !params.row.isNew ? "Hold Membership" : "Delete New Membership"
-          }
-        >
-          {params.row?.isNew ? (
-            <div onClick={() => onDeleteNewMembership()}>
-              <Delete color="error" sx={{ cursor: "pointer" }} />
-            </div>
-          ) : (
-            <CancelScheduleSend color="action" sx={{ cursor: "pointer" }} />
-          )}
-        </Tooltip>,
-      ],
+      getActions: (params: GridRowParams) => {
+        const { status } = params.row;
+        const isActive = status === MEMBERSHIP_STATUS.ACTIVE;
+        const isExpired = status === MEMBERSHIP_STATUS.EXPIRED;
+        if (isExpired) return [];
+        return [
+          <Tooltip
+            title={
+              params.row.isNew
+                ? "Delete New Membership"
+                : isActive
+                ? "Hold Membership"
+                : "Activate Membership"
+            }
+          >
+            {params.row?.isNew ? (
+              <div onClick={() => onDeleteNewMembership()}>
+                <Delete color="error" sx={{ cursor: "pointer" }} />
+              </div>
+            ) : isActive ? (
+              <CancelScheduleSend
+                color="action"
+                sx={{ cursor: "pointer" }}
+                onClick={() => {
+                  setOpenHoldMembershipDialog(true);
+                  setSelectedRow(params.row);
+                }}
+              />
+            ) : (
+              <AlarmOn
+                color="success"
+                sx={{ cursor: "pointer" }}
+                onClick={() => {
+                  setOpenActivateHoldMembershipDialog(true);
+                  setSelectedRow(params.row);
+                }}
+              />
+            )}
+          </Tooltip>,
+        ];
+      },
     },
   ];
   const newMembership = watch("newMembership");
   const onNewMembership = () => {
+    const hasOneActiveMembership = memberships.some(
+      (membership) => membership.status === MEMBERSHIP_STATUS.ACTIVE
+    );
     setValue("newMembership", {
       membershipType: "Standard",
       term: "1 Month",
-      startDate: dayjs(),
-      endDate: dayjs().add(1, "month"),
+      startDate: hasOneActiveMembership ? dayjs(maxEndDate) : dayjs(),
+      endDate: hasOneActiveMembership
+        ? dayjs(maxEndDate).add(1, "month")
+        : dayjs().add(1, "month"),
+      status: hasOneActiveMembership ? "H" : "A",
       isNew: true,
     });
     setShowAddMembershipButton(false);
@@ -154,8 +226,38 @@ export default function MembershipTable({
       paymentMethod: PAYMENT_METHODS[0],
     });
   };
+  const _rows = useMemo(() => {
+    return newMembership ? [newMembership, ...memberships] : memberships;
+  }, [newMembership, memberships]);
+  const [holdMembership, { loading: holdMembershipLoading }] =
+    useMutation(HOLD_MEMBERSHIP);
+  const [activateMembership, { loading: activateMembershipLoading }] =
+    useMutation(ACTIVATE_MEMBERSHIP);
+  const onHoldMembership = () => {
+    if (id && selectedRow) {
+      holdMembership({
+        variables: { memberId: id, startDate: selectedRow.startDate },
+      }).then(() => {
+        refetchMember(id);
+        setOpenHoldMembershipDialog(false);
+      });
+    }
+  };
+  const onActivateMembership = () => {
+    if (id && selectedRow) {
+      activateMembership({
+        variables: { memberId: id, startDate: selectedRow.startDate },
+      }).then(() => {
+        refetchMember(id);
+        setOpenActivateHoldMembershipDialog(false);
+      });
+    }
+  };
   return (
     <Box width="100%" sx={{ pl: "32px" }}>
+      {(holdMembershipLoading || activateMembershipLoading) && (
+        <LoadingSpinner />
+      )}
       <Stack direction="row" justifyContent="space-between" sx={{ mt: 1 }}>
         <h2 style={{ marginBottom: "5px", marginTop: "5px" }}>Memberships</h2>
         {showAddMembershipButton && (
@@ -173,7 +275,7 @@ export default function MembershipTable({
       </Stack>
       <div style={{ height: 350, width: "100%", background: "white" }}>
         <DataGrid
-          rows={newMembership ? [...memberships, newMembership] : memberships}
+          rows={_rows}
           columns={columns}
           disableSelectionOnClick
           getRowId={() => uuidv4()}
@@ -183,8 +285,37 @@ export default function MembershipTable({
               fontWeight: "700",
             },
           }}
+          initialState={{
+            sorting: {
+              sortModel: [{ field: "startDate", sort: "desc" }],
+            },
+          }}
         />
       </div>
+      <DialogModal
+        content="By holding the membership, the member can not check in and membership End Date will be extended based on the holding period. Do you want to continue?"
+        title="Hold Membership"
+        handleClose={() => {
+          setOpenHoldMembershipDialog(false);
+        }}
+        handleContinue={() => {
+          onHoldMembership();
+        }}
+        open={openHoldMembershipDialog}
+      />
+      <DialogModal
+        content="Because only 1 membership can be active for this member.
+        By activate the membership, this set the membership to be active and hold other memberships. 
+        Do you want to continue?"
+        title="Activate Membership"
+        handleClose={() => {
+          setOpenActivateHoldMembershipDialog(false);
+        }}
+        handleContinue={() => {
+          onActivateMembership();
+        }}
+        open={openActivateMembershipDialog}
+      />
     </Box>
   );
 }
