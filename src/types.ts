@@ -61,7 +61,7 @@ export type Product = {
   discountPercent?: number;
   photo?: FileList | string;
 };
-export type Inventory = {
+export type InventoryType = {
   id?: string;
   productId: string;
   productName: string;

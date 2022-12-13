@@ -7,7 +7,7 @@ import SearchBar from "material-ui-search-bar";
 import { useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { Inventory } from "../../types";
+import { InventoryType } from "../../types";
 import StockInForm from "./StockInForm";
 import { validationSchema } from "./validationSchema";
 
@@ -45,12 +45,12 @@ export default function Inventory() {
     { id: 2, productName: "Water Bottle", stocks: 10 },
     { id: 3, productName: "Water Bottle", stocks: 10 },
   ];
-  const methods = useForm<Inventory>({
+  const methods = useForm<InventoryType>({
     resolver: yupResolver(validationSchema),
   });
   const { handleSubmit, reset } = methods;
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const onSubmit: SubmitHandler<Inventory> = (data) => {
+  const onSubmit: SubmitHandler<InventoryType> = (data) => {
     console.log(data);
   };
   const onSearch = (value: string) => {};
