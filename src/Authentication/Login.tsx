@@ -1,24 +1,24 @@
+import { useMutation } from "@apollo/client";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Checkbox, FormControlLabel, Link, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import "./index.scss";
-import * as yup from "yup";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation } from "@apollo/client";
-import { LOGIN } from "../graphql/mutations/login";
-import LoadingSpinner from "../Generic Components/LoadingSpinner";
-import { useLocation, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import { useAppDispatch, useAppSelector } from "../Redux-toolkit/hooks";
+import { useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { client } from "../config/publicClient";
+import LoadingSpinner from "../Generic Components/LoadingSpinner";
+import { LOGIN } from "../graphql/mutations/login";
 import { getAuthUser, setUser } from "../Redux-toolkit/features/Auth/authSlice";
 import {
   getPersit,
   togglePersit,
 } from "../Redux-toolkit/features/Persit/persitSlice";
-import { client } from "../config/publicClient";
-import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../Redux-toolkit/hooks";
+import "./index.scss";
 
 interface Inputs {
   username: string;
@@ -70,19 +70,19 @@ export default function Login() {
       navigate(from, { replace: true });
       reset();
     }
-  }, [token]);
+  }, [token, dispatch, navigate, reset, from]);
 
   const authUser = useAppSelector(getAuthUser);
 
   useEffect(() => {
     if (authUser) navigate(from, { replace: true });
-  }, []);
+  }, [authUser, navigate, from]);
   const persit = useAppSelector(getPersit);
   return (
     <div className="bg">
       <div className="glassContainer">
         {loading && <LoadingSpinner />}
-        <img src="./i-gym.png" alt="logo-icon" className="logo" />
+        <img src="/i-gym.png" alt="logo-icon" className="logo" />
         <h2 className="WelcomeText">Welcome</h2>
         <Stack
           spacing={2}

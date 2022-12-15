@@ -24,7 +24,7 @@ export default function LeftPanel({ member, isAddNew }: Props) {
       <Stack sx={{ alignItems: "center" }} spacing={2}>
         {!isAddNew && <h2>{fullName}</h2>}
         <Image
-          src={_photo || "/blank-profile.png"}
+          src={_photo || "./blank-profile.png"}
           showLoading
           width={250}
           height={250}
