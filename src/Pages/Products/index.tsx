@@ -5,9 +5,10 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 import { GridRowParams } from "@mui/x-data-grid/models";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DialogModal from "../../Generic Components/Dialog";
+import SearchBar from "../../Generic Components/SearchBar";
 import { DELELE_PRODUCT } from "../../graphql/mutations/deleteProduct";
 import { GET_PRODUCTS } from "../../graphql/queries/products";
 import { ROUTES } from "../../routes";
@@ -91,14 +92,18 @@ export default function Products() {
     setSearchedRows(rows);
   }, [rows]);
 
-  const onSearch = (value: string) => {
-    const searchedData = searchData(rows, value, ["photo", "id"]);
-    setSearchedRows(searchedData);
-  };
+  const onSearch = useCallback(
+    (value: string) => {
+      const searchedData = searchData(rows, value, ["photo", "id"]);
+      setSearchedRows(searchedData);
+    },
+    [rows]
+  );
   const navigate = useNavigate();
   return (
     <Box sx={{ p: "15px 2% 10px" }}>
       <Stack spacing={2}>
+        <SearchBar placeholder="Search Product..." onSearch={onSearch} />
         <Stack direction="row-reverse">
           <Button
             variant="contained"

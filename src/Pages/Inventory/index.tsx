@@ -3,9 +3,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Add, Cancel, SaveAlt } from "@mui/icons-material";
 import { Box, Button, Stack } from "@mui/material";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import LoadingSpinner from "../../Generic Components/LoadingSpinner";
+import SearchBar from "../../Generic Components/SearchBar";
 import { STOCK_IN } from "../../graphql/mutations/stockIn";
 import { GET_INVENTORY } from "../../graphql/queries/inventory";
 import { InventoryType, Product } from "../../types";
@@ -73,15 +74,19 @@ export default function Inventory() {
     setSearchedRows(rows);
   }, [rows]);
 
-  const onSearch = (value: string) => {
-    const searchedData = searchData(rows, value, ["id"]);
-    setSearchedRows(searchedData);
-  };
+  const onSearch = useCallback(
+    (value: string) => {
+      const searchedData = searchData(rows, value, ["id"]);
+      setSearchedRows(searchedData);
+    },
+    [rows]
+  );
 
   return (
     <Box sx={{ p: "15px 2% 10px" }}>
       {stockInLoading && <LoadingSpinner />}
       <Stack spacing={2}>
+        <SearchBar placeholder="Search Product..." onSearch={onSearch} />
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Stack direction="row-reverse" spacing={2}>

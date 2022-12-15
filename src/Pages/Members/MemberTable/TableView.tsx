@@ -13,7 +13,8 @@ interface Props {
 }
 export default function TableView({ loading, data, onDelete }: Props) {
   const navigate = useNavigate();
-  if (data.length === 0) return <h3>No Members Found!</h3>;
+  if (data.length === 0)
+    return <h3 style={{ marginLeft: "15px" }}>No Members Found!</h3>;
   const columns = [
     { field: "name", headerName: "Name", width: 230 },
     {

@@ -5,7 +5,8 @@ interface Props {
   data: Member[];
 }
 export default function GridView({ data }: Props) {
-  if (data.length === 0) return <h3>No members found!</h3>;
+  if (data.length === 0)
+    return <h3 style={{ marginLeft: "15px" }}>No members found!</h3>;
   return (
     <Grid container spacing={2}>
       {data.map((member) => (

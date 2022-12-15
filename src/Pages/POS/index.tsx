@@ -8,6 +8,7 @@ import { Product } from "../../types";
 import ProductCard from "./ProductCard";
 import ShoppingCartDrawer from "./ShoppingCart";
 import produce from "immer";
+import SearchBar from "../../Generic Components/SearchBar";
 
 export default function POS() {
   const { data, loading } = useQuery(GET_INVENTORY);
@@ -47,6 +48,7 @@ export default function POS() {
       />
       <Stack spacing={2}>
         <Stack direction="row" justifyContent="space-between">
+          <SearchBar placeholder="Search Product" onSearch={() => {}} />
           <IconButton
             size="large"
             color="info"

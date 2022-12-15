@@ -5,13 +5,14 @@ import {
   ButtonGroup,
   FormControl,
   FormControlLabel,
+  IconButton,
   Radio,
   RadioGroup,
-  IconButton,
 } from "@mui/material";
 import { GridRowParams } from "@mui/x-data-grid/models";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import DialogModal from "../../../Generic Components/Dialog";
+import SearchBar from "../../../Generic Components/SearchBar";
 import { DELETE_MEMBER } from "../../../graphql/mutations/deleteMember";
 import { GET_MEMBERS } from "../../../graphql/queries/members";
 import { Member } from "../../../types";
@@ -51,17 +52,21 @@ export default function MemberTable() {
     setSearchedRows(rows);
   }, [rows]);
 
-  const onSearch = (value: string) => {
-    const searchedData = searchData(rows, value, ["photo", "id"]);
-    setSearchedRows(searchedData);
-    setInitSearchedRows(searchedData);
-  };
+  const _onSearch = useCallback(
+    (value: string) => {
+      const searchedData = searchData(rows, value, ["photo", "id"]);
+      setSearchedRows(searchedData);
+      setInitSearchedRows(searchedData);
+    },
+    [rows]
+  );
   return (
     <Stack spacing={2}>
       <Stack
         direction="row"
         sx={{ justifyContent: "space-between", alignItems: "center" }}
       >
+        <SearchBar placeholder="Search Member" onSearch={_onSearch} />
         <ButtonGroup aria-label="view-selection">
           <IconButton
             aria-label="grid-view"
@@ -85,6 +90,7 @@ export default function MemberTable() {
           defaultValue="everyone"
           name="radio-buttons-group"
           row
+          sx={{ ml: 2 }}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             if (e.target.value !== "everyone") {
               setInitSearchedRows(searchedRows);
