@@ -5,7 +5,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 import { GridRowParams } from "@mui/x-data-grid/models";
-import SearchBar from "material-ui-search-bar";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DialogModal from "../../Generic Components/Dialog";
@@ -100,12 +99,6 @@ export default function Products() {
   return (
     <Box sx={{ p: "15px 2% 10px" }}>
       <Stack spacing={2}>
-        <SearchBar
-          placeholder="Search product..."
-          style={{ width: "50%" }}
-          onChange={onSearch}
-          onCancelSearch={() => {}}
-        />
         <Stack direction="row-reverse">
           <Button
             variant="contained"

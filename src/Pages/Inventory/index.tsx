@@ -3,7 +3,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Add, Cancel, SaveAlt } from "@mui/icons-material";
 import { Box, Button, Stack } from "@mui/material";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
-import SearchBar from "material-ui-search-bar";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import LoadingSpinner from "../../Generic Components/LoadingSpinner";
@@ -83,12 +82,6 @@ export default function Inventory() {
     <Box sx={{ p: "15px 2% 10px" }}>
       {stockInLoading && <LoadingSpinner />}
       <Stack spacing={2}>
-        <SearchBar
-          placeholder="Search product..."
-          style={{ width: "50%" }}
-          onChange={onSearch}
-          onCancelSearch={() => {}}
-        />
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Stack direction="row-reverse" spacing={2}>

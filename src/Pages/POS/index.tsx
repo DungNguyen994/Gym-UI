@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { ShoppingCart } from "@mui/icons-material";
 import { Badge, Box, Grid, IconButton, Stack } from "@mui/material";
-import SearchBar from "material-ui-search-bar";
 import { useState } from "react";
 import LoadingSpinner from "../../Generic Components/LoadingSpinner";
 import { GET_INVENTORY } from "../../graphql/queries/inventory";
@@ -48,12 +47,6 @@ export default function POS() {
       />
       <Stack spacing={2}>
         <Stack direction="row" justifyContent="space-between">
-          <SearchBar
-            placeholder="Search product..."
-            style={{ width: "50%", marginLeft: "16px" }}
-            onChange={() => {}}
-            onCancelSearch={() => {}}
-          />
           <IconButton
             size="large"
             color="info"

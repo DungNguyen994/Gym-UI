@@ -7,9 +7,9 @@ import {
   Stack,
   Tooltip,
   Typography,
+  Button,
 } from "@mui/material";
 import Image from "mui-image";
-import { Button } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../routes";
 import { Member } from "../../../types";

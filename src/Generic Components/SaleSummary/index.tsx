@@ -1,4 +1,3 @@
-import { Divider } from "@material-ui/core";
 import {
   Paper,
   Stack,
@@ -9,6 +8,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Divider,
 } from "@mui/material";
 import { round, subtract } from "lodash";
 import { useFormContext } from "react-hook-form";

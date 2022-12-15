@@ -7,9 +7,9 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
+  IconButton,
 } from "@mui/material";
 import { GridRowParams } from "@mui/x-data-grid/models";
-import SearchBar from "material-ui-search-bar";
 import { useEffect, useMemo, useState } from "react";
 import DialogModal from "../../../Generic Components/Dialog";
 import { DELETE_MEMBER } from "../../../graphql/mutations/deleteMember";
@@ -18,7 +18,6 @@ import { Member } from "../../../types";
 import { formatMemberTableData, searchData } from "../../../utils";
 import GridView from "./GridView";
 import TableView from "./TableView";
-import { IconButton } from "@material-ui/core";
 
 interface SelectedRow {
   id?: string;
@@ -63,14 +62,6 @@ export default function MemberTable() {
         direction="row"
         sx={{ justifyContent: "space-between", alignItems: "center" }}
       >
-        <SearchBar
-          placeholder="Search Member..."
-          style={{ width: "50%" }}
-          onChange={onSearch}
-          onCancelSearch={() => {
-            setSearchedRows(rows);
-          }}
-        />
         <ButtonGroup aria-label="view-selection">
           <IconButton
             aria-label="grid-view"

@@ -1,4 +1,3 @@
-import AppBar from "@material-ui/core/AppBar";
 import { AccountCircle, Mail, More, Notifications } from "@mui/icons-material";
 import {
   Badge,
@@ -8,6 +7,7 @@ import {
   MenuItem,
   Toolbar,
   Typography,
+  AppBar,
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import React from "react";
