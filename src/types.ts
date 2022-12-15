@@ -54,19 +54,24 @@ export type Member = {
 
 export type Product = {
   id?: string;
+  productId: string;
   productName: string;
   productType: string;
   supplier?: string;
   unitPrice: number;
   discountPercent?: number;
   photo?: FileList | string;
+  quantity?: number;
+  buyQuantity?: number;
+};
+
+type ProductOption = {
+  label: string;
+  value: string;
 };
 export type InventoryType = {
   id?: string;
-  productId: string;
-  productName: string;
-  productType: string;
-  supplier?: string;
+  product: ProductOption;
   quantity: number;
 };
 export interface CommonFieldProps {

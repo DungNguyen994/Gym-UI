@@ -7,4 +7,5 @@ export const ROUTES = {
   PRODUCTS: "/products",
   NEWPRODUCT: "/products/new",
   EDITPRODUCT: "/edit-product/:id",
+  POS: "/point-of-sale",
 };

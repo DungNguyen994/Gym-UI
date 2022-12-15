@@ -14,6 +14,7 @@ import Products from "./Pages/Products";
 import AddNewProduct from "./Pages/Products/AddNewProduct";
 import { ROUTES } from "./routes";
 import ProductDetails from "./Pages/Products/ProductDetails";
+import POS from "./Pages/POS";
 
 export default function App() {
   const client = usePrivateClient();
@@ -35,6 +36,7 @@ export default function App() {
               <Route path={ROUTES.PRODUCTS} element={<Products />} />
               <Route path={ROUTES.NEWPRODUCT} element={<AddNewProduct />} />
               <Route path={ROUTES.EDITPRODUCT} element={<ProductDetails />} />
+              <Route path={ROUTES.POS} element={<POS />} />
             </Route>
           </Route>
         </Route>

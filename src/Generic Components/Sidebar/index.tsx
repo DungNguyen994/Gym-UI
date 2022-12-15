@@ -6,6 +6,7 @@ import {
   Inventory,
   Logout,
   Search,
+  ShoppingCart,
 } from "@mui/icons-material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -84,6 +85,12 @@ export default function Sidebar() {
               selected === ROUTES.NEWPRODUCT ||
               selected === ROUTES.EDITPRODUCT
             }
+          />
+          <MenuItem
+            Icon={ShoppingCart}
+            text="POS"
+            onClick={() => onMenuClick(ROUTES.POS)}
+            selected={selected === ROUTES.POS}
           />
           {/* <MenuItem
             onClick={() => {

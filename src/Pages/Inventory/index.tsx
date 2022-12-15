@@ -1,61 +1,87 @@
+import { useMutation, useQuery } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Add, Delete, Edit, Login } from "@mui/icons-material";
-import { Box, Button, Stack, Tooltip } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import { GridRowParams } from "@mui/x-data-grid/models";
+import { Add, Cancel, SaveAlt } from "@mui/icons-material";
+import { Box, Button, Stack } from "@mui/material";
+import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 import SearchBar from "material-ui-search-bar";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { InventoryType } from "../../types";
+import LoadingSpinner from "../../Generic Components/LoadingSpinner";
+import { STOCK_IN } from "../../graphql/mutations/stockIn";
+import { GET_INVENTORY } from "../../graphql/queries/inventory";
+import { InventoryType, Product } from "../../types";
+import { searchData } from "../../utils";
 import StockInForm from "./StockInForm";
 import { validationSchema } from "./validationSchema";
 
 export default function Inventory() {
-  const navigate = useNavigate();
   const [isStockIn, setIsStockIn] = useState(false);
+  const { data, loading } = useQuery(GET_INVENTORY);
+  const rows = useMemo(
+    () => (data?.inventory?.data as Product[]) || [],
+    [data]
+  );
+
   const columns = [
-    { field: "productName", headerName: "Product Name", width: 230 },
+    { field: "productType", headerName: "Product Name", width: 300 },
+    { field: "productName", headerName: "Product Name", width: 400 },
+    { field: "supplier", headerName: "Supplier", width: 230 },
     {
-      field: "stocks",
+      field: "quantity",
       headerName: "Stocks",
       width: 230,
       type: "number",
     },
     {
-      field: "action",
-      headerName: "Actions",
-      width: 200,
+      field: "status",
+      headerName: "Status",
+      width: 400,
       type: "actions",
-      getActions: (params: GridRowParams) => [
-        <Tooltip title="Check In">
-          <Login color="success" sx={{ cursor: "pointer" }} />
-        </Tooltip>,
-        <Tooltip title="Edit Member">
-          <Edit onClick={() => {}} color="warning" sx={{ cursor: "pointer" }} />
-        </Tooltip>,
-        <Tooltip title="Delete Member">
-          <Delete color="error" sx={{ cursor: "pointer" }} onClick={() => {}} />
-        </Tooltip>,
-      ],
+      renderCell: (params: GridRenderCellParams<string>) =>
+        params.row.quantity > 0 ? (
+          <Button
+            variant="contained"
+            color="success"
+            sx={{ cursor: "default" }}
+          >
+            Available
+          </Button>
+        ) : (
+          <Button variant="contained" color="error" sx={{ cursor: "default" }}>
+            Out Of Stock
+          </Button>
+        ),
     },
   ];
-  const rows = [
-    { id: 1, productName: "Water Bottle", stocks: 10 },
-    { id: 2, productName: "Water Bottle", stocks: 10 },
-    { id: 3, productName: "Water Bottle", stocks: 10 },
-  ];
+
   const methods = useForm<InventoryType>({
     resolver: yupResolver(validationSchema),
   });
   const { handleSubmit, reset } = methods;
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [stockIn, { loading: stockInLoading }] = useMutation(STOCK_IN);
+
   const onSubmit: SubmitHandler<InventoryType> = (data) => {
-    console.log(data);
+    stockIn({
+      variables: { productId: data.product.value, quantity: data.quantity },
+      refetchQueries: [{ query: GET_INVENTORY }],
+    }).then(() => {
+      reset();
+    });
   };
-  const onSearch = (value: string) => {};
+
+  const [searchedRows, setSearchedRows] = useState(rows);
+  useEffect(() => {
+    setSearchedRows(rows);
+  }, [rows]);
+
+  const onSearch = (value: string) => {
+    const searchedData = searchData(rows, value, ["id"]);
+    setSearchedRows(searchedData);
+  };
+
   return (
     <Box sx={{ p: "15px 2% 10px" }}>
+      {stockInLoading && <LoadingSpinner />}
       <Stack spacing={2}>
         <SearchBar
           placeholder="Search product..."
@@ -63,27 +89,41 @@ export default function Inventory() {
           onChange={onSearch}
           onCancelSearch={() => {}}
         />
-        <Stack direction="row-reverse">
-          <Button
-            variant="contained"
-            startIcon={<Add />}
-            onClick={() => setIsStockIn(true)}
-          >
-            Stock In
-          </Button>
-        </Stack>
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <StockInForm />
+            <Stack direction="row-reverse" spacing={2}>
+              {isStockIn && (
+                <Button
+                  variant="contained"
+                  startIcon={<SaveAlt />}
+                  color="warning"
+                  type="submit"
+                >
+                  Save
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                startIcon={isStockIn ? <Cancel /> : <Add />}
+                onClick={() => {
+                  setIsStockIn((prev) => !prev);
+                  if (isStockIn) reset();
+                }}
+              >
+                {isStockIn ? "Cancel" : "Stock In"}
+              </Button>
+            </Stack>
+            {isStockIn && <StockInForm />}
           </form>
         </FormProvider>
         <div style={{ height: 600, width: "100%", background: "white" }}>
           <DataGrid
-            rows={rows}
+            rows={searchedRows}
             columns={columns}
             disableSelectionOnClick
             rowsPerPageOptions={[10, 25, 50, 100]}
             pageSize={10}
+            loading={loading}
             sx={{
               "& .MuiDataGrid-columnHeaderTitle": {
                 fontWeight: "700",

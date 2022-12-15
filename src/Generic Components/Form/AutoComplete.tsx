@@ -27,8 +27,13 @@ export default function AutoComplete({
   md = 6,
   lg = 6,
 }: Props) {
-  const { watch, setValue } = useFormContext();
+  const {
+    watch,
+    setValue,
+    formState: { errors },
+  } = useFormContext();
   const value = watch(fieldName);
+  const errorMessage = errors[fieldName]?.message as string | undefined;
   return (
     <Grid item xs={xs} md={md} lg={lg}>
       {readonly ? (
@@ -50,7 +55,13 @@ export default function AutoComplete({
           fullWidth
           defaultValue={defaultValue}
           renderInput={(params) => (
-            <TextField {...params} label={label} variant="standard" />
+            <TextField
+              {...params}
+              label={label}
+              error={Boolean(errors[fieldName]) && !value}
+              variant="standard"
+              helperText={!value && errorMessage}
+            />
           )}
         />
       )}

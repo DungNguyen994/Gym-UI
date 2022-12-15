@@ -32,7 +32,7 @@ export default function Products() {
   };
   const columns = [
     { field: "productType", headerName: "Product Type", width: 230 },
-    { field: "productName", headerName: "Product Name", width: 230 },
+    { field: "productName", headerName: "Product Name", width: 300 },
     {
       field: "unitPrice",
       headerName: "Unit Price",
