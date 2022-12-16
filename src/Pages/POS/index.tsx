@@ -1,14 +1,14 @@
 import { useQuery } from "@apollo/client";
 import { ShoppingCart } from "@mui/icons-material";
 import { Badge, Box, Grid, IconButton, Stack } from "@mui/material";
+import produce from "immer";
 import { useState } from "react";
 import LoadingSpinner from "../../Generic Components/LoadingSpinner";
+import SearchBar from "../../Generic Components/SearchBar";
 import { GET_INVENTORY } from "../../graphql/queries/inventory";
 import { Product } from "../../types";
 import ProductCard from "./ProductCard";
 import ShoppingCartDrawer from "./ShoppingCart";
-import produce from "immer";
-import SearchBar from "../../Generic Components/SearchBar";
 
 export default function POS() {
   const { data, loading } = useQuery(GET_INVENTORY);
@@ -38,6 +38,24 @@ export default function POS() {
     });
     setSelectedProducts(nextState);
   };
+  const removeOneItem = (productId: string) => {
+    const nextState = produce(selectedProducts, (draftState) => {
+      if (draftState && draftState.length > 0) {
+        const foundProduct = draftState.find((p) => p.productId === productId);
+        if (foundProduct) {
+          if (foundProduct.buyQuantity && foundProduct.buyQuantity > 1)
+            foundProduct.buyQuantity--;
+          else return draftState.filter((p) => p.productId !== productId);
+        }
+      }
+      return draftState;
+    });
+    setSelectedProducts(nextState);
+  };
+  const removeProduct = (productId: string) => {
+    setSelectedProducts((pre) => pre?.filter((p) => p.productId !== productId));
+  };
+  const clearCart = () => setSelectedProducts([]);
   return (
     <Box sx={{ padding: "15px 2% 10px" }}>
       {loading && <LoadingSpinner />}
@@ -45,6 +63,10 @@ export default function POS() {
         open={openShoppingCart}
         onClose={closeShoppingCart}
         selectedProducts={selectedProducts}
+        removeProduct={removeProduct}
+        removeOneItem={removeOneItem}
+        addOneItem={onAddToCart}
+        clearCart={clearCart}
       />
       <Stack spacing={2}>
         <Stack direction="row" justifyContent="space-between">
@@ -59,7 +81,7 @@ export default function POS() {
             </Badge>
           </IconButton>
         </Stack>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} height="80vh" overflow="auto">
           {products?.map((product) => (
             <ProductCard product={product} addToCart={onAddToCart} />
           ))}

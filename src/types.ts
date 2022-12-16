@@ -54,6 +54,7 @@ export type Member = {
 
 export type Product = {
   id?: string;
+  inventoryId?: string;
   productId: string;
   productName: string;
   productType: string;
