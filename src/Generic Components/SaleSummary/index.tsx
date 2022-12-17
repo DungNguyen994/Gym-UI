@@ -9,6 +9,7 @@ import {
   TableRow,
   TextField,
   Divider,
+  Box,
 } from "@mui/material";
 import { round, subtract } from "lodash";
 import { useFormContext } from "react-hook-form";
@@ -42,7 +43,7 @@ export default function SaleSummary() {
   const errorMessage = (errors["payment.collected"]?.message ||
     "Please collect more money") as string;
   return (
-    <div className="sale-summary">
+    <Box sx={{ display: { xs: "none", xl: "block" } }} className="sale-summary">
       <h1 className="text-center">Sale Summary</h1>
       <hr className="divider" />
       <TableContainer component={Paper} sx={{ boxShadow: "none" }}>
@@ -110,6 +111,6 @@ export default function SaleSummary() {
         <p className="bold size-l">Total</p>
         <p className="bold size-l">{total}</p>
       </Stack>
-    </div>
+    </Box>
   );
 }

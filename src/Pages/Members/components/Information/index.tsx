@@ -100,8 +100,9 @@ export default function Information({
               <h2
                 style={{
                   width: "100%",
-                  paddingLeft: "32px",
+                  marginLeft: "32px",
                   marginBottom: 0,
+                  borderBottom: "1px solid #e3e3e3",
                 }}
               >
                 Membership

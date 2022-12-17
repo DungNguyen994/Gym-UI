@@ -125,21 +125,17 @@ export default function MemberDetails() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Grid container direction="row">
-              <Grid item xs={2}>
-                <LeftPanel member={member} isAddNew={isAddNew} />
-              </Grid>
-              <Grid item xs={7}>
-                <Stack direction="column">
-                  <Information
-                    isAddNew={isAddNew}
-                    memberships={member?.memberships}
-                    member={member}
-                    refetchMember={refetchMember}
-                  />
-                </Stack>
+              <LeftPanel isAddNew={isAddNew} />
+              <Grid item xs={12} md={7}>
+                <Information
+                  isAddNew={isAddNew}
+                  memberships={member?.memberships}
+                  member={member}
+                  refetchMember={refetchMember}
+                />
               </Grid>
               {(isAddNew || hasNewMembership) && (
-                <Grid item xs={3}>
+                <Grid item md={3}>
                   <SaleSummary />
                 </Grid>
               )}

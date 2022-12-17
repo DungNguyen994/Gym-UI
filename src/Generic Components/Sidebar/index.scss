@@ -1,7 +1,7 @@
 .sidebar {
   position: fixed;
   left: 0;
-  top: 55px;
+  top: 64px;
   height: 100%;
   width: 10%;
   background: #11101d;
@@ -10,15 +10,25 @@
   svg {
     color: white;
   }
-  .menu-item-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+}
+.menu-item-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  border-radius: 0;
+  width: 100%;
+  padding: 8px 0;
+}
+.mobile-sidebar {
+  width: 100%;
+  background: #11101d;
+  z-index: 99;
+  transition: all 0.5s ease;
+  border-top: 1px silver solid;
+  svg {
     color: white;
-    border-radius: 0;
-    width: 100%;
-    padding: 8px 0;
   }
 }
 .sidebar.open {

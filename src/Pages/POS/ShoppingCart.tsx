@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Add, Cancel, Print, Remove } from "@mui/icons-material";
+import { Add, Cancel, Remove } from "@mui/icons-material";
 import {
   Autocomplete,
   Button,
@@ -94,7 +94,6 @@ export default function ShoppingCartDrawer({
       clearCart();
     });
   };
-
   return (
     <div>
       <Drawer anchor="right" open={open} onClose={onClose}>
@@ -232,7 +231,6 @@ export default function ShoppingCartDrawer({
           <Button variant="contained" type="submit">
             Make Payment
           </Button>
-          <Button startIcon={<Print />}>Print Receipt</Button>
         </Stack>
       </Drawer>
     </div>

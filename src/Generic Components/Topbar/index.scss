@@ -1,24 +1,8 @@
 .brand-name {
   text-transform: uppercase;
-  background: linear-gradient(to right, #30cfd0 0%, white 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   font-size: 1.5rem;
   font-weight: 700;
-}
-.brand-name-container {
-  background: rgb(2, 0, 36);
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(121, 9, 102, 1) 35%,
-    rgba(0, 212, 255, 1) 100%
-  );
-  width: 10%;
-  height: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: inherit;
 }
 
 .nav-container {

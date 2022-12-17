@@ -8,13 +8,13 @@ import {
   Search,
   ShoppingCart,
 } from "@mui/icons-material";
-import List from "@mui/material/List";
+import { Box, List } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { client } from "../../config/publicClient";
 import { LOG_OUT } from "../../graphql/queries/logout";
@@ -25,12 +25,20 @@ import LoadingSpinner from "../LoadingSpinner";
 import "./index.scss";
 import { MenuItem } from "./MenuItem";
 
-export default function Sidebar() {
+interface Props {
+  isMobile?: boolean;
+  closeSidebar?: () => void;
+}
+
+export default function Sidebar({ isMobile, closeSidebar }: Props) {
   const navigate = useNavigate();
   const [logout, { data, loading }] = useLazyQuery(LOG_OUT, { client });
   const dispatch = useAppDispatch();
   const location = useLocation();
   const [selected, setSelected] = useState(location.pathname);
+  useEffect(() => {
+    setSelected(location.pathname);
+  }, [location.pathname]);
 
   if (data?.logout?.data) {
     dispatch(setUser(undefined));
@@ -40,10 +48,15 @@ export default function Sidebar() {
   const onMenuClick = (path: string) => {
     navigate(path);
     setSelected(path);
+    if (closeSidebar) closeSidebar();
   };
 
   return (
-    <div className="sidebar">
+    <Box
+      className={isMobile ? "mobile-sidebar" : "sidebar"}
+      sx={{ display: isMobile ? {} : { xs: "none", md: "block" } }}
+      width={{ md: "20%", xl: "10%" }}
+    >
       {loading && <LoadingSpinner />}
       <Stack
         sx={{
@@ -123,6 +136,6 @@ export default function Sidebar() {
           </ListItemButton>
         </ListItem>
       </Stack>
-    </div>
+    </Box>
   );
 }

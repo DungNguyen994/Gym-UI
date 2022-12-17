@@ -1,22 +1,23 @@
-import { AccountCircle, Mail, More, Notifications } from "@mui/icons-material";
+import { Cancel, Mail, Notifications } from "@mui/icons-material";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
+  AppBar,
   Badge,
   Box,
   IconButton,
-  Menu,
-  MenuItem,
   Toolbar,
   Typography,
-  AppBar,
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
-import React from "react";
-import { useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes";
+import MobileSideBar from "../Sidebar/MobileSideBar";
 import "./index.scss";
 
 export default function Topbar() {
   const location = useLocation();
+
   let workItem;
   switch (location.pathname) {
     case ROUTES.HOME:
@@ -49,164 +50,76 @@ export default function Topbar() {
   if (location.pathname.includes("/edit-product")) {
     workItem = "Edit Product";
   }
-
-  const menuId = "primary-search-account-menu";
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null);
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <Mail />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <Notifications />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
+
+  const navigate = useNavigate();
+
+  const closeSidebar = () => setIsMobileMenuOpen(false);
   return (
-    <Stack direction="row">
-      <div className="brand-name-container">
-        <p className="brand-name">Gym Bot</p>
-      </div>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" style={{ background: "#11101d" }}>
-          <Toolbar className="tool-bar">
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ display: { xs: "none", sm: "block" } }}
-            >
-              {workItem}
-            </Typography>
-            <Box sx={{ flexGrow: 1 }} />
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <IconButton
-                size="large"
-                aria-label="show 4 new mails"
-                color="inherit"
+    <Box>
+      <Stack direction="row">
+        <Box sx={{ flexGrow: 1 }}>
+          <AppBar position="fixed" style={{ background: "#11101d" }}>
+            <Toolbar className="tool-bar">
+              <Typography
+                variant="h5"
+                noWrap
+                component="div"
+                sx={{ cursor: "pointer" }}
+                minWidth={{ md: "10%" }}
+                onClick={() => navigate(ROUTES.HOME, { replace: true })}
               >
-                <Badge badgeContent={4} color="error">
-                  <Mail />
-                </Badge>
-              </IconButton>
-              <IconButton
-                size="large"
-                aria-label="show 17 new notifications"
-                color="inherit"
+                Gym Bot
+              </Typography>
+              <Typography
+                noWrap
+                component="div"
+                sx={{ display: { xs: "none", lg: "block" } }}
               >
-                <Badge badgeContent={17} color="error">
-                  <Notifications />
-                </Badge>
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-            </Box>
-            <Box sx={{ display: { xs: "flex", md: "none" } }}>
-              <IconButton
-                size="large"
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen}
-                color="inherit"
-              >
-                <More />
-              </IconButton>
-            </Box>
-          </Toolbar>
-        </AppBar>
-        {renderMobileMenu}
-        {renderMenu}
-      </Box>
-    </Stack>
+                {workItem}
+              </Typography>
+              <Box sx={{ flexGrow: 1 }} />
+              <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                <IconButton
+                  size="large"
+                  aria-label="show 4 new mails"
+                  color="inherit"
+                >
+                  <Badge badgeContent={4} color="error">
+                    <Mail />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  size="large"
+                  aria-label="show 17 new notifications"
+                  color="inherit"
+                >
+                  <Badge badgeContent={17} color="error">
+                    <Notifications />
+                  </Badge>
+                </IconButton>
+              </Box>
+              <Box sx={{ display: { xs: "flex", md: "none" } }}>
+                <IconButton
+                  size="large"
+                  aria-label="show more"
+                  aria-controls={mobileMenuId}
+                  aria-haspopup="true"
+                  onClick={() => setIsMobileMenuOpen((pre) => !pre)}
+                  color="inherit"
+                >
+                  {!isMobileMenuOpen ? <MenuIcon /> : <Cancel />}
+                </IconButton>
+              </Box>
+            </Toolbar>
+            <MobileSideBar
+              open={isMobileMenuOpen}
+              closeSidebar={closeSidebar}
+            />
+          </AppBar>
+        </Box>
+      </Stack>
+    </Box>
   );
 }
