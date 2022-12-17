@@ -18,7 +18,10 @@ export const MenuItem: React.FC<Props> = ({
 }) => {
   return (
     <ListItem className={`menu-item-container ${selected ? "selected" : ""}`}>
-      <ListItemButton onClick={onClick} style={{ background: "transparent" }}>
+      <ListItemButton
+        onClick={onClick}
+        style={{ background: "transparent", padding: "8px 0" }}
+      >
         <ListItemIcon>
           <Icon />
         </ListItemIcon>

@@ -1,19 +1,19 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Grid, Stack } from "@mui/material";
+import { Grid } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useLocation, useParams } from "react-router-dom";
-import {
-  membershipTypes,
-  PAYMENT_METHODS,
-  periodOptions,
-} from "../../../constants";
 import LoadingSpinner from "../../../Generic Components/LoadingSpinner";
 import SaleSummary from "../../../Generic Components/SaleSummary";
+import {
+  PAYMENT_METHODS,
+  membershipTypes,
+  periodOptions,
+} from "../../../constants";
 import { ADD_MEMBER } from "../../../graphql/mutations/addMember";
 import { UPDATE_MEMBER } from "../../../graphql/mutations/updateMember";
 import { GET_MEMBER } from "../../../graphql/queries/member";
