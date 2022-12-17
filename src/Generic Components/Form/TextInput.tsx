@@ -11,9 +11,9 @@ export default function TextInput({
   prefix,
   defaultValue,
   type,
-  xs,
-  md,
-  lg,
+  xs = 12,
+  md = 6,
+  lg = 6,
 }: CommonFieldProps) {
   const {
     register,
