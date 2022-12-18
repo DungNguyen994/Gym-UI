@@ -5,16 +5,15 @@ import PersitLogin from "./Authentication/PersistLogin";
 import Register from "./Authentication/Register";
 import RequiredAuth from "./Authentication/RequiredAuth";
 import Layout from "./Generic Components/Layout";
-import { usePrivateClient } from "./hooks/usePrivateClient";
-import Home from "./Pages/Home";
-import MemberDetails from "./Pages/Members/MemberDetails";
-import FindMember from "./Pages/Members/FindMember";
 import Inventory from "./Pages/Inventory";
+import FindMember from "./Pages/Members/FindMember";
+import MemberDetails from "./Pages/Members/MemberDetails";
+import POS from "./Pages/POS";
 import Products from "./Pages/Products";
 import AddNewProduct from "./Pages/Products/AddNewProduct";
-import { ROUTES } from "./routes";
 import ProductDetails from "./Pages/Products/ProductDetails";
-import POS from "./Pages/POS";
+import { usePrivateClient } from "./hooks/usePrivateClient";
+import { ROUTES } from "./routes";
 
 export default function App() {
   const client = usePrivateClient();
@@ -28,7 +27,7 @@ export default function App() {
         <Route element={<PersitLogin />}>
           <Route element={<RequiredAuth />}>
             <Route path="/" element={<Layout />}>
-              <Route path={ROUTES.HOME} element={<Home />} />
+              <Route path={ROUTES.HOME} element={<FindMember />} />
               <Route path={ROUTES.FINDMEMBER} element={<FindMember />} />
               <Route path={ROUTES.ADDMEMBER} element={<MemberDetails />} />
               <Route path={ROUTES.EDITMEMBER} element={<MemberDetails />} />

@@ -15,7 +15,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { client } from "../../config/publicClient";
 import { LOG_OUT } from "../../graphql/queries/logout";
 import { setUser } from "../../Redux-toolkit/features/Auth/authSlice";
@@ -32,6 +32,7 @@ interface Props {
 
 export default function Sidebar({ isMobile, closeSidebar }: Props) {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [logout, { data, loading }] = useLazyQuery(LOG_OUT, { client });
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -39,6 +40,7 @@ export default function Sidebar({ isMobile, closeSidebar }: Props) {
   useEffect(() => {
     setSelected(location.pathname);
   }, [location.pathname]);
+  console.log(selected, location.pathname);
 
   if (data?.logout?.data) {
     dispatch(setUser(undefined));
@@ -81,7 +83,10 @@ export default function Sidebar({ isMobile, closeSidebar }: Props) {
             Icon={Search}
             text="Find Member"
             onClick={() => onMenuClick(ROUTES.FINDMEMBER)}
-            selected={selected === ROUTES.FINDMEMBER}
+            selected={
+              selected === ROUTES.FINDMEMBER ||
+              selected === ROUTES.EDITMEMBER.replace(":id", id || "")
+            }
           />
           <MenuItem
             Icon={Inventory}

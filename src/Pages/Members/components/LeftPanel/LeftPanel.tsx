@@ -1,6 +1,5 @@
 import { Login, ShoppingCart } from "@mui/icons-material";
-import { Box, Button, Stack, Grid } from "@mui/material";
-import Image from "mui-image";
+import { Button, Card, CardMedia, Grid, Stack } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { Member } from "../../../../types";
 import "./index.scss";
@@ -20,53 +19,60 @@ export default function LeftPanel({ member, isAddNew }: Props) {
   const _photo = photoUrl || (photo as string);
   const fullName = firstName + " " + lastName;
   return (
-    <Box
-      sx={{ display: { xs: "none", md: "flex" } }}
+    <Grid
+      item
+      xs={0}
+      md={2}
+      sx={{ display: { xs: "none", md: "flex" }, justifyContent: "center" }}
       borderRight=" 1px solid #e3e3e3"
+      p={1}
     >
-      <Grid item md={2} sx={{ display: { xs: "none", md: "flex" } }}>
-        <Stack sx={{ alignItems: "center" }} spacing={2}>
-          {!isAddNew && <h2>{fullName}</h2>}
-          <Image
-            src={_photo || "./blank-profile.png"}
-            showLoading
-            width={250}
-            height={250}
+      <Stack sx={{ alignItems: "center" }} spacing={2}>
+        {!isAddNew && <h2>{fullName}</h2>}{" "}
+        <Card>
+          <CardMedia
+            component="img"
+            sx={{ height: { md: 100, lg: 170, xl: 250 } }}
+            image={_photo || "/blank-profile.png"}
+            alt="profile"
           />
-          <label htmlFor="btn-upload">
-            <input
-              id="btn-upload"
-              style={{ display: "none" }}
-              type="file"
-              accept="image/*"
-              {...register("photo")}
-            />
-            <Button
-              className="btn-choose"
-              variant="contained"
-              component="span"
-              sx={{ marginTop: "10px" }}
-            >
-              {isAddNew ? "Choose Photo" : "Change Photo"}
+        </Card>
+        <label htmlFor="btn-upload">
+          <input
+            id="btn-upload"
+            style={{ display: "none" }}
+            type="file"
+            accept="image/*"
+            {...register("photo")}
+          />
+          <Button
+            className="btn-choose"
+            variant="contained"
+            sx={{
+              marginTop: "10px",
+            }}
+            size="small"
+            component="span"
+          >
+            {isAddNew ? "Choose Photo" : "Change Photo"}
+          </Button>
+        </label>
+        {!isAddNew && (
+          <>
+            <hr className="divider" />
+            <Button variant="contained" startIcon={<Login />} color="success">
+              Check In
             </Button>
-          </label>
-          {!isAddNew && (
-            <>
-              <hr className="divider" />
-              <Button variant="contained" startIcon={<Login />} color="success">
-                Check In
-              </Button>
-              <Button
-                variant="contained"
-                startIcon={<ShoppingCart />}
-                color="warning"
-              >
-                Purchase
-              </Button>
-            </>
-          )}
-        </Stack>
-      </Grid>
-    </Box>
+            <Button
+              variant="contained"
+              startIcon={<ShoppingCart />}
+              color="warning"
+            >
+              Purchase
+            </Button>
+          </>
+        )}
+      </Stack>
+    </Grid>
   );
 }

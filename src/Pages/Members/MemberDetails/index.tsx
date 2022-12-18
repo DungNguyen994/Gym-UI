@@ -1,14 +1,14 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Grid } from "@mui/material";
+import { Button, Grid, Stack, Box, Container } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { isEqual, isNull, omitBy } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useLocation, useParams } from "react-router-dom";
 import LoadingSpinner from "../../../Generic Components/LoadingSpinner";
-import SaleSummary from "../../../Generic Components/SaleSummary";
 import {
   PAYMENT_METHODS,
   membershipTypes,
@@ -22,9 +22,9 @@ import { Member, NewMember } from "../../../types";
 import { uploadPhoto } from "../../../utils";
 import Information from "../components/Information";
 import LeftPanel from "../components/LeftPanel/LeftPanel";
+import SaleSummary from "../components/SaleSummary";
 import { mapMemberPayload, mapUpdateMemberPayload } from "../utils";
 import { validationSchema } from "../validationSchema";
-import "./index.scss";
 
 const addNewDefaultValues = {
   newMembership: {
@@ -43,19 +43,19 @@ const addNewDefaultValues = {
 };
 export default function MemberDetails() {
   const { id } = useParams();
-  const [fetchMember, { data, loading: getMemberLoading }] =
-    useLazyQuery(GET_MEMBER);
-  const member = useMemo(() => data?.member?.data as Member, [data]);
   const location = useLocation();
   const isAddNew = location.pathname === "/add-member";
-  useEffect(() => {
-    if (!isAddNew && id) fetchMember({ variables: { memberId: id } });
-  }, []);
+  const { data, loading: getMemberLoading } = useQuery(GET_MEMBER, {
+    skip: isAddNew,
+    variables: { memberId: id },
+  });
+  const member = useMemo(() => data?.member?.data as Member, [data]);
+  console.log(member);
   const methods = useForm<Member>({
     resolver: yupResolver(validationSchema),
     defaultValues: isAddNew ? addNewDefaultValues : member,
   });
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit, reset, getValues } = methods;
 
   useEffect(() => {
     if (!isAddNew) reset(member);
@@ -69,13 +69,6 @@ export default function MemberDetails() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const refetchMember = (id: string) => {
-    if (!isAddNew && id)
-      fetchMember({
-        variables: { memberId: id },
-        fetchPolicy: "network-only",
-      });
-  };
   const onSave = (data: Member, photoUrl: string) => {
     if (isAddNew) {
       const newMember = mapMemberPayload(data, photoUrl) as NewMember;
@@ -90,13 +83,10 @@ export default function MemberDetails() {
         });
     } else {
       const updatedMember = mapUpdateMemberPayload(data, photoUrl);
-      update({ variables: updatedMember })
-        .then(() => {
-          if (id) {
-            refetchMember(id);
-          }
-        })
-        .finally(() => setIsSubmitting(false));
+      update({
+        variables: updatedMember,
+        refetchQueries: [{ query: GET_MEMBER, variables: { memberId: id } }],
+      }).finally(() => setIsSubmitting(false));
     }
   };
   const onSubmit: SubmitHandler<Member> = (data) => {
@@ -116,33 +106,59 @@ export default function MemberDetails() {
   };
 
   const hasNewMembership = methods.watch("newMembership");
+
+  const isDirty = !isEqual(omitBy(getValues(), isNull), omitBy(member, isNull));
   return (
-    <div className="new-member">
+    <Box p={1} width={{ xs: "95%", md: "80%", lg: "95%" }}>
       {(loading || isSubmitting || updateLoading || getMemberLoading) && (
         <LoadingSpinner />
       )}
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Grid container direction="row">
-              <LeftPanel isAddNew={isAddNew} />
-              <Grid item xs={12} md={7}>
+            <Grid container direction="row" border="1px solid #e3e3e3">
+              <LeftPanel isAddNew={isAddNew} member={member} />
+              <Grid item xs={12} md={10} lg={7}>
                 <Information
                   isAddNew={isAddNew}
                   memberships={member?.memberships}
                   member={member}
-                  refetchMember={refetchMember}
                 />
               </Grid>
               {(isAddNew || hasNewMembership) && (
-                <Grid item md={3}>
+                <Grid item xl={3}>
                   <SaleSummary />
                 </Grid>
               )}
             </Grid>
+            <Stack
+              className="edit-btn"
+              spacing={2}
+              direction="row-reverse"
+              mt={2}
+            >
+              <Button
+                variant="contained"
+                color="warning"
+                disabled={!isAddNew && !isDirty}
+                type="submit"
+              >
+                Save
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  reset();
+                }}
+                disabled={!isAddNew && !isDirty}
+              >
+                Cancel
+              </Button>
+            </Stack>
           </LocalizationProvider>
         </form>
       </FormProvider>
-    </div>
+    </Box>
   );
 }

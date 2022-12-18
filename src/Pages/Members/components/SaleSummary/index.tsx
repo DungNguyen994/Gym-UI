@@ -13,9 +13,9 @@ import {
 } from "@mui/material";
 import { round, subtract } from "lodash";
 import { useFormContext } from "react-hook-form";
-import { PAYMENT_METHODS } from "../../constants";
-import { calculateAmount, formatCurrency } from "../../utils";
-import AutoComplete from "../Form/AutoComplete";
+import { PAYMENT_METHODS } from "../../../../constants";
+import { calculateAmount, formatCurrency } from "../../../../utils";
+import AutoComplete from "../../../../Generic Components/Form/AutoComplete";
 import "./index.scss";
 
 export default function SaleSummary() {

@@ -8,22 +8,20 @@ import {
   Start,
   Wc,
 } from "@mui/icons-material";
-import { Button, Grid, Stack } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import { Dayjs } from "dayjs";
-import { isEqual, isNull, omitBy } from "lodash";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { useWatch } from "react-hook-form";
+import AutoComplete from "../../../../Generic Components/Form/AutoComplete";
+import { DateInput } from "../../../../Generic Components/Form/DateInput";
+import RadioInput from "../../../../Generic Components/Form/RadioInput";
+import TextInput from "../../../../Generic Components/Form/TextInput";
 import {
   DATE_FORMAT,
   GENDER_OPTIONS,
   membershipTypes,
   periodOptions,
 } from "../../../../constants";
-import AutoComplete from "../../../../Generic Components/Form/AutoComplete";
-import { DateInput } from "../../../../Generic Components/Form/DateInput";
-import RadioInput from "../../../../Generic Components/Form/RadioInput";
-import TextInput from "../../../../Generic Components/Form/TextInput";
 import { Gender, Member, Membership } from "../../../../types";
 import MembershipTable from "../MembershipTable";
 import "./index.scss";
@@ -32,20 +30,12 @@ interface Props {
   isAddNew?: boolean;
   memberships?: Membership[];
   member?: Member;
-  refetchMember: (id: string) => void;
 }
 
-export default function Information({
-  isAddNew,
-  memberships,
-  member,
-  refetchMember,
-}: Props) {
-  const { reset, watch, setValue } = useFormContext();
+export default function Information({ isAddNew, memberships, member }: Props) {
+  const { watch, setValue } = useFormContext();
   const startDate = watch("newMembership.startDate") as Dayjs;
   const endDate = startDate?.add(1, "month");
-  const isDirty = !isEqual(omitBy(useWatch(), isNull), omitBy(member, isNull));
-  const [showAddMembershipButton, setShowAddMembershipButton] = useState(true);
 
   useEffect(() => {
     if (
@@ -54,6 +44,7 @@ export default function Information({
     )
       setValue("newMembership.endDate", endDate);
   }, [endDate, setValue, watch]);
+
   return (
     <div>
       <Stack className="member-info">
@@ -132,35 +123,9 @@ export default function Information({
             </>
           )}
           {memberships && !isAddNew && (
-            <MembershipTable
-              memberships={memberships}
-              showAddMembershipButton={showAddMembershipButton}
-              setShowAddMembershipButton={setShowAddMembershipButton}
-              refetchMember={refetchMember}
-            />
+            <MembershipTable memberships={memberships} />
           )}
         </Grid>
-        <Stack className="edit-btn" spacing={2} direction="row">
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              reset();
-              setShowAddMembershipButton(true);
-            }}
-            disabled={!isAddNew && !isDirty}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            color="warning"
-            type="submit"
-            disabled={!isAddNew && !isDirty}
-          >
-            Save
-          </Button>
-        </Stack>
       </Stack>
     </div>
   );

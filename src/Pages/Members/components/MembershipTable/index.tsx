@@ -28,19 +28,12 @@ import { ACTIVATE_MEMBERSHIP } from "../../../../graphql/mutations/activateMembe
 import { HOLD_MEMBERSHIP } from "../../../../graphql/mutations/holdMembership";
 import { Membership } from "../../../../types";
 import { getMaxDate } from "../../../../utils";
+import { GET_MEMBER } from "../../../../graphql/queries/member";
 
 interface Props {
   memberships: Membership[];
-  showAddMembershipButton: boolean;
-  setShowAddMembershipButton: React.Dispatch<React.SetStateAction<boolean>>;
-  refetchMember: (id: string) => void;
 }
-export default function MembershipTable({
-  memberships,
-  showAddMembershipButton,
-  setShowAddMembershipButton,
-  refetchMember,
-}: Props) {
+export default function MembershipTable({ memberships }: Props) {
   const { id } = useParams();
   const maxEndDate = getMaxDate(memberships.map((m) => m.endDate as string));
   const [openHoldMembershipDialog, setOpenHoldMembershipDialog] =
@@ -51,7 +44,6 @@ export default function MembershipTable({
   const onDeleteNewMembership = () => {
     setValue("newMembership", null);
     setValue("payment", null);
-    setShowAddMembershipButton(true);
   };
 
   const [selectedRow, setSelectedRow] = useState<Membership>();
@@ -221,7 +213,6 @@ export default function MembershipTable({
       status: hasOneActiveMembership ? "H" : "A",
       isNew: true,
     });
-    setShowAddMembershipButton(false);
     setValue("payment", {
       paymentMethod: PAYMENT_METHODS[0],
     });
@@ -237,8 +228,8 @@ export default function MembershipTable({
     if (id && selectedRow) {
       holdMembership({
         variables: { memberId: id, startDate: selectedRow.startDate },
+        refetchQueries: [{ query: GET_MEMBER, variables: { memberId: id } }],
       }).then(() => {
-        refetchMember(id);
         setOpenHoldMembershipDialog(false);
       });
     }
@@ -247,8 +238,8 @@ export default function MembershipTable({
     if (id && selectedRow) {
       activateMembership({
         variables: { memberId: id, startDate: selectedRow.startDate },
+        refetchQueries: [{ query: GET_MEMBER, variables: { memberId: id } }],
       }).then(() => {
-        refetchMember(id);
         setOpenActivateHoldMembershipDialog(false);
       });
     }
@@ -260,7 +251,7 @@ export default function MembershipTable({
       )}
       <Stack direction="row" justifyContent="space-between" sx={{ mt: 1 }}>
         <h2 style={{ marginBottom: "5px", marginTop: "5px" }}>Memberships</h2>
-        {showAddMembershipButton && (
+        {!newMembership && (
           <Button
             variant="contained"
             startIcon={<Add />}
