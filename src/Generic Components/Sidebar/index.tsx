@@ -19,11 +19,11 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { setUser } from "../../Redux-toolkit/features/Auth/authSlice";
 import { useAppDispatch } from "../../Redux-toolkit/hooks";
 import { LOG_OUT } from "../../graphql/queries/logout";
-import { usePrivateClient } from "../../hooks/usePrivateClient";
 import { ROUTES } from "../../routes";
 import LoadingSpinner from "../LoadingSpinner";
 import { MenuItem } from "./MenuItem";
 import "./index.scss";
+import { client } from "../../config/publicClient";
 
 interface Props {
   isMobile?: boolean;
@@ -33,7 +33,6 @@ interface Props {
 export default function Sidebar({ isMobile, closeSidebar }: Props) {
   const navigate = useNavigate();
   const { id } = useParams();
-  const client = usePrivateClient();
   const [logout, { data, loading }] = useLazyQuery(LOG_OUT, { client });
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -131,7 +130,7 @@ export default function Sidebar({ isMobile, closeSidebar }: Props) {
         </List>
         <ListItem className="menu-item-container logout">
           <ListItemButton
-            onClick={async () => {
+            onClick={() => {
               logout();
               client.resetStore();
             }}
