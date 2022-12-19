@@ -16,14 +16,14 @@ import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { client } from "../../config/publicClient";
-import { LOG_OUT } from "../../graphql/queries/logout";
 import { setUser } from "../../Redux-toolkit/features/Auth/authSlice";
 import { useAppDispatch } from "../../Redux-toolkit/hooks";
+import { LOG_OUT } from "../../graphql/queries/logout";
+import { usePrivateClient } from "../../hooks/usePrivateClient";
 import { ROUTES } from "../../routes";
 import LoadingSpinner from "../LoadingSpinner";
-import "./index.scss";
 import { MenuItem } from "./MenuItem";
+import "./index.scss";
 
 interface Props {
   isMobile?: boolean;
@@ -33,6 +33,7 @@ interface Props {
 export default function Sidebar({ isMobile, closeSidebar }: Props) {
   const navigate = useNavigate();
   const { id } = useParams();
+  const client = usePrivateClient();
   const [logout, { data, loading }] = useLazyQuery(LOG_OUT, { client });
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -130,7 +131,10 @@ export default function Sidebar({ isMobile, closeSidebar }: Props) {
         </List>
         <ListItem className="menu-item-container logout">
           <ListItemButton
-            onClick={() => logout()}
+            onClick={async () => {
+              logout();
+              client.resetStore();
+            }}
             style={{ background: "transparent" }}
           >
             <ListItemIcon>

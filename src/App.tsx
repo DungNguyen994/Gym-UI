@@ -14,9 +14,20 @@ import AddNewProduct from "./Pages/Products/AddNewProduct";
 import ProductDetails from "./Pages/Products/ProductDetails";
 import { usePrivateClient } from "./hooks/usePrivateClient";
 import { ROUTES } from "./routes";
+import { useEffect } from "react";
 
 export default function App() {
   const client = usePrivateClient();
+  //clear store cache everyday
+  useEffect(() => {
+    const DAY_IN_MILISECONDS = 24 * 60 * 60 * 1000;
+    const interval = setInterval(async () => {
+      client.resetStore();
+      console.log("Cache is Clear!");
+    }, DAY_IN_MILISECONDS);
+
+    return () => clearInterval(interval);
+  }, [client]);
   return (
     <ApolloProvider client={client}>
       <Routes>
