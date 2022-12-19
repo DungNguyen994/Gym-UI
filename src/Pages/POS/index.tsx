@@ -68,25 +68,28 @@ export default function POS() {
         addOneItem={onAddToCart}
         clearCart={clearCart}
       />
-      <Stack spacing={2}>
-        <Stack direction="row" justifyContent="space-between">
-          <SearchBar placeholder="Search Product" onSearch={() => {}} />
-          <IconButton
-            size="large"
-            color="info"
-            onClick={() => setOpenShoppingCart(true)}
-          >
-            <Badge badgeContent={totalQuantity} color="error">
-              <ShoppingCart fontSize="large" />
-            </Badge>
-          </IconButton>
-        </Stack>
-        <Grid container spacing={2} height="80vh" overflow="auto">
-          {products?.map((product) => (
-            <ProductCard product={product} addToCart={onAddToCart} />
-          ))}
-        </Grid>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={1}
+      >
+        <SearchBar placeholder="Search Product" onSearch={() => {}} />
+        <IconButton
+          size="large"
+          color="info"
+          onClick={() => setOpenShoppingCart(true)}
+        >
+          <Badge badgeContent={totalQuantity} color="error">
+            <ShoppingCart fontSize="large" />
+          </Badge>
+        </IconButton>
       </Stack>
+      <Grid container spacing={{ xs: 0, md: 1 }}>
+        {products?.map((product) => (
+          <ProductCard product={product} addToCart={onAddToCart} />
+        ))}
+      </Grid>
     </Box>
   );
 }

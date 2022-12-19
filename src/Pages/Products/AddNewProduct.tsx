@@ -62,10 +62,15 @@ function AddNewProduct() {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container direction="row">
-            <Grid item xs={2}>
+            <Grid
+              item
+              xs={0}
+              md={2}
+              sx={{ display: { xs: "none", md: "block" } }}
+            >
               <LeftPanel isAddNew={true} />
             </Grid>
-            <Grid item xs={7}>
+            <Grid item xs={12} md={7}>
               <Stack direction="column">
                 <Information />
               </Stack>

@@ -6,7 +6,6 @@ import {
   Divider,
   Drawer,
   IconButton,
-  Paper,
   Stack,
   Table,
   TableBody,
@@ -94,144 +93,167 @@ export default function ShoppingCartDrawer({
       clearCart();
     });
   };
+  const content = (
+    <>
+      {(addPaymentLoading || loading) && <LoadingSpinner />}
+      <Stack
+        className="sale-summary"
+        spacing={2}
+        component="form"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <h1 className="text-center">Sale Summary</h1>
+        <hr className="divider" />
+        <TableContainer>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow className="table-header">
+                <TableCell>Product</TableCell>
+                <TableCell align="center">Quantity</TableCell>
+                <TableCell align="center">Price</TableCell>
+                <TableCell align="right">Total</TableCell>
+                <TableCell align="center"></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {selectedProducts?.map((product) => (
+                <TableRow
+                  key={product.productId}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell scope="row">{product.productName}</TableCell>
+                  <TableCell align="center">
+                    <Stack direction="row" spacing={2} alignItems="center">
+                      <IconButton onClick={() => addOneItem(product)}>
+                        <Add color="info" />
+                      </IconButton>
+                      <p> {product.buyQuantity}</p>
+                      <IconButton
+                        onClick={() => removeOneItem(product.productId)}
+                      >
+                        <Remove color="info" />
+                      </IconButton>
+                    </Stack>
+                  </TableCell>
+                  <TableCell align="center">${product.unitPrice}</TableCell>
+                  <TableCell align="center">
+                    $
+                    {product.buyQuantity
+                      ? product.buyQuantity * product.unitPrice
+                      : 0}
+                  </TableCell>
+                  <TableCell align="center">
+                    <IconButton
+                      onClick={() => removeProduct(product.productId)}
+                    >
+                      <Cancel color="error" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Divider />
+        <Stack sx={{ padding: "20px" }}>
+          <Autocomplete
+            sx={{ mb: 2 }}
+            onChange={(e, newValue) => setValue("memberId", newValue?.id || "")}
+            disablePortal
+            id="combo-box"
+            options={
+              members?.map((m) => ({
+                label: `${m.firstName} ${m.lastName} (Phone: ${m.phoneNumber})`,
+                id: m.id,
+              })) || []
+            }
+            fullWidth
+            getOptionLabel={(member) => member.label}
+            renderInput={(params) => (
+              <TextField {...params} label="Member" variant="standard" />
+            )}
+          />
+          <Autocomplete
+            onChange={(e, newValue) =>
+              setValue("paymentMethod", newValue || "")
+            }
+            value={watch("paymentMethod")}
+            disablePortal
+            id="combo-box"
+            options={PAYMENT_METHODS}
+            fullWidth
+            defaultValue={PAYMENT_METHODS[0]}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Payment Method"
+                variant="standard"
+              />
+            )}
+          />
+          {paymentMethod === PAYMENT_METHODS[0] && (
+            <Stack>
+              <TextField
+                label="Collected"
+                variant="standard"
+                {...register("collected")}
+                InputProps={{ startAdornment: "$" }}
+                sx={{ marginTop: "20px" }}
+                type="number"
+                error={collectMore}
+                helperText="Please collect more money"
+                required
+              />
+              <TextField
+                label="Change"
+                variant="standard"
+                {...register("change")}
+                InputProps={{ startAdornment: "$", readOnly: true }}
+                sx={{ marginTop: "20px", marginBottom: "40px" }}
+              />
+            </Stack>
+          )}
+        </Stack>
+        <Divider />
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          marginTop={3}
+          padding={1}
+        >
+          <p className="bold size-l">Total</p>
+          <p className="bold size-l">${total}</p>
+        </Stack>
+        <Button variant="contained" type="submit">
+          Make Payment
+        </Button>
+      </Stack>
+    </>
+  );
   return (
     <div>
-      <Drawer anchor="right" open={open} onClose={onClose}>
-        {(addPaymentLoading || loading) && <LoadingSpinner />}
-        <Stack
-          className="sale-summary"
-          spacing={2}
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <h1 className="text-center">Sale Summary</h1>
-          <hr className="divider" />
-          <TableContainer component={Paper} sx={{ boxShadow: "none" }}>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow className="table-header">
-                  <TableCell>Product</TableCell>
-                  <TableCell align="center">Quantity</TableCell>
-                  <TableCell align="center">Price</TableCell>
-                  <TableCell align="right">Total</TableCell>
-                  <TableCell align="center"></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {selectedProducts?.map((product) => (
-                  <TableRow
-                    key={product.productId}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell scope="row">{product.productName}</TableCell>
-                    <TableCell align="center">
-                      <Stack direction="row" spacing={2} alignItems="center">
-                        <IconButton onClick={() => addOneItem(product)}>
-                          <Add color="info" />
-                        </IconButton>
-                        <p> {product.buyQuantity}</p>
-                        <IconButton
-                          onClick={() => removeOneItem(product.productId)}
-                        >
-                          <Remove color="info" />
-                        </IconButton>
-                      </Stack>
-                    </TableCell>
-                    <TableCell align="center">${product.unitPrice}</TableCell>
-                    <TableCell align="center">
-                      $
-                      {product.buyQuantity
-                        ? product.buyQuantity * product.unitPrice
-                        : 0}
-                    </TableCell>
-                    <TableCell align="center">
-                      <IconButton
-                        onClick={() => removeProduct(product.productId)}
-                      >
-                        <Cancel color="error" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <Divider />
-          <Stack sx={{ padding: "20px" }}>
-            <Autocomplete
-              sx={{ mb: 2 }}
-              onChange={(e, newValue) =>
-                setValue("memberId", newValue?.id || "")
-              }
-              disablePortal
-              id="combo-box"
-              options={
-                members?.map((m) => ({
-                  label: `${m.firstName} ${m.lastName} (Phone: ${m.phoneNumber})`,
-                  id: m.id,
-                })) || []
-              }
-              fullWidth
-              getOptionLabel={(member) => member.label}
-              renderInput={(params) => (
-                <TextField {...params} label="Member" variant="standard" />
-              )}
-            />
-            <Autocomplete
-              onChange={(e, newValue) =>
-                setValue("paymentMethod", newValue || "")
-              }
-              value={watch("paymentMethod")}
-              disablePortal
-              id="combo-box"
-              options={PAYMENT_METHODS}
-              fullWidth
-              defaultValue={PAYMENT_METHODS[0]}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Payment Method"
-                  variant="standard"
-                />
-              )}
-            />
-            {paymentMethod === PAYMENT_METHODS[0] && (
-              <Stack>
-                <TextField
-                  label="Collected"
-                  variant="standard"
-                  {...register("collected")}
-                  InputProps={{ startAdornment: "$" }}
-                  sx={{ marginTop: "20px" }}
-                  type="number"
-                  error={collectMore}
-                  helperText="Please collect more money"
-                  required
-                />
-                <TextField
-                  label="Change"
-                  variant="standard"
-                  {...register("change")}
-                  InputProps={{ startAdornment: "$", readOnly: true }}
-                  sx={{ marginTop: "20px", marginBottom: "40px" }}
-                />
-              </Stack>
-            )}
-          </Stack>
-          <Divider />
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            marginTop={3}
-            padding={1}
-          >
-            <p className="bold size-l">Total</p>
-            <p className="bold size-l">${total}</p>
-          </Stack>
-          <Button variant="contained" type="submit">
-            Make Payment
-          </Button>
-        </Stack>
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={onClose}
+        variant="temporary"
+        sx={{
+          display: { xs: "block", sm: "none" },
+          "& .MuiDrawer-paper": { boxSizing: "border-box", width: 300 },
+        }}
+      >
+        {content}
+      </Drawer>
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={onClose}
+        sx={{
+          display: { xs: "none", sm: "block" },
+          "& .MuiDrawer-paper": { boxSizing: "border-box" },
+        }}
+      >
+        {content}
       </Drawer>
     </div>
   );

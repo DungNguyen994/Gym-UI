@@ -68,10 +68,10 @@ function ProductDetails() {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container direction="row">
-            <Grid item xs={2}>
+            <Grid item xs={0} md={2} display={{ xs: "none", md: "block" }}>
               <LeftPanel isAddNew={false} photo={product?.photo} />
             </Grid>
-            <Grid item xs={7}>
+            <Grid item xs={12} md={7}>
               <Stack direction="column">
                 <Information />
               </Stack>

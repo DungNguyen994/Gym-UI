@@ -18,7 +18,7 @@ interface Props {
 export default function ProductCard({ product, addToCart }: Props) {
   const { photo, productName, quantity, supplier, unitPrice } = product;
   return (
-    <Grid item xs={6} md={3}>
+    <Grid item xs={12} md={5} xl={3} marginBottom={{ xs: 1, md: 0 }}>
       <Card sx={{ p: 1, height: 250 }}>
         <Stack direction="row" spacing={2}>
           <Image

@@ -40,7 +40,6 @@ export default function Sidebar({ isMobile, closeSidebar }: Props) {
   useEffect(() => {
     setSelected(location.pathname);
   }, [location.pathname]);
-  console.log(selected, location.pathname);
 
   if (data?.logout?.data) {
     dispatch(setUser(undefined));
@@ -101,7 +100,7 @@ export default function Sidebar({ isMobile, closeSidebar }: Props) {
             selected={
               selected === ROUTES.PRODUCTS ||
               selected === ROUTES.NEWPRODUCT ||
-              selected === ROUTES.EDITPRODUCT
+              selected === ROUTES.EDITPRODUCT.replace(":id", id || "")
             }
           />
           <MenuItem

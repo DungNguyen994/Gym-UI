@@ -1,6 +1,5 @@
 import { ArrowBack } from "@mui/icons-material";
-import { Box, Button, Stack } from "@mui/material";
-import Image from "mui-image";
+import { Box, Button, Stack, Card, CardMedia } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes";
@@ -22,12 +21,14 @@ export default function LeftPanel({ isAddNew = true, photo }: Props) {
   return (
     <Box className="left-panel">
       <Stack sx={{ alignItems: "center" }} spacing={2}>
-        <Image
-          src={_photo || "/blank-product.png"}
-          showLoading
-          width={250}
-          height={250}
-        />
+        <Card>
+          <CardMedia
+            component="img"
+            sx={{ height: { md: 100, lg: 170, xl: 250 } }}
+            image={_photo || "/blank-profile.png"}
+            alt="profile"
+          />
+        </Card>
         <label htmlFor="btn-upload">
           <input
             id="btn-upload"
@@ -41,6 +42,7 @@ export default function LeftPanel({ isAddNew = true, photo }: Props) {
             variant="contained"
             component="span"
             sx={{ marginTop: "10px" }}
+            size="small"
           >
             {isAddNew ? "Choose Photo" : "Change Photo"}
           </Button>
