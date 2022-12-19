@@ -17,7 +17,11 @@ export const GET_MEMBER = gql`
           startDate
           term
           status
+          id
         }
+        status
+        currentMembershipType
+        remainingDays
         note
         phoneNumber
         photo

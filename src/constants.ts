@@ -44,3 +44,8 @@ export const MEMBERSHIP_STATUS = {
   HOLD: "H",
   EXPIRED: "E",
 };
+export const MEMBERSHIP_STATUS_DESCRIPTION = {
+  A: "ACTIVE",
+  H: "ON HOLD",
+  E: "EXPIRED",
+};

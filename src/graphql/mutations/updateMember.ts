@@ -12,7 +12,7 @@ export const UPDATE_MEMBER = gql`
     $note: String
     $gender: String
     $photo: String
-    $memberships: [NewMembership]
+    $newMembership: NewMembership
     $payment: NewPayment
   ) {
     updateMember(
@@ -26,7 +26,7 @@ export const UPDATE_MEMBER = gql`
       note: $note
       gender: $gender
       photo: $photo
-      memberships: $memberships
+      newMembership: $newMembership
       payment: $payment
     ) {
       data

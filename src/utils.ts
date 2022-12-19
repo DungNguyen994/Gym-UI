@@ -4,11 +4,11 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "./config/firebase";
 import {
   BASIC_PRICE,
-  membershipTypes,
   MEMBERSHIP_STATUS,
+  membershipTypes,
   periodOptions,
 } from "./constants";
-import { Member, Membership } from "./types";
+import { Member } from "./types";
 
 export const getUniqueObjArray = (array: any[], key: string) => [
   ...new Map(array.map((item) => [item[key], item])).values(),
@@ -82,41 +82,17 @@ export const uploadPhoto = (
     );
   }
 };
-const getMemberStatus = (memberships: Membership[]) => {
-  if (
-    memberships.some(
-      (membership) => membership.status === MEMBERSHIP_STATUS.ACTIVE
-    )
-  ) {
-    return "Active";
-  } else if (
-    memberships.every(
-      (membership) => membership.status === MEMBERSHIP_STATUS.EXPIRED
-    )
-  ) {
-    return "Expired";
-  } else {
-    return "On Hold";
-  }
+export const getRemainingTime = (days: number) => {
+  dayjs.extend(RelativeTime);
+  return dayjs().add(days, "day").fromNow();
 };
+
 export const formatMemberTableData = (data: Member[] | undefined) => {
   if (!data) return [];
-  dayjs.extend(RelativeTime);
   return data.map((member) => ({
     ...member,
     name: member.firstName + " " + member.lastName,
-    membershipType:
-      (member.memberships &&
-        member.memberships.find(
-          (membership) => membership.status === MEMBERSHIP_STATUS.ACTIVE
-        )?.membershipType) ||
-      "",
-    remainingTime:
-      member.memberships &&
-      dayjs(
-        getMaxDate(member.memberships.map((m) => m.endDate as string))
-      ).fromNow(),
-    status: member.memberships && getMemberStatus(member.memberships),
+    remainingTime: getRemainingTime(member.remainingDays),
   }));
 };
 export const searchData = (data: any[], value: string, blacklist: string[]) =>
@@ -143,4 +119,12 @@ export const getMaxDate = (dates: string[] | undefined) => {
   return dates?.reduce((pre, cur) =>
     Date.parse(pre) < Date.parse(cur) ? cur : pre
   );
+};
+export const getButtonStatusColor = (value: string | undefined) => {
+  if (!value) return "inherit";
+  return value === MEMBERSHIP_STATUS.ACTIVE
+    ? "success"
+    : value === MEMBERSHIP_STATUS.EXPIRED
+    ? "error"
+    : "inherit";
 };

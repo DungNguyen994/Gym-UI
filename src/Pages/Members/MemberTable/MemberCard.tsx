@@ -1,73 +1,82 @@
 import { Delete, Login, Phone } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   IconButton,
   Stack,
   Tooltip,
   Typography,
-  Button,
+  CardActionArea,
 } from "@mui/material";
 import Image from "mui-image";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../routes";
-import { Member } from "../../../types";
+import { Member, MembershipStatus } from "../../../types";
 import "./index.scss";
+import {
+  MEMBERSHIP_STATUS,
+  MEMBERSHIP_STATUS_DESCRIPTION,
+} from "../../../constants";
 interface Props {
   member: Member;
+  onDelete: (member: Member) => void;
 }
-export default function MemberCard({ member }: Props) {
+export default function MemberCard({ member, onDelete }: Props) {
   const { photo, name, phoneNumber, status } = member;
   const navigate = useNavigate();
   return (
     <div>
-      <Card
-        className="card-container"
-        onClick={() =>
-          member.id && navigate(ROUTES.EDITMEMBER.replace(":id", member.id))
-        }
-      >
-        <Image
-          src={photo as string}
-          width={100}
-          height={130}
-          showLoading
-          fit="cover"
-        />
-        <Box sx={{ display: "flex", flexDirection: "column" }} width="80%">
-          <CardContent sx={{ flex: "1 0 auto" }}>
-            <Typography component="div" variant="h5">
-              {name}
-            </Typography>
-            <Box>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <Phone fontSize="small" />
-                <Typography
-                  variant="subtitle1"
-                  color="text.secondary"
-                  component="div"
-                >
-                  {phoneNumber}
+      <Card className="card-container">
+        <CardActionArea
+          onClick={() =>
+            member.id && navigate(ROUTES.EDITMEMBER.replace(":id", member.id))
+          }
+        >
+          <Stack direction="row">
+            <Image
+              src={photo as string}
+              width={100}
+              height={130}
+              showLoading
+              fit="cover"
+            />
+            <Box sx={{ display: "flex", flexDirection: "column" }} width="80%">
+              <CardContent sx={{ flex: "1 0 auto" }}>
+                <Typography component="div" variant="h5">
+                  {name}
                 </Typography>
-              </Stack>
-              <Button
-                variant="contained"
-                size="small"
-                className={
-                  status === "Active"
-                    ? "success-btn"
-                    : status === "Expired"
-                    ? "error-btn"
-                    : ""
-                }
-              >
-                {status?.toUpperCase()}
-              </Button>
+                <Box>
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Phone fontSize="small" />
+                    <Typography
+                      variant="subtitle1"
+                      color="text.secondary"
+                      component="div"
+                    >
+                      {phoneNumber}
+                    </Typography>
+                  </Stack>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color={
+                      status === MEMBERSHIP_STATUS.ACTIVE
+                        ? "success"
+                        : status === MEMBERSHIP_STATUS.EXPIRED
+                        ? "error"
+                        : "inherit"
+                    }
+                  >
+                    {MEMBERSHIP_STATUS_DESCRIPTION[status as MembershipStatus]}
+                  </Button>
+                </Box>
+              </CardContent>
             </Box>
-          </CardContent>
-        </Box>
-        <IconButton className="delete-icon">
+          </Stack>
+        </CardActionArea>
+        <IconButton className="delete-icon" onClick={() => onDelete(member)}>
           <Tooltip title="Delete Member">
             <Delete color="error" />
           </Tooltip>

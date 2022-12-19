@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const HOLD_MEMBERSHIP = gql`
-  mutation ($memberId: ID!, $startDate: String!) {
-    holdMembership(memberId: $memberId, startDate: $startDate) {
+  mutation ($id: ID!) {
+    holdMembership(id: $id) {
       data
       errors {
         message

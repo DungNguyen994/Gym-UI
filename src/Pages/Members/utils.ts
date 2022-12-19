@@ -34,14 +34,7 @@ export const mapUpdateMemberPayload = (data: Member, photoUrl?: string) => {
     }
     if (draftState.newMembership) {
       delete draftState.newMembership.isNew;
-      if (draftState.memberships) {
-        draftState.memberships = [
-          ...draftState.memberships,
-          draftState.newMembership,
-        ];
-      } else {
-        draftState.memberships = [draftState.newMembership];
-      }
+      delete draftState.newMembership.id;
     }
   });
   return newData;

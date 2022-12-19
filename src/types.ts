@@ -12,6 +12,7 @@ interface Payment {
   paymentMethod: string;
 }
 export type Membership = {
+  id?: string;
   membershipType: string;
   term: string;
   startDate?: Dayjs | string;
@@ -49,7 +50,9 @@ export type Member = {
   payment?: Payment;
   memberships?: Membership[];
   name?: string;
-  status?: string;
+  currentMembershipType: string;
+  status: string;
+  remainingDays: number;
 };
 
 export type Product = {
@@ -98,4 +101,9 @@ export enum ToolbarSelection {
 export enum Gender {
   Male = "Male",
   Female = "Female",
+}
+export enum MembershipStatus {
+  A = "A",
+  H = "H",
+  E = "E",
 }

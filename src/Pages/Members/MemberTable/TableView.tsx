@@ -1,15 +1,17 @@
 import { Delete, Edit, Login } from "@mui/icons-material";
-import { Button, Tooltip } from "@mui/material";
+import { Box, Button, Tooltip } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { GridRenderCellParams, GridRowParams } from "@mui/x-data-grid/models";
 import { useNavigate } from "react-router-dom";
+import { MEMBERSHIP_STATUS_DESCRIPTION } from "../../../constants";
 import { ROUTES } from "../../../routes";
-import { Member } from "../../../types";
+import { Member, MembershipStatus } from "../../../types";
+import { getButtonStatusColor } from "../../../utils";
 
 interface Props {
   loading: boolean;
   data: Member[];
-  onDelete: (params: GridRowParams) => void;
+  onDelete: (member: Member) => void;
 }
 export default function TableView({ loading, data, onDelete }: Props) {
   const navigate = useNavigate();
@@ -31,17 +33,10 @@ export default function TableView({ loading, data, onDelete }: Props) {
       renderCell: (params: GridRenderCellParams<string>) => (
         <Button
           variant="contained"
-          color="success"
+          color={getButtonStatusColor(params.value)}
           size="small"
-          className={
-            params.value === "Active"
-              ? "success-btn"
-              : params.value === "Expired"
-              ? "error-btn"
-              : ""
-          }
         >
-          {params.value?.toUpperCase()}
+          {MEMBERSHIP_STATUS_DESCRIPTION[params.value as MembershipStatus]}
         </Button>
       ),
     },
@@ -83,7 +78,7 @@ export default function TableView({ loading, data, onDelete }: Props) {
             color="error"
             sx={{ cursor: "pointer" }}
             onClick={() => {
-              onDelete(params);
+              onDelete(params.row);
             }}
           />
         </Tooltip>,
@@ -91,7 +86,13 @@ export default function TableView({ loading, data, onDelete }: Props) {
     },
   ];
   return (
-    <div style={{ height: 600, width: "100%", background: "white" }}>
+    <Box
+      sx={{
+        height: 600,
+        width: "100%",
+        background: "white",
+      }}
+    >
       <DataGrid
         rows={data}
         columns={columns}
@@ -103,8 +104,9 @@ export default function TableView({ loading, data, onDelete }: Props) {
           "& .MuiDataGrid-columnHeaderTitle": {
             fontWeight: "700",
           },
+          ml: { xl: 2 },
         }}
       />
-    </div>
+    </Box>
   );
 }

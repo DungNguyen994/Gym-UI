@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const ACTIVATE_MEMBERSHIP = gql`
-  mutation ($memberId: ID!, $startDate: String!) {
-    activateMembership(memberId: $memberId, startDate: $startDate) {
+  mutation ($id: ID!, $memberId: ID!) {
+    activateMembership(id: $id, memberId: $memberId) {
       data
       errors {
         message

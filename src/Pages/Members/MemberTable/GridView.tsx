@@ -3,8 +3,9 @@ import { Member } from "../../../types";
 import MemberCard from "./MemberCard";
 interface Props {
   data: Member[];
+  onDelete: (member: Member) => void;
 }
-export default function GridView({ data }: Props) {
+export default function GridView({ data, onDelete }: Props) {
   if (data.length === 0)
     return <h3 style={{ marginLeft: "15px" }}>No members found!</h3>;
   return (
@@ -18,7 +19,7 @@ export default function GridView({ data }: Props) {
           key={member.id}
           marginBottom={{ xs: 1, xl: 0 }}
         >
-          <MemberCard member={member} />
+          <MemberCard member={member} onDelete={onDelete} />
         </Grid>
       ))}
     </Grid>

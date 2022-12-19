@@ -18,7 +18,7 @@ import { ADD_MEMBER } from "../../../graphql/mutations/addMember";
 import { UPDATE_MEMBER } from "../../../graphql/mutations/updateMember";
 import { GET_MEMBER } from "../../../graphql/queries/member";
 import { GET_MEMBERS } from "../../../graphql/queries/members";
-import { Member, NewMember } from "../../../types";
+import { Member } from "../../../types";
 import { uploadPhoto } from "../../../utils";
 import Information from "../components/Information";
 import LeftPanel from "../components/LeftPanel/LeftPanel";
@@ -75,7 +75,7 @@ export default function MemberDetails() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const onSave = (data: Member, photoUrl: string) => {
     if (isAddNew) {
-      const newMember = mapMemberPayload(data, photoUrl) as NewMember;
+      const newMember = mapMemberPayload(data, photoUrl);
       add({
         variables: newMember,
       })
@@ -127,7 +127,7 @@ export default function MemberDetails() {
               <Grid item xs={12} md={9} lg={7}>
                 <Information
                   isAddNew={isAddNew}
-                  memberships={member?.memberships}
+                  memberships={member?.memberships || []}
                   member={member}
                 />
               </Grid>

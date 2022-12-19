@@ -1,7 +1,19 @@
 import { Login, ShoppingCart } from "@mui/icons-material";
-import { Button, Card, CardMedia, Grid, Stack } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardMedia,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useFormContext } from "react-hook-form";
-import { Member } from "../../../../types";
+import {
+  MEMBERSHIP_STATUS,
+  MEMBERSHIP_STATUS_DESCRIPTION,
+} from "../../../../constants";
+import { Member, MembershipStatus } from "../../../../types";
+import { getRemainingTime } from "../../../../utils";
 import "./index.scss";
 
 interface Props {
@@ -9,7 +21,8 @@ interface Props {
   isAddNew?: boolean;
 }
 export default function LeftPanel({ member, isAddNew }: Props) {
-  const { photo, firstName, lastName } = (member as Member) || {};
+  const { photo, firstName, lastName, status, remainingDays } =
+    (member as Member) || {};
   const { register, watch } = useFormContext();
   const photoValue = watch("photo");
   let photoUrl;
@@ -58,9 +71,29 @@ export default function LeftPanel({ member, isAddNew }: Props) {
             {isAddNew ? "Choose Photo" : "Change Photo"}
           </Button>
         </label>
+        <hr className="divider" />
         {!isAddNew && (
           <>
+            <h4>Membership Status</h4>
+            <Button
+              variant="contained"
+              color={
+                status === MEMBERSHIP_STATUS.ACTIVE
+                  ? "success"
+                  : status === MEMBERSHIP_STATUS.EXPIRED
+                  ? "error"
+                  : "inherit"
+              }
+              sx={{ cursor: "default" }}
+            >
+              {MEMBERSHIP_STATUS_DESCRIPTION[status as MembershipStatus]}
+            </Button>
+            {status === MEMBERSHIP_STATUS.ACTIVE && (
+              <Typography color="red">{`Expired 
+             ${getRemainingTime(remainingDays)}`}</Typography>
+            )}
             <hr className="divider" />
+            <h4>Actions</h4>
             <Button variant="contained" startIcon={<Login />} color="success">
               Check In
             </Button>

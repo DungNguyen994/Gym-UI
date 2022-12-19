@@ -29,6 +29,7 @@ import { HOLD_MEMBERSHIP } from "../../../../graphql/mutations/holdMembership";
 import { Membership } from "../../../../types";
 import { getMaxDate } from "../../../../utils";
 import { GET_MEMBER } from "../../../../graphql/queries/member";
+import { GET_MEMBERS } from "../../../../graphql/queries/members";
 
 interface Props {
   memberships: Membership[];
@@ -212,6 +213,7 @@ export default function MembershipTable({ memberships }: Props) {
         : dayjs().add(1, "month"),
       status: hasOneActiveMembership ? "H" : "A",
       isNew: true,
+      id: uuidv4(),
     });
     setValue("payment", {
       paymentMethod: PAYMENT_METHODS[0],
@@ -225,20 +227,26 @@ export default function MembershipTable({ memberships }: Props) {
   const [activateMembership, { loading: activateMembershipLoading }] =
     useMutation(ACTIVATE_MEMBERSHIP);
   const onHoldMembership = () => {
-    if (id && selectedRow) {
+    if (selectedRow && selectedRow.id && id) {
       holdMembership({
-        variables: { memberId: id, startDate: selectedRow.startDate },
-        refetchQueries: [{ query: GET_MEMBER, variables: { memberId: id } }],
+        variables: { id: selectedRow.id },
+        refetchQueries: [
+          { query: GET_MEMBER, variables: { memberId: id } },
+          { query: GET_MEMBERS },
+        ],
       }).then(() => {
         setOpenHoldMembershipDialog(false);
       });
     }
   };
   const onActivateMembership = () => {
-    if (id && selectedRow) {
+    if (selectedRow && selectedRow.id && id) {
       activateMembership({
-        variables: { memberId: id, startDate: selectedRow.startDate },
-        refetchQueries: [{ query: GET_MEMBER, variables: { memberId: id } }],
+        variables: { id: selectedRow.id, memberId: id },
+        refetchQueries: [
+          { query: GET_MEMBER, variables: { memberId: id } },
+          { query: GET_MEMBERS },
+        ],
       }).then(() => {
         setOpenActivateHoldMembershipDialog(false);
       });
@@ -269,7 +277,6 @@ export default function MembershipTable({ memberships }: Props) {
           rows={_rows}
           columns={columns}
           disableSelectionOnClick
-          getRowId={() => uuidv4()}
           autoPageSize
           sx={{
             "& .MuiDataGrid-columnHeaderTitle": {

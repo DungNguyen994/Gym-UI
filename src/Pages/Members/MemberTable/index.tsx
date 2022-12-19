@@ -9,7 +9,6 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
-import { GridRowParams } from "@mui/x-data-grid/models";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import DialogModal from "../../../Generic Components/Dialog";
 import SearchBar from "../../../Generic Components/SearchBar";
@@ -44,9 +43,9 @@ export default function MemberTable() {
     deleteMember({ variables: { deleteMemberId: selectedRow.id } });
     setOpenDialog(false);
   };
-  const onDelete = (params: GridRowParams) => {
+  const onDelete = (member: Member) => {
     setOpenDialog(true);
-    setSelectedRow(params.row);
+    setSelectedRow(member);
   };
   useEffect(() => {
     setSearchedRows(rows);
@@ -123,7 +122,7 @@ export default function MemberTable() {
         </RadioGroup>
       </FormControl>
       {isGridView ? (
-        <GridView data={searchedRows} />
+        <GridView data={searchedRows} onDelete={onDelete} />
       ) : (
         <TableView
           loading={loading || deleteLoading}
