@@ -22,7 +22,8 @@ export default function LeftPanel({ member, isAddNew }: Props) {
     <Grid
       item
       xs={0}
-      md={2}
+      md={3}
+      lg={2}
       sx={{ display: { xs: "none", md: "flex" }, justifyContent: "center" }}
       borderRight=" 1px solid #e3e3e3"
       p={1}

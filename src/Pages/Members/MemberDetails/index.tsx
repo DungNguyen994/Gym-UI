@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Grid, Stack, Box, Container } from "@mui/material";
+import { Box, Button, Grid, Stack } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -50,12 +50,16 @@ export default function MemberDetails() {
     variables: { memberId: id },
   });
   const member = useMemo(() => data?.member?.data as Member, [data]);
-  console.log(member);
   const methods = useForm<Member>({
     resolver: yupResolver(validationSchema),
     defaultValues: isAddNew ? addNewDefaultValues : member,
   });
-  const { handleSubmit, reset, getValues } = methods;
+  const {
+    handleSubmit,
+    reset,
+    getValues,
+    formState: { isDirty: isFormDirty },
+  } = methods;
 
   useEffect(() => {
     if (!isAddNew) reset(member);
@@ -107,7 +111,9 @@ export default function MemberDetails() {
 
   const hasNewMembership = methods.watch("newMembership");
 
-  const isDirty = !isEqual(omitBy(getValues(), isNull), omitBy(member, isNull));
+  const isDirty =
+    !isEqual(omitBy(getValues(), isNull), omitBy(member, isNull)) ||
+    isFormDirty;
   return (
     <Box p={1} width={{ xs: "95%", md: "80%", lg: "95%" }}>
       {(loading || isSubmitting || updateLoading || getMemberLoading) && (
@@ -116,9 +122,9 @@ export default function MemberDetails() {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Grid container direction="row" border="1px solid #e3e3e3">
+            <Grid container direction="row" borderBottom="1px solid #e3e3e3">
               <LeftPanel isAddNew={isAddNew} member={member} />
-              <Grid item xs={12} md={10} lg={7}>
+              <Grid item xs={12} md={9} lg={7}>
                 <Information
                   isAddNew={isAddNew}
                   memberships={member?.memberships}
@@ -126,7 +132,7 @@ export default function MemberDetails() {
                 />
               </Grid>
               {(isAddNew || hasNewMembership) && (
-                <Grid item xl={3}>
+                <Grid item xs={12} xl={3}>
                   <SaleSummary />
                 </Grid>
               )}

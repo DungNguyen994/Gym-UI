@@ -48,7 +48,7 @@ export default function Information({ isAddNew, memberships, member }: Props) {
   return (
     <div>
       <Stack className="member-info">
-        <h1 className="header">Information</h1>
+        <h1 className="header">{isAddNew ? "New Member" : "Edit Member"}</h1>
         <Grid container spacing={4}>
           <TextInput
             label="First Name"

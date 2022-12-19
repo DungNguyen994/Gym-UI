@@ -1,4 +1,6 @@
 import {
+  Box,
+  Divider,
   Paper,
   Stack,
   Table,
@@ -8,14 +10,12 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Divider,
-  Box,
 } from "@mui/material";
 import { round, subtract } from "lodash";
 import { useFormContext } from "react-hook-form";
+import AutoComplete from "../../../../Generic Components/Form/AutoComplete";
 import { PAYMENT_METHODS } from "../../../../constants";
 import { calculateAmount, formatCurrency } from "../../../../utils";
-import AutoComplete from "../../../../Generic Components/Form/AutoComplete";
 import "./index.scss";
 
 export default function SaleSummary() {
@@ -43,14 +43,25 @@ export default function SaleSummary() {
   const errorMessage = (errors["payment.collected"]?.message ||
     "Please collect more money") as string;
   return (
-    <Box sx={{ display: { xs: "none", xl: "block" } }} className="sale-summary">
-      <h1 className="text-center">Sale Summary</h1>
+    <Box
+      className="sale-summary"
+      borderLeft={{ xs: "none", lg: "1px solid #e3e3e3" }}
+    >
+      <h2
+        style={{
+          width: "100%",
+          marginLeft: "10px",
+          marginBottom: 0,
+        }}
+      >
+        Sale Summary
+      </h2>
       <hr className="divider" />
       <TableContainer component={Paper} sx={{ boxShadow: "none" }}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow className="table-header">
-              <TableCell>Membership Type</TableCell>
+              <TableCell>Membership</TableCell>
               <TableCell align="center">Term</TableCell>
               <TableCell align="center">Discount</TableCell>
               <TableCell align="right">Total</TableCell>

@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import Topbar from "../Topbar";
-import "./index.scss";
 import { Box } from "@mui/material";
 
 export default function Layout() {
@@ -13,6 +12,7 @@ export default function Layout() {
         className="page-content"
         marginLeft={{ md: "20%", xl: "10%" }}
         marginTop={{ xs: "56px", md: "64px" }}
+        sx={{ background: "white" }}
       >
         <Outlet />
       </Box>

@@ -4,7 +4,7 @@ import "./index.scss";
 
 export default function FindMember() {
   return (
-    <Box sx={{ padding: "15px 2% 10px", height: "100%" }}>
+    <Box sx={{ padding: { xs: 1 }, height: "100%" }}>
       <MemberTable />
     </Box>
   );
