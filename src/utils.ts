@@ -83,6 +83,7 @@ export const uploadPhoto = (
   }
 };
 export const getRemainingTime = (days: number) => {
+  if (days <= 0) return "";
   dayjs.extend(RelativeTime);
   return dayjs().add(days, "day").fromNow();
 };

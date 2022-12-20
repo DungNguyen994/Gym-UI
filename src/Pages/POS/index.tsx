@@ -2,17 +2,19 @@ import { useQuery } from "@apollo/client";
 import { ShoppingCart } from "@mui/icons-material";
 import { Badge, Box, Grid, IconButton, Stack } from "@mui/material";
 import produce from "immer";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import LoadingSpinner from "../../Generic Components/LoadingSpinner";
 import SearchBar from "../../Generic Components/SearchBar";
 import { GET_INVENTORY } from "../../graphql/queries/inventory";
 import { Product } from "../../types";
 import ProductCard from "./ProductCard";
 import ShoppingCartDrawer from "./ShoppingCart";
+import { searchData } from "../../utils";
 
 export default function POS() {
   const { data, loading } = useQuery(GET_INVENTORY);
-  const products = data?.inventory?.data as Product[];
+  const products = useMemo(() => data?.inventory?.data as Product[], [data]);
+  const [searchedProducts, setSearchedProducts] = useState(products);
   const [openShoppingCart, setOpenShoppingCart] = useState(false);
   const closeShoppingCart = () => setOpenShoppingCart(false);
   const [selectedProducts, setSelectedProducts] = useState<Product[]>();
@@ -56,6 +58,14 @@ export default function POS() {
     setSelectedProducts((pre) => pre?.filter((p) => p.productId !== productId));
   };
   const clearCart = () => setSelectedProducts([]);
+
+  const onSearch = useCallback(
+    (value: string) => {
+      const searchedData = searchData(products, value, ["photo", "id"]);
+      setSearchedProducts(searchedData);
+    },
+    [products]
+  );
   return (
     <Box sx={{ padding: "15px 2% 10px" }}>
       {loading && <LoadingSpinner />}
@@ -74,7 +84,7 @@ export default function POS() {
         alignItems="center"
         mb={1}
       >
-        <SearchBar placeholder="Search Product" onSearch={() => {}} />
+        <SearchBar placeholder="Search Product" onSearch={onSearch} />
         <IconButton
           size="large"
           color="info"
@@ -86,7 +96,7 @@ export default function POS() {
         </IconButton>
       </Stack>
       <Grid container spacing={{ xs: 0, md: 1 }}>
-        {products?.map((product) => (
+        {searchedProducts?.map((product) => (
           <ProductCard product={product} addToCart={onAddToCart} />
         ))}
       </Grid>

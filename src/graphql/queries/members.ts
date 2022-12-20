@@ -9,6 +9,7 @@ export const GET_MEMBERS = gql`
         lastName
         phoneNumber
         photo
+        note
         status
         remainingDays
         currentMembershipType

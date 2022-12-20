@@ -43,24 +43,36 @@ export default function MemberCard({ member, onDelete }: Props) {
               fit="cover"
             />
             <Box sx={{ display: "flex", flexDirection: "column" }} width="80%">
-              <CardContent sx={{ flex: "1 0 auto" }}>
-                <Typography component="div" variant="h5">
-                  {name}
-                </Typography>
-                <Box>
-                  <Stack direction="row" alignItems="center" spacing={1}>
-                    <Phone fontSize="small" />
-                    <Typography
-                      variant="subtitle1"
-                      color="text.secondary"
-                      component="div"
-                    >
-                      {phoneNumber}
+              <CardContent
+                sx={{
+                  flex: "1 0 auto",
+                  p: 1,
+                  pl: 2,
+                  "&:last-child": {
+                    pb: 1,
+                  },
+                }}
+              >
+                <Stack justifyContent="space-between" height="100%">
+                  <Stack>
+                    <Typography component="div" variant="h5">
+                      {name}
                     </Typography>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Phone fontSize="small" />
+                      <Typography
+                        variant="subtitle1"
+                        color="text.secondary"
+                        component="div"
+                      >
+                        {phoneNumber}
+                      </Typography>
+                    </Stack>
                   </Stack>
                   <Button
                     variant="contained"
                     size="small"
+                    sx={{ width: "50%" }}
                     color={
                       status === MEMBERSHIP_STATUS.ACTIVE
                         ? "success"
@@ -71,7 +83,7 @@ export default function MemberCard({ member, onDelete }: Props) {
                   >
                     {MEMBERSHIP_STATUS_DESCRIPTION[status as MembershipStatus]}
                   </Button>
-                </Box>
+                </Stack>
               </CardContent>
             </Box>
           </Stack>

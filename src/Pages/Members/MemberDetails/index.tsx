@@ -128,7 +128,6 @@ export default function MemberDetails() {
                 <Information
                   isAddNew={isAddNew}
                   memberships={member?.memberships || []}
-                  member={member}
                 />
               </Grid>
               {(isAddNew || hasNewMembership) && (

@@ -41,13 +41,13 @@ export default function TableView({ loading, data, onDelete }: Props) {
       ),
     },
     {
-      field: "membershipType",
+      field: "currentMembershipType",
       headerName: "Current Membership Type",
       width: 230,
     },
     {
       field: "remainingTime",
-      headerName: "Remaining Time",
+      headerName: "Expire Time",
       width: 200,
     },
     {

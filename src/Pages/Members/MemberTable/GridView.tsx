@@ -9,7 +9,7 @@ export default function GridView({ data, onDelete }: Props) {
   if (data.length === 0)
     return <h3 style={{ marginLeft: "15px" }}>No members found!</h3>;
   return (
-    <Grid container spacing={{ xs: 0, md: 1, xl: 2 }} marginLeft={{ md: 1 }}>
+    <Grid container spacing={{ xs: 0, md: 1, xl: 1 }} marginLeft={{ md: 1 }}>
       {data.map((member) => (
         <Grid
           item

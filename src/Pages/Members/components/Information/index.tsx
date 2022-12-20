@@ -5,6 +5,7 @@ import {
   LocalPhone,
   LocationOn,
   Mail,
+  Note,
   Start,
   Wc,
 } from "@mui/icons-material";
@@ -22,20 +23,37 @@ import {
   membershipTypes,
   periodOptions,
 } from "../../../../constants";
-import { Gender, Member, Membership } from "../../../../types";
+import { Gender, Membership } from "../../../../types";
 import MembershipTable from "../MembershipTable";
 import "./index.scss";
 
 interface Props {
   isAddNew?: boolean;
   memberships?: Membership[];
-  member?: Member;
 }
 
-export default function Information({ isAddNew, memberships, member }: Props) {
+export default function Information({ isAddNew, memberships }: Props) {
   const { watch, setValue } = useFormContext();
   const startDate = watch("newMembership.startDate") as Dayjs;
-  const endDate = startDate?.add(1, "month");
+  const term = watch("newMembership.term");
+  let numOfMonth = 1;
+  switch (term) {
+    case "1 Month":
+      numOfMonth = 1;
+      break;
+    case "3 Months":
+      numOfMonth = 3;
+      break;
+    case "6 Months":
+      numOfMonth = 6;
+      break;
+    case "1 Year":
+      numOfMonth = 12;
+      break;
+    default:
+      numOfMonth = 1;
+  }
+  const endDate = startDate?.add(numOfMonth, "month");
 
   useEffect(() => {
     if (
@@ -74,6 +92,7 @@ export default function Information({ isAddNew, memberships, member }: Props) {
             fieldName="address"
           />
           <TextInput label="Email" prefix={<Mail />} fieldName="email" />
+          <TextInput label="Note" prefix={<Note />} fieldName="note" />
           <DateInput
             label="Date of Birth"
             fieldName="birthDate"
