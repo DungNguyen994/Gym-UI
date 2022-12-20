@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { ShoppingCart } from "@mui/icons-material";
 import { Badge, Box, Grid, IconButton, Stack } from "@mui/material";
 import produce from "immer";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import LoadingSpinner from "../../Generic Components/LoadingSpinner";
 import SearchBar from "../../Generic Components/SearchBar";
 import { GET_INVENTORY } from "../../graphql/queries/inventory";
@@ -59,6 +59,9 @@ export default function POS() {
   };
   const clearCart = () => setSelectedProducts([]);
 
+  useEffect(() => {
+    setSearchedProducts(products);
+  }, [products]);
   const onSearch = useCallback(
     (value: string) => {
       const searchedData = searchData(products, value, ["photo", "id"]);
@@ -66,6 +69,7 @@ export default function POS() {
     },
     [products]
   );
+
   return (
     <Box sx={{ padding: "15px 2% 10px" }}>
       {loading && <LoadingSpinner />}
