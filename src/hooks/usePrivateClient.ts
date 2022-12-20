@@ -49,6 +49,12 @@ export const usePrivateClient = () => {
             authorization: accessToken ? `Bearer ${accessToken}` : "",
           },
         };
+      } else {
+        dispatch(setUser(undefined));
+        return {
+          hasError: false,
+          headers,
+        };
       }
     }
     return {

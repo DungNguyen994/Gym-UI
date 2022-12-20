@@ -23,7 +23,7 @@ export default function Inventory() {
   );
 
   const columns = [
-    { field: "productType", headerName: "Product Name", width: 300 },
+    { field: "productType", headerName: "Product Type", width: 200 },
     { field: "productName", headerName: "Product Name", width: 400 },
     { field: "supplier", headerName: "Supplier", width: 230 },
     {
@@ -114,7 +114,7 @@ export default function Inventory() {
             {isStockIn && <StockInForm />}
           </form>
         </FormProvider>
-        <div style={{ height: 600, width: "100%", background: "white" }}>
+        <div style={{ height: 650, width: "100%", background: "white" }}>
           <DataGrid
             rows={searchedRows}
             columns={columns}
@@ -122,6 +122,7 @@ export default function Inventory() {
             rowsPerPageOptions={[10, 25, 50, 100]}
             pageSize={10}
             loading={loading}
+            pagination
             sx={{
               "& .MuiDataGrid-columnHeaderTitle": {
                 fontWeight: "700",

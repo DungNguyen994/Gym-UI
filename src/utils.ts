@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import RelativeTime from "dayjs/plugin/relativeTime";
+import isToday from "dayjs/plugin/isToday";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "./config/firebase";
 import {
@@ -86,6 +87,15 @@ export const getRemainingTime = (days: number) => {
   if (days <= 0) return "";
   dayjs.extend(RelativeTime);
   return dayjs().add(days, "day").fromNow();
+};
+
+export const getTimeToNow = (date: string) => {
+  dayjs.extend(RelativeTime);
+  return dayjs().to(dayjs(date)) + ` (At ${dayjs(date).format("HH:mm")})`;
+};
+export const _isToday = (date: string) => {
+  dayjs.extend(isToday);
+  return dayjs(date).isToday();
 };
 
 export const formatMemberTableData = (data: Member[] | undefined) => {

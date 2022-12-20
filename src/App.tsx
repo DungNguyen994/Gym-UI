@@ -15,6 +15,7 @@ import ProductDetails from "./Pages/Products/ProductDetails";
 import { usePrivateClient } from "./hooks/usePrivateClient";
 import { ROUTES } from "./routes";
 import { useEffect } from "react";
+import VisitHistoryPage from "./Pages/VisitHistory";
 
 export default function App() {
   const client = usePrivateClient();
@@ -42,11 +43,12 @@ export default function App() {
               <Route path={ROUTES.FINDMEMBER} element={<FindMember />} />
               <Route path={ROUTES.ADDMEMBER} element={<MemberDetails />} />
               <Route path={ROUTES.EDITMEMBER} element={<MemberDetails />} />
+              <Route path={ROUTES.POS} element={<POS />} />
               <Route path={ROUTES.INVENTORY} element={<Inventory />} />
               <Route path={ROUTES.PRODUCTS} element={<Products />} />
               <Route path={ROUTES.NEWPRODUCT} element={<AddNewProduct />} />
               <Route path={ROUTES.EDITPRODUCT} element={<ProductDetails />} />
-              <Route path={ROUTES.POS} element={<POS />} />
+              <Route path={ROUTES.VISIT} element={<VisitHistoryPage />} />
             </Route>
           </Route>
         </Route>

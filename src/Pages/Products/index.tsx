@@ -113,7 +113,7 @@ export default function Products() {
             Add New Product
           </Button>
         </Stack>
-        <div style={{ height: 600, width: "100%", background: "white" }}>
+        <div style={{ height: 650, width: "100%", background: "white" }}>
           <DataGrid
             rows={searchedRows}
             columns={columns}
@@ -121,6 +121,7 @@ export default function Products() {
             disableSelectionOnClick
             rowsPerPageOptions={[10, 25, 50, 100]}
             pageSize={10}
+            pagination
             sx={{
               "& .MuiDataGrid-columnHeaderTitle": {
                 fontWeight: "700",

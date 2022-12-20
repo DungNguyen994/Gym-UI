@@ -2,6 +2,7 @@ import { useLazyQuery } from "@apollo/client";
 import {
   Add,
   Category,
+  History,
   Home,
   Inventory,
   Logout,
@@ -88,6 +89,12 @@ export default function Sidebar({ isMobile, closeSidebar }: Props) {
             }
           />
           <MenuItem
+            Icon={ShoppingCart}
+            text="POS"
+            onClick={() => onMenuClick(ROUTES.POS)}
+            selected={selected === ROUTES.POS}
+          />
+          <MenuItem
             Icon={Inventory}
             text="Inventory"
             onClick={() => onMenuClick(ROUTES.INVENTORY)}
@@ -104,10 +111,10 @@ export default function Sidebar({ isMobile, closeSidebar }: Props) {
             }
           />
           <MenuItem
-            Icon={ShoppingCart}
-            text="POS"
-            onClick={() => onMenuClick(ROUTES.POS)}
-            selected={selected === ROUTES.POS}
+            Icon={History}
+            text="Visit History"
+            onClick={() => onMenuClick(ROUTES.VISIT)}
+            selected={selected === ROUTES.VISIT}
           />
           {/* <MenuItem
             onClick={() => {

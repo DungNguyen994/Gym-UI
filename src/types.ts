@@ -69,6 +69,13 @@ export type Product = {
   buyQuantity?: number;
 };
 
+export type VisitHistory = {
+  id?: string;
+  memberId?: string;
+  date: string;
+  memberName: string;
+};
+
 type ProductOption = {
   label: string;
   value: string;

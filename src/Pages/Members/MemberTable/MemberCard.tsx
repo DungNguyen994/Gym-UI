@@ -1,24 +1,31 @@
+import { useMutation } from "@apollo/client";
 import { Delete, Login, Phone } from "@mui/icons-material";
 import {
+  Alert,
   Box,
   Button,
   Card,
+  CardActionArea,
   CardContent,
   IconButton,
+  Snackbar,
   Stack,
   Tooltip,
   Typography,
-  CardActionArea,
 } from "@mui/material";
 import Image from "mui-image";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../../routes";
-import { Member, MembershipStatus } from "../../../types";
-import "./index.scss";
+import LoadingSpinner from "../../../Generic Components/LoadingSpinner";
 import {
   MEMBERSHIP_STATUS,
   MEMBERSHIP_STATUS_DESCRIPTION,
 } from "../../../constants";
+import { CHECK_IN } from "../../../graphql/mutations/checkIn";
+import { ROUTES } from "../../../routes";
+import { Member, MembershipStatus } from "../../../types";
+import "./index.scss";
+import { VISIT_HISTORY } from "../../../graphql/queries/visitHistory";
 interface Props {
   member: Member;
   onDelete: (member: Member) => void;
@@ -26,8 +33,31 @@ interface Props {
 export default function MemberCard({ member, onDelete }: Props) {
   const { photo, name, phoneNumber, status } = member;
   const navigate = useNavigate();
+  const [checkIn, { data, loading }] = useMutation(CHECK_IN);
+  const [open, setOpen] = useState(false);
+  const onCheckIn = () => {
+    checkIn({
+      variables: { memberId: member.id },
+      refetchQueries: [{ query: VISIT_HISTORY }],
+    }).then(() => {
+      setOpen(true);
+    });
+  };
+  const onClose = () => setOpen(false);
   return (
     <div>
+      {loading && <LoadingSpinner />}
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={onClose}
+        message={data?.checkIn?.data || ""}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert severity="success" sx={{ width: "100%" }} onClose={onClose}>
+          {data?.checkIn?.data || ""}
+        </Alert>
+      </Snackbar>
       <Card className="card-container">
         <CardActionArea
           onClick={() =>
@@ -93,7 +123,7 @@ export default function MemberCard({ member, onDelete }: Props) {
             <Delete color="error" />
           </Tooltip>
         </IconButton>
-        <IconButton className="checkin-icon">
+        <IconButton className="checkin-icon" onClick={() => onCheckIn()}>
           <Tooltip title="Check In">
             <Login color="success" />
           </Tooltip>

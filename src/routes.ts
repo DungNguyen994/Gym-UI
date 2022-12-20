@@ -8,4 +8,5 @@ export const ROUTES = {
   NEWPRODUCT: "/products/new",
   EDITPRODUCT: "/edit-product/:id",
   POS: "/point-of-sale",
+  VISIT: "/visit-history",
 };
