@@ -68,6 +68,20 @@ export type Product = {
   quantity?: number;
   buyQuantity?: number;
 };
+export type PaymentRes = {
+  id?: string;
+  memberId?: string;
+  products?: Product[];
+  membershipType?: string;
+  term?: string;
+  supplier?: string;
+  paymentMethod?: string;
+  memberName?: string;
+  total: number;
+  change: number;
+  collected: number;
+  createdAt: string;
+};
 
 export type VisitHistory = {
   id?: string;

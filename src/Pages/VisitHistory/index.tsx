@@ -56,6 +56,9 @@ export default function VisitHistoryPage() {
       {loading && <LoadingSpinner />}
       <Stack spacing={2}>
         <SearchBar placeholder="Search..." onSearch={onSearch} />
+        <Typography color="red">
+          Note: Search date format is: YYYY/MM/DD, eg: 2022/12/20
+        </Typography>
         <Typography
           color="teal"
           fontWeight={700}

@@ -9,9 +9,13 @@ import {
 interface Props {
   open: boolean;
   handleClose: () => void;
-  handleContinue: () => void;
+  handleContinue?: () => void;
   title: string;
-  content: string;
+  content: string | React.ReactNode;
+  noLabel?: string;
+  yesLabel?: string;
+  disableYes?: boolean;
+  fullWidth?: boolean;
 }
 export default function DialogModal({
   open,
@@ -19,6 +23,10 @@ export default function DialogModal({
   content,
   handleClose,
   handleContinue,
+  noLabel = "No",
+  yesLabel = "Yes",
+  disableYes,
+  fullWidth,
 }: Props) {
   return (
     <Dialog
@@ -26,7 +34,8 @@ export default function DialogModal({
       keepMounted
       onClose={handleClose}
       aria-describedby="confirm-member-delete-dialog"
-      maxWidth="md"
+      maxWidth={fullWidth ? "xl" : "md"}
+      fullWidth={fullWidth}
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
@@ -36,11 +45,13 @@ export default function DialogModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} variant="contained">
-          No
+          {noLabel}
         </Button>
-        <Button onClick={handleContinue} variant="contained" color="warning">
-          Yes
-        </Button>
+        {!disableYes && (
+          <Button onClick={handleContinue} variant="contained" color="warning">
+            {yesLabel}
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );

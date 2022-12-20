@@ -44,6 +44,9 @@ export default function Topbar() {
     case ROUTES.VISIT:
       workItem = "Visit History";
       break;
+    case ROUTES.PAYMENTS:
+      workItem = "Payments";
+      break;
     default:
       workItem = "Home";
   }

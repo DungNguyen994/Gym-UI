@@ -6,6 +6,7 @@ import {
   Home,
   Inventory,
   Logout,
+  Payment,
   Search,
   ShoppingCart,
 } from "@mui/icons-material";
@@ -116,24 +117,12 @@ export default function Sidebar({ isMobile, closeSidebar }: Props) {
             onClick={() => onMenuClick(ROUTES.VISIT)}
             selected={selected === ROUTES.VISIT}
           />
-          {/* <MenuItem
-            onClick={() => {
-              navigate("/groups");
-              setSelected(4);
-            }}
-            selected={selected === 4}
-            Icon={Category}
-            text="Membership Types"
-          /> */}
-          {/* <MenuItem
+          <MenuItem
             Icon={Payment}
             text="Payments"
-            onClick={() => {
-              navigate("/groups");
-              setSelected(5);
-            }}
-            selected={selected === 5}
-          /> */}
+            onClick={() => onMenuClick(ROUTES.PAYMENTS)}
+            selected={selected === ROUTES.PAYMENTS}
+          />
         </List>
         <ListItem className="menu-item-container logout">
           <ListItemButton

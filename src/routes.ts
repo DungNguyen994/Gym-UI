@@ -9,4 +9,5 @@ export const ROUTES = {
   EDITPRODUCT: "/edit-product/:id",
   POS: "/point-of-sale",
   VISIT: "/visit-history",
+  PAYMENTS: "/payments",
 };
