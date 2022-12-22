@@ -10,4 +10,5 @@ export const ROUTES = {
   POS: "/point-of-sale",
   VISIT: "/visit-history",
   PAYMENTS: "/payments",
+  SETTINGS: "/settings",
 };

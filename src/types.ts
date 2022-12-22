@@ -99,6 +99,13 @@ export type InventoryType = {
   product: ProductOption;
   quantity: number;
 };
+export type MembershipType = {
+  id?: string;
+  name: string;
+  pricePerMonth: number;
+  discountPercent: number;
+  isNew?: boolean;
+};
 export interface CommonFieldProps {
   label: string;
   fieldName: string;

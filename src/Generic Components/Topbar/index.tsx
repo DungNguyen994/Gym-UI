@@ -47,6 +47,9 @@ export default function Topbar() {
     case ROUTES.PAYMENTS:
       workItem = "Payments";
       break;
+    case ROUTES.SETTINGS:
+      workItem = "Settings";
+      break;
     default:
       workItem = "Home";
   }

@@ -8,6 +8,7 @@ import {
   Logout,
   Payment,
   Search,
+  Settings,
   ShoppingCart,
 } from "@mui/icons-material";
 import { Box, List } from "@mui/material";
@@ -122,6 +123,12 @@ export default function Sidebar({ isMobile, closeSidebar }: Props) {
             text="Payments"
             onClick={() => onMenuClick(ROUTES.PAYMENTS)}
             selected={selected === ROUTES.PAYMENTS}
+          />
+          <MenuItem
+            Icon={Settings}
+            text="Settings"
+            onClick={() => onMenuClick(ROUTES.SETTINGS)}
+            selected={selected === ROUTES.SETTINGS}
           />
         </List>
         <ListItem className="menu-item-container logout">

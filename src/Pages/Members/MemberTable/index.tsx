@@ -18,6 +18,7 @@ import { Member } from "../../../types";
 import { formatMemberTableData, searchData } from "../../../utils";
 import GridView from "./GridView";
 import TableView from "./TableView";
+import LoadingSpinner from "../../../Generic Components/LoadingSpinner";
 
 interface SelectedRow {
   id?: string;
@@ -35,10 +36,10 @@ export default function MemberTable() {
   const tableData = data?.members?.data as Member[];
   const rows = useMemo(() => formatMemberTableData(tableData), [tableData]);
   const [searchedRows, setSearchedRows] = useState(rows);
-  const [initSearchedRows, setInitSearchedRows] = useState(() => searchedRows);
   const [openDialog, setOpenDialog] = useState(false);
   const [isGridView, setIsGridView] = useState(true);
   const [selectedRow, setSelectedRow] = useState<SelectedRow>({});
+  const [viewType, setViewType] = useState("everyone");
   const handleDeleteMember = () => {
     deleteMember({ variables: { deleteMemberId: selectedRow.id } });
     setOpenDialog(false);
@@ -55,12 +56,26 @@ export default function MemberTable() {
     (value: string) => {
       const searchedData = searchData(rows, value, ["photo", "id"]);
       setSearchedRows(searchedData);
-      setInitSearchedRows(searchedData);
     },
     [rows]
   );
+  let viewMembers;
+  switch (viewType) {
+    case "everyone":
+      viewMembers = searchedRows;
+      break;
+    case "E":
+      viewMembers = searchedRows.filter((r) => r.status === "E");
+      break;
+    case "A":
+      viewMembers = searchedRows.filter((r) => r.status === "A");
+      break;
+    default:
+      viewMembers = searchedRows;
+  }
   return (
     <Stack spacing={2}>
+      {(loading || deleteLoading) && <LoadingSpinner />}
       <Stack
         direction="row"
         sx={{ justifyContent: "space-between", alignItems: "center" }}
@@ -91,17 +106,7 @@ export default function MemberTable() {
           row
           sx={{ ml: 2 }}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            if (e.target.value !== "everyone") {
-              setInitSearchedRows(searchedRows);
-              setSearchedRows((prev) =>
-                (prev.length > 0 ? prev : initSearchedRows).filter(
-                  (i) => i.status === e.target.value
-                )
-              );
-            } else {
-              if (initSearchedRows.length > 0)
-                setSearchedRows(initSearchedRows);
-            }
+            setViewType(e.target.value);
           }}
         >
           <FormControlLabel
@@ -110,19 +115,19 @@ export default function MemberTable() {
             label="Everyone"
           />
           <FormControlLabel
-            value="active"
+            value="A"
             control={<Radio />}
             label="Active Members"
           />
           <FormControlLabel
-            value="expired"
+            value="E"
             control={<Radio />}
             label="Expired Members"
           />
         </RadioGroup>
       </FormControl>
       {isGridView ? (
-        <GridView data={searchedRows} onDelete={onDelete} />
+        <GridView data={viewMembers} onDelete={onDelete} />
       ) : (
         <TableView
           loading={loading || deleteLoading}

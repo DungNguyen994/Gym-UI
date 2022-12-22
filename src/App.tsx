@@ -17,6 +17,7 @@ import { ROUTES } from "./routes";
 import { useEffect } from "react";
 import VisitHistoryPage from "./Pages/VisitHistory";
 import Payments from "./Pages/Payments";
+import Settings from "./Pages/Settings";
 
 export default function App() {
   const client = usePrivateClient();
@@ -50,6 +51,7 @@ export default function App() {
               <Route path={ROUTES.NEWPRODUCT} element={<AddNewProduct />} />
               <Route path={ROUTES.EDITPRODUCT} element={<ProductDetails />} />
               <Route path={ROUTES.VISIT} element={<VisitHistoryPage />} />
+              <Route path={ROUTES.SETTINGS} element={<Settings />} />
               <Route path={ROUTES.PAYMENTS} element={<Payments />} />
             </Route>
           </Route>
