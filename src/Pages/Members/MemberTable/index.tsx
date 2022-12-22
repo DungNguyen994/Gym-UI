@@ -132,7 +132,7 @@ export default function MemberTable() {
         <TableView
           loading={loading || deleteLoading}
           onDelete={onDelete}
-          data={searchedRows}
+          data={viewMembers}
         />
       )}
       <DialogModal

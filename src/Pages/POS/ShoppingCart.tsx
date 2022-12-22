@@ -24,6 +24,8 @@ import { PAYMENT_METHODS } from "../../constants";
 import { ADD_PAYMENT } from "../../graphql/mutations/addPayment";
 import { GET_MEMBERS } from "../../graphql/queries/members";
 import { Member, Product } from "../../types";
+import { GET_INVENTORY } from "../../graphql/queries/inventory";
+import { PAYMENTS } from "../../graphql/queries/payments";
 
 interface Props {
   open: boolean;
@@ -57,7 +59,10 @@ export default function ShoppingCartDrawer({
   const { data, loading } = useQuery(GET_MEMBERS);
   const members = data?.members.data as Member[];
   const paymentMethod = watch("paymentMethod");
-  const [addPayment, { loading: addPaymentLoading }] = useMutation(ADD_PAYMENT);
+  const [addPayment, { loading: addPaymentLoading }] = useMutation(
+    ADD_PAYMENT,
+    { refetchQueries: [{ query: GET_INVENTORY }, { query: PAYMENTS }] }
+  );
   const total =
     selectedProducts?.reduce((total, product) => {
       return (
@@ -124,7 +129,13 @@ export default function ShoppingCartDrawer({
                   <TableCell scope="row">{product.productName}</TableCell>
                   <TableCell align="center">
                     <Stack direction="row" spacing={2} alignItems="center">
-                      <IconButton onClick={() => addOneItem(product)}>
+                      <IconButton
+                        onClick={() => {
+                          const buyQuantity = product.buyQuantity || 0;
+                          const stocks = product.quantity || 0;
+                          if (stocks > buyQuantity) addOneItem(product);
+                        }}
+                      >
                         <Add color="info" />
                       </IconButton>
                       <p> {product.buyQuantity}</p>

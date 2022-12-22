@@ -13,7 +13,13 @@ import { searchData } from "../../utils";
 
 export default function POS() {
   const { data, loading } = useQuery(GET_INVENTORY);
-  const products = useMemo(() => data?.inventory?.data as Product[], [data]);
+  const products = useMemo(
+    () =>
+      data?.inventory?.data?.filter(
+        (i: Product) => i.quantity && i.quantity > 0
+      ) as Product[],
+    [data]
+  );
   const [searchedProducts, setSearchedProducts] = useState(products);
   const [openShoppingCart, setOpenShoppingCart] = useState(false);
   const closeShoppingCart = () => setOpenShoppingCart(false);

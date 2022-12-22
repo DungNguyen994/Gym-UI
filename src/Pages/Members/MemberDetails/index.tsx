@@ -25,6 +25,7 @@ import LeftPanel from "../components/LeftPanel/LeftPanel";
 import SaleSummary from "../components/SaleSummary";
 import { mapMemberPayload, mapUpdateMemberPayload } from "../utils";
 import { validationSchema } from "../validationSchema";
+import { PAYMENTS } from "../../../graphql/queries/payments";
 
 const addNewDefaultValues = {
   newMembership: {
@@ -66,7 +67,7 @@ export default function MemberDetails() {
     else reset(addNewDefaultValues);
   }, [member, reset, isAddNew]);
   const [add, { loading }] = useMutation(ADD_MEMBER, {
-    refetchQueries: [{ query: GET_MEMBERS }],
+    refetchQueries: [{ query: GET_MEMBERS }, { query: PAYMENTS }],
   });
   const [update, { loading: updateLoading }] = useMutation(UPDATE_MEMBER, {
     refetchQueries: [{ query: GET_MEMBERS }],
