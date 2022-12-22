@@ -110,7 +110,7 @@ export default function Products() {
             startIcon={<Add />}
             onClick={() => navigate(ROUTES.NEWPRODUCT)}
           >
-            Add New Product
+            Add New
           </Button>
         </Stack>
         <div style={{ height: 650, width: "100%", background: "white" }}>

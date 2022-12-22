@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Add, AlarmOn, CancelScheduleSend, Delete } from "@mui/icons-material";
 import { Box, Button, Stack } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
@@ -13,23 +13,23 @@ import { useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import {
-  DATE_FORMAT,
-  membershipTypes,
-  MEMBERSHIP_STATUS,
-  PAYMENT_METHODS,
-  periodOptions,
-} from "../../../../constants";
 import DialogModal from "../../../../Generic Components/Dialog";
 import AutoComplete from "../../../../Generic Components/Form/AutoComplete";
 import { DateInput } from "../../../../Generic Components/Form/DateInput";
 import LoadingSpinner from "../../../../Generic Components/LoadingSpinner";
+import {
+  DATE_FORMAT,
+  MEMBERSHIP_STATUS,
+  PAYMENT_METHODS,
+  periodOptions,
+} from "../../../../constants";
 import { ACTIVATE_MEMBERSHIP } from "../../../../graphql/mutations/activateMembership";
 import { HOLD_MEMBERSHIP } from "../../../../graphql/mutations/holdMembership";
-import { Membership } from "../../../../types";
-import { getMaxDate } from "../../../../utils";
 import { GET_MEMBER } from "../../../../graphql/queries/member";
 import { GET_MEMBERS } from "../../../../graphql/queries/members";
+import { GET_MEMBERSHIP_TYPES } from "../../../../graphql/queries/membershipTypes";
+import { Membership, MembershipType } from "../../../../types";
+import { getMaxDate } from "../../../../utils";
 
 interface Props {
   memberships: Membership[];
@@ -46,7 +46,10 @@ export default function MembershipTable({ memberships }: Props) {
     setValue("newMembership", null);
     setValue("payment", null);
   };
+  const { data, loading } = useQuery(GET_MEMBERSHIP_TYPES);
 
+  const membershipTypes = data?.membershipTypes?.data as MembershipType[];
+  const membershipTypeOptions = membershipTypes?.map((m) => m.name) || [];
   const [selectedRow, setSelectedRow] = useState<Membership>();
   const columns = [
     {
@@ -58,8 +61,8 @@ export default function MembershipTable({ memberships }: Props) {
           <AutoComplete
             fieldName="newMembership.membershipType"
             label=""
-            options={membershipTypes}
-            defaultValue={membershipTypes[0]}
+            options={membershipTypeOptions}
+            defaultValue={membershipTypeOptions[0]}
             md={12}
             lg={12}
           />
@@ -254,7 +257,7 @@ export default function MembershipTable({ memberships }: Props) {
   };
   return (
     <Box width="100%" sx={{ pl: "32px" }}>
-      {(holdMembershipLoading || activateMembershipLoading) && (
+      {(holdMembershipLoading || activateMembershipLoading || loading) && (
         <LoadingSpinner />
       )}
       <Stack direction="row" justifyContent="space-between" sx={{ mt: 1 }}>

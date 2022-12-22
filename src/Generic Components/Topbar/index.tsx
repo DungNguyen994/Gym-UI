@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes";
 import MobileSideBar from "../Sidebar/MobileSideBar";
@@ -18,7 +18,7 @@ import "./index.scss";
 export default function Topbar() {
   const location = useLocation();
 
-  let workItem;
+  let workItem: string;
   switch (location.pathname) {
     case ROUTES.HOME:
       workItem = "Home";
@@ -59,6 +59,10 @@ export default function Topbar() {
   if (location.pathname.includes("/edit-product")) {
     workItem = "Edit Product";
   }
+
+  useEffect(() => {
+    document.title = workItem + "-Gym Bot";
+  }, [workItem]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mobileMenuId = "primary-search-account-menu-mobile";
 

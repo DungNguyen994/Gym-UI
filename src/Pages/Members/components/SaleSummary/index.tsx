@@ -17,6 +17,10 @@ import AutoComplete from "../../../../Generic Components/Form/AutoComplete";
 import { PAYMENT_METHODS } from "../../../../constants";
 import { calculateAmount, formatCurrency } from "../../../../utils";
 import "./index.scss";
+import { useQuery } from "@apollo/client";
+import { GET_MEMBERSHIP_TYPES } from "../../../../graphql/queries/membershipTypes";
+import { MembershipType } from "../../../../types";
+import LoadingSpinner from "../../../../Generic Components/LoadingSpinner";
 
 export default function SaleSummary() {
   const {
@@ -28,7 +32,16 @@ export default function SaleSummary() {
   const term = watch("newMembership.term");
   const membershipType = watch("newMembership.membershipType");
   const paymentMethod = watch("payment.paymentMethod");
-  const { amount, discountPercent } = calculateAmount(term, membershipType);
+  const { data, loading } = useQuery(GET_MEMBERSHIP_TYPES);
+
+  const membershipTypes = data?.membershipTypes?.data as MembershipType[];
+  const foundMembershipType = membershipTypes?.find(
+    (m) => m.name.toLocaleLowerCase() === membershipType?.toLocaleLowerCase()
+  );
+  const pricePerMonth = foundMembershipType?.pricePerMonth || 1;
+  const discountPercent = foundMembershipType?.discountPercent || 0;
+
+  const amount = calculateAmount(term, pricePerMonth, discountPercent);
   const total = formatCurrency(amount);
   const collected = watch("payment.collected");
   const hasCollectedError = collected
@@ -56,6 +69,7 @@ export default function SaleSummary() {
       >
         Sale Summary
       </h2>
+      {loading && <LoadingSpinner />}
       <hr className="divider" />
       <TableContainer component={Paper} sx={{ boxShadow: "none" }}>
         <Table aria-label="simple table">

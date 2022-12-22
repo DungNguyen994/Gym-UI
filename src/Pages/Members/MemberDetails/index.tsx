@@ -9,39 +9,21 @@ import { useEffect, useMemo, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useLocation, useParams } from "react-router-dom";
 import LoadingSpinner from "../../../Generic Components/LoadingSpinner";
-import {
-  PAYMENT_METHODS,
-  membershipTypes,
-  periodOptions,
-} from "../../../constants";
+import { PAYMENT_METHODS, periodOptions } from "../../../constants";
 import { ADD_MEMBER } from "../../../graphql/mutations/addMember";
 import { UPDATE_MEMBER } from "../../../graphql/mutations/updateMember";
 import { GET_MEMBER } from "../../../graphql/queries/member";
 import { GET_MEMBERS } from "../../../graphql/queries/members";
-import { Member } from "../../../types";
+import { GET_MEMBERSHIP_TYPES } from "../../../graphql/queries/membershipTypes";
+import { PAYMENTS } from "../../../graphql/queries/payments";
+import { Member, MembershipType } from "../../../types";
 import { uploadPhoto } from "../../../utils";
 import Information from "../components/Information";
 import LeftPanel from "../components/LeftPanel/LeftPanel";
 import SaleSummary from "../components/SaleSummary";
 import { mapMemberPayload, mapUpdateMemberPayload } from "../utils";
 import { validationSchema } from "../validationSchema";
-import { PAYMENTS } from "../../../graphql/queries/payments";
 
-const addNewDefaultValues = {
-  newMembership: {
-    startDate: dayjs(),
-    membershipType: membershipTypes[0],
-    term: periodOptions[0],
-  },
-  firstName: "",
-  lastName: "",
-  phoneNumber: "",
-  email: "",
-  gender: "Male",
-  payment: {
-    paymentMethod: PAYMENT_METHODS[0],
-  },
-};
 export default function MemberDetails() {
   const { id } = useParams();
   const location = useLocation();
@@ -51,6 +33,33 @@ export default function MemberDetails() {
     variables: { memberId: id },
   });
   const member = useMemo(() => data?.member?.data as Member, [data]);
+  const { data: membershipTypeRes, loading: getMembershipTypeLoading } =
+    useQuery(GET_MEMBERSHIP_TYPES);
+  const membershipTypes = membershipTypeRes?.membershipTypes
+    ?.data as MembershipType[];
+  const membershipTypeOptions = useMemo(
+    () => membershipTypes?.map((m) => m.name) || [],
+    [membershipTypes]
+  );
+
+  const addNewDefaultValues = useMemo(
+    () => ({
+      newMembership: {
+        startDate: dayjs(),
+        membershipType: membershipTypeOptions[0],
+        term: periodOptions[0],
+      },
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      gender: "Male",
+      payment: {
+        paymentMethod: PAYMENT_METHODS[0],
+      },
+    }),
+    [membershipTypeOptions]
+  );
   const methods = useForm<Member>({
     resolver: yupResolver(validationSchema),
     defaultValues: isAddNew ? addNewDefaultValues : member,
@@ -65,7 +74,7 @@ export default function MemberDetails() {
   useEffect(() => {
     if (!isAddNew) reset(member);
     else reset(addNewDefaultValues);
-  }, [member, reset, isAddNew]);
+  }, [member, reset, isAddNew, addNewDefaultValues]);
   const [add, { loading }] = useMutation(ADD_MEMBER, {
     refetchQueries: [{ query: GET_MEMBERS }, { query: PAYMENTS }],
   });
@@ -117,9 +126,11 @@ export default function MemberDetails() {
     isFormDirty;
   return (
     <Box p={1} width={{ xs: "95%", md: "80%", lg: "95%" }}>
-      {(loading || isSubmitting || updateLoading || getMemberLoading) && (
-        <LoadingSpinner />
-      )}
+      {(loading ||
+        isSubmitting ||
+        updateLoading ||
+        getMemberLoading ||
+        getMembershipTypeLoading) && <LoadingSpinner />}
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>

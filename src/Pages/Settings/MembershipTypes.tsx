@@ -250,7 +250,7 @@ export default function MembershipTypes() {
                   onAddNew();
                 }}
               >
-                Add New MembershipType
+                Add New
               </Button>
             )}
             {(isEditing || isAddNew) && (

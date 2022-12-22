@@ -7,9 +7,6 @@ export const validationSchema = yup
       .number()
       .required("Enter Monthly Fee")
       .moreThan(0, "Must be greater than 0"),
-    discountPercent: yup
-      .number()
-      .required("Enter Discount Percent")
-      .positive("Must be positive number"),
+    discountPercent: yup.number().required("Enter Discount Percent").min(0),
   })
   .required();

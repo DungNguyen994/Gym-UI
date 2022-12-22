@@ -20,12 +20,14 @@ import TextInput from "../../../../Generic Components/Form/TextInput";
 import {
   DATE_FORMAT,
   GENDER_OPTIONS,
-  membershipTypes,
   periodOptions,
 } from "../../../../constants";
-import { Gender, Membership } from "../../../../types";
+import { Gender, Membership, MembershipType } from "../../../../types";
 import MembershipTable from "../MembershipTable";
 import "./index.scss";
+import { useQuery } from "@apollo/client";
+import { GET_MEMBERSHIP_TYPES } from "../../../../graphql/queries/membershipTypes";
+import LoadingSpinner from "../../../../Generic Components/LoadingSpinner";
 
 interface Props {
   isAddNew?: boolean;
@@ -63,8 +65,14 @@ export default function Information({ isAddNew, memberships }: Props) {
       setValue("newMembership.endDate", endDate);
   }, [endDate, setValue, watch]);
 
+  const { data, loading } = useQuery(GET_MEMBERSHIP_TYPES);
+
+  const membershipTypes = data?.membershipTypes?.data as MembershipType[];
+  const membershipTypeOptions = membershipTypes?.map((m) => m.name) || [];
+
   return (
     <div>
+      {loading && <LoadingSpinner />}
       <Stack className="member-info">
         <h1 className="header">{isAddNew ? "New Member" : "Edit Member"}</h1>
         <Grid container spacing={4}>
@@ -126,8 +134,12 @@ export default function Information({ isAddNew, memberships }: Props) {
               <AutoComplete
                 label="Membership Type"
                 fieldName="newMembership.membershipType"
-                options={membershipTypes}
-                defaultValue={membershipTypes[0]}
+                options={membershipTypeOptions}
+                defaultValue={
+                  membershipTypeOptions.length > 0
+                    ? membershipTypeOptions[0]
+                    : ""
+                }
               />
               <DateInput
                 label="Start Date"
