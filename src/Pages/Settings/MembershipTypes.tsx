@@ -38,13 +38,14 @@ export default function MembershipTypes() {
   const [openEditAlert, setOpenEditAert] = useState(false);
   const [selectedRow, setSelectedRow] = useState<MembershipType>();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
+  const defaultValues = {
+    name: "",
+    discountPercent: 0,
+    pricePerMonth: 0,
+  };
   const methods = useForm<MembershipType>({
     resolver: yupResolver(validationSchema),
-    defaultValues: {
-      name: "",
-      discountPercent: 0,
-    },
+    defaultValues,
   });
 
   const {
@@ -76,7 +77,7 @@ export default function MembershipTypes() {
       }).then(() => {
         setIsAddNew(false);
         setOpenAddNewAlert(true);
-        reset();
+        reset(defaultValues);
       });
     } else {
       update({
@@ -124,6 +125,8 @@ export default function MembershipTypes() {
         setOpenDeleteDialog(false);
         setOpenDeleteAlert(true);
         setSelectedRow(undefined);
+        setIsEditing(false);
+        reset(defaultValues);
       });
     }
   };
@@ -133,7 +136,7 @@ export default function MembershipTypes() {
       headerName: "Membership Type Name",
       width: 200,
       renderCell: (params: GridRenderCellParams<string>) =>
-        params.row.isNew || params.id === selectedRow?.id ? (
+        params.row.isNew || (isEditing && params.id === selectedRow?.id) ? (
           <TextField
             required
             {...register("name")}
@@ -153,12 +156,13 @@ export default function MembershipTypes() {
       headerName: "Monthly Fee",
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) =>
-        params.row.isNew || params.id === selectedRow?.id ? (
+        params.row.isNew || (isEditing && params.id === selectedRow?.id) ? (
           <TextField
             required
             {...register("pricePerMonth")}
             variant="standard"
             InputProps={{ startAdornment: "$" }}
+            inputProps={{ style: { textAlign: "right" } }}
             error={Boolean(errors.pricePerMonth)}
             helperText={
               Boolean(errors.pricePerMonth) && errors.pricePerMonth?.message
@@ -174,7 +178,7 @@ export default function MembershipTypes() {
       width: 150,
       type: "number",
       renderCell: (params: GridRenderCellParams<string>) =>
-        params.row.isNew || params.id === selectedRow?.id ? (
+        params.row.isNew || (isEditing && params.id === selectedRow?.id) ? (
           <TextField
             required
             {...register("discountPercent")}
@@ -228,6 +232,7 @@ export default function MembershipTypes() {
                   onClick={() => {
                     setSelectedRow(params.row as MembershipType);
                     setOpenDeleteDialog(true);
+                    setIsEditing(false);
                   }}
                 />
               </Tooltip>,
