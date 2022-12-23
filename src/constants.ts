@@ -14,13 +14,6 @@ export const PAYMENT_METHODS = [
 ];
 export const SHOW_OPTIONS = ["All", "Active", "Inactive"];
 export const DATE_FORMAT = "MMMM DD, YYYY";
-export const products = [
-  "Water (sm)",
-  "Water (lg)",
-  "Gym gloves",
-  "Whey Bulk Powder",
-  "Whey Bulk Powder",
-];
 export const GENDER_OPTIONS = [
   {
     value: Gender.Male,

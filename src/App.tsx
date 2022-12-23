@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import VisitHistoryPage from "./Pages/VisitHistory";
 import Payments from "./Pages/Payments";
 import Settings from "./Pages/Settings";
+import Home from "./Pages/Home";
 
 export default function App() {
   const client = usePrivateClient();
@@ -41,7 +42,7 @@ export default function App() {
         <Route element={<PersitLogin />}>
           <Route element={<RequiredAuth />}>
             <Route path="/" element={<Layout />}>
-              <Route path={ROUTES.HOME} element={<FindMember />} />
+              <Route path={ROUTES.HOME} element={<Home />} />
               <Route path={ROUTES.FINDMEMBER} element={<FindMember />} />
               <Route path={ROUTES.ADDMEMBER} element={<MemberDetails />} />
               <Route path={ROUTES.EDITMEMBER} element={<MemberDetails />} />
