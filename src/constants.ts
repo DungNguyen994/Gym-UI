@@ -14,6 +14,7 @@ export const PAYMENT_METHODS = [
 ];
 export const SHOW_OPTIONS = ["All", "Active", "Inactive"];
 export const DATE_FORMAT = "MMMM DD, YYYY";
+export const DATETIME_FORMAT = "MMMM DD, YYYY HH:mm";
 export const GENDER_OPTIONS = [
   {
     value: Gender.Male,

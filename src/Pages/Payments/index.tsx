@@ -12,7 +12,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import DialogModal from "../../Generic Components/Dialog";
 import LoadingSpinner from "../../Generic Components/LoadingSpinner";
 import SearchBar from "../../Generic Components/SearchBar";
-import { DATE_FORMAT } from "../../constants";
+import { DATETIME_FORMAT } from "../../constants";
 import { PAYMENTS } from "../../graphql/queries/payments";
 import { PaymentRes, Product } from "../../types";
 import { formatCurrency, searchData } from "../../utils";
@@ -31,38 +31,41 @@ export default function Payments() {
       headerName: "Created Date",
       width: 200,
       valueFormatter: (params: GridValueFormatterParams<string>) =>
-        dayjs(params.value).format(DATE_FORMAT),
+        dayjs(params.value).format(DATETIME_FORMAT),
     },
     {
       field: "total",
-      headerName: "Total Price",
-      width: 200,
+      headerName: "Total",
+      type: "number",
+      width: 150,
       valueFormatter: (params: GridValueFormatterParams<string>) =>
         formatCurrency(params.value),
     },
     {
       field: "collected",
-      headerName: "Collected Amount",
-      width: 200,
+      type: "number",
+      headerName: "Collected",
+      width: 150,
       valueFormatter: (params: GridValueFormatterParams<string>) =>
         formatCurrency(params.value),
     },
     {
       field: "change",
-      headerName: "Change Amount",
-      width: 200,
+      headerName: "Change",
+      type: "number",
+      width: 150,
       valueFormatter: (params: GridValueFormatterParams<string>) =>
         formatCurrency(params.value),
     },
     {
       field: "paymentMethod",
       headerName: "Payment Method",
-      width: 200,
+      width: 150,
     },
     {
       field: "membershipType",
       headerName: "Membership Type",
-      width: 200,
+      width: 150,
     },
     {
       field: "term",

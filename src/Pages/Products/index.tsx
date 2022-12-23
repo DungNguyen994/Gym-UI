@@ -31,19 +31,19 @@ export default function Products() {
     setOpenDialog(false);
   };
   const columns = [
-    { field: "productType", headerName: "Product Type", width: 230 },
+    { field: "productType", headerName: "Product Type", width: 150 },
     { field: "productName", headerName: "Product Name", width: 300 },
     {
       field: "unitPrice",
       headerName: "Unit Price",
-      width: 230,
+      width: 100,
       type: "number",
       renderCell: (params: GridRenderCellParams<string>) => `$${params.value}`,
     },
     {
       field: "photo",
       headerName: "Photo",
-      width: 230,
+      width: 100,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Avatar
           alt={`Product-${params.row?.productName}-photo`}
@@ -51,11 +51,11 @@ export default function Products() {
         />
       ),
     },
-    { field: "supplier", headerName: "Supplier", width: 230 },
+    { field: "supplier", headerName: "Supplier", width: 100 },
     {
       field: "discountPercent",
       headerName: "Discount",
-      width: 230,
+      width: 100,
       type: "number",
       renderCell: (params: GridRenderCellParams<string>) => `${params.value} %`,
     },
@@ -104,7 +104,7 @@ export default function Products() {
     <Box sx={{ p: "15px 2% 10px" }}>
       <Stack spacing={2}>
         <SearchBar placeholder="Search Product..." onSearch={onSearch} />
-        <Stack direction="row-reverse">
+        <Stack direction="row">
           <Button
             variant="contained"
             startIcon={<Add />}
@@ -126,6 +126,7 @@ export default function Products() {
               "& .MuiDataGrid-columnHeaderTitle": {
                 fontWeight: "700",
               },
+              width: { xl: "70%" },
             }}
           />
         </div>

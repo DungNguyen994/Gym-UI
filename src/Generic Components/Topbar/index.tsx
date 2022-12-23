@@ -1,4 +1,4 @@
-import { Cancel, Mail, Notifications } from "@mui/icons-material";
+import { Cancel, Mail, Notifications, Settings } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
@@ -7,6 +7,7 @@ import {
   IconButton,
   Toolbar,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
@@ -17,7 +18,6 @@ import "./index.scss";
 
 export default function Topbar() {
   const location = useLocation();
-
   let workItem: string;
   switch (location.pathname) {
     case ROUTES.HOME:
@@ -112,6 +112,16 @@ export default function Topbar() {
                     <Notifications />
                   </Badge>
                 </IconButton>
+                <Tooltip title="Settings">
+                  <IconButton
+                    size="large"
+                    aria-label="settings"
+                    color="inherit"
+                    onClick={() => navigate(ROUTES.SETTINGS, { replace: true })}
+                  >
+                    <Settings />
+                  </IconButton>
+                </Tooltip>
               </Box>
               <Box sx={{ display: { xs: "flex", md: "none" } }}>
                 <IconButton

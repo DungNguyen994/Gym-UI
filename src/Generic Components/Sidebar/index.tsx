@@ -124,12 +124,14 @@ export default function Sidebar({ isMobile, closeSidebar }: Props) {
             onClick={() => onMenuClick(ROUTES.PAYMENTS)}
             selected={selected === ROUTES.PAYMENTS}
           />
-          <MenuItem
-            Icon={Settings}
-            text="Settings"
-            onClick={() => onMenuClick(ROUTES.SETTINGS)}
-            selected={selected === ROUTES.SETTINGS}
-          />
+          <Box sx={{ display: { xs: "block", lg: "none" } }}>
+            <MenuItem
+              Icon={Settings}
+              text="Settings"
+              onClick={() => onMenuClick(ROUTES.SETTINGS)}
+              selected={selected === ROUTES.SETTINGS}
+            />
+          </Box>
         </List>
         <ListItem className="menu-item-container logout">
           <ListItemButton

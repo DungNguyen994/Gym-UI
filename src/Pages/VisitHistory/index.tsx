@@ -32,7 +32,7 @@ export default function VisitHistoryPage() {
     {
       field: "date",
       headerName: "Visit Date",
-      width: 400,
+      width: 200,
       valueFormatter: (params: GridValueFormatterParams<string>) =>
         dayjs(params.value).format(DATE_FORMAT),
     },
@@ -73,6 +73,7 @@ export default function VisitHistoryPage() {
               "& .MuiDataGrid-columnHeaderTitle": {
                 fontWeight: "700",
               },
+              width: { xl: "50%", lg: "70%" },
             }}
           />
         </div>

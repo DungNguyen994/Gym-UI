@@ -104,7 +104,7 @@ export default function SaleSummary() {
           sx={{ marginTop: "20px" }}
         />
         {paymentMethod === PAYMENT_METHODS[0] && (
-          <>
+          <Stack>
             <TextField
               label="Collected"
               variant="standard"
@@ -123,7 +123,7 @@ export default function SaleSummary() {
               InputProps={{ startAdornment: "$", readOnly: true }}
               sx={{ marginTop: "20px", marginBottom: "40px" }}
             />
-          </>
+          </Stack>
         )}
       </Stack>
       <Divider />

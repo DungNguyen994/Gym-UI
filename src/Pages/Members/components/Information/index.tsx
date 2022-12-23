@@ -69,7 +69,7 @@ export default function Information({ isAddNew, memberships }: Props) {
 
   const membershipTypes = data?.membershipTypes?.data as MembershipType[];
   const membershipTypeOptions = membershipTypes?.map((m) => m.name) || [];
-
+  console.log(membershipTypeOptions);
   return (
     <div>
       {loading && <LoadingSpinner />}
@@ -131,16 +131,14 @@ export default function Information({ isAddNew, memberships }: Props) {
                 options={periodOptions}
                 defaultValue={periodOptions[0]}
               />
-              <AutoComplete
-                label="Membership Type"
-                fieldName="newMembership.membershipType"
-                options={membershipTypeOptions}
-                defaultValue={
-                  membershipTypeOptions.length > 0
-                    ? membershipTypeOptions[0]
-                    : ""
-                }
-              />
+              {membershipTypeOptions.length > 0 && (
+                <AutoComplete
+                  label="Membership Type"
+                  fieldName="newMembership.membershipType"
+                  options={membershipTypeOptions}
+                  defaultValue={membershipTypeOptions[0]}
+                />
+              )}
               <DateInput
                 label="Start Date"
                 fieldName="newMembership.startDate"

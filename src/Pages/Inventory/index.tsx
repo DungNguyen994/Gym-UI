@@ -23,19 +23,19 @@ export default function Inventory() {
   );
 
   const columns = [
-    { field: "productType", headerName: "Product Type", width: 200 },
-    { field: "productName", headerName: "Product Name", width: 400 },
-    { field: "supplier", headerName: "Supplier", width: 230 },
+    { field: "productType", headerName: "Product Type", width: 150 },
+    { field: "productName", headerName: "Product Name", width: 300 },
+    { field: "supplier", headerName: "Supplier", width: 150 },
     {
       field: "quantity",
       headerName: "Stocks",
-      width: 230,
+      width: 100,
       type: "number",
     },
     {
       field: "status",
       headerName: "Status",
-      width: 400,
+      width: 200,
       type: "actions",
       renderCell: (params: GridRenderCellParams<string>) =>
         params.row.quantity > 0 ? (
@@ -89,7 +89,7 @@ export default function Inventory() {
         <SearchBar placeholder="Search Product..." onSearch={onSearch} />
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Stack direction="row-reverse" spacing={2}>
+            <Stack direction="row" spacing={2}>
               {isStockIn && (
                 <Button
                   variant="contained"
@@ -114,7 +114,7 @@ export default function Inventory() {
             {isStockIn && <StockInForm />}
           </form>
         </FormProvider>
-        <div style={{ height: 650, width: "100%", background: "white" }}>
+        <Box style={{ height: 650, width: "100%", background: "white" }}>
           <DataGrid
             rows={searchedRows}
             columns={columns}
@@ -127,9 +127,10 @@ export default function Inventory() {
               "& .MuiDataGrid-columnHeaderTitle": {
                 fontWeight: "700",
               },
+              width: { xl: "60%" },
             }}
           />
-        </div>
+        </Box>
       </Stack>
     </Box>
   );

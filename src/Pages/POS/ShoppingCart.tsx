@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Add, Cancel, Remove } from "@mui/icons-material";
 import {
   Autocomplete,
+  Box,
   Button,
   Divider,
   Drawer,
@@ -17,15 +18,14 @@ import {
 } from "@mui/material";
 import produce from "immer";
 import { round, subtract } from "lodash";
-import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import LoadingSpinner from "../../Generic Components/LoadingSpinner";
 import { PAYMENT_METHODS } from "../../constants";
 import { ADD_PAYMENT } from "../../graphql/mutations/addPayment";
-import { GET_MEMBERS } from "../../graphql/queries/members";
-import { Member, Product } from "../../types";
 import { GET_INVENTORY } from "../../graphql/queries/inventory";
+import { GET_MEMBERS } from "../../graphql/queries/members";
 import { PAYMENTS } from "../../graphql/queries/payments";
+import { Member, Product } from "../../types";
 
 interface Props {
   open: boolean;
@@ -71,12 +71,12 @@ export default function ShoppingCartDrawer({
       );
     }, 0) || 0;
   const collected = watch("collected");
-  const collectMore = Number(collected || 0) < Number(total);
-  useEffect(() => {
-    if (!collectMore)
-      setValue("change", round(subtract(Number(collected), Number(total)), 2));
-    else setValue("change", 0);
-  }, [collected, collectMore, setValue, total]);
+  const collectMore =
+    collected !== undefined && Number(collected || 0) < Number(total);
+  setValue(
+    "change",
+    collectMore ? round(subtract(Number(collected), Number(total)), 2) : 0
+  );
   const onSubmit: SubmitHandler<FormValue> = (data) => {
     const products = produce(selectedProducts, (draft) => {
       draft?.forEach((p) => {
@@ -99,7 +99,7 @@ export default function ShoppingCartDrawer({
     });
   };
   const content = (
-    <>
+    <Box>
       {(addPaymentLoading || loading) && <LoadingSpinner />}
       <Stack
         className="sale-summary"
@@ -207,13 +207,15 @@ export default function ShoppingCartDrawer({
               <TextField
                 label="Collected"
                 variant="standard"
-                {...register("collected")}
                 InputProps={{ startAdornment: "$" }}
                 sx={{ marginTop: "20px" }}
-                type="number"
                 error={collectMore}
-                helperText="Please collect more money"
+                helperText={collectMore && "Please collect more money!"}
                 required
+                type="number"
+                onChange={(e) => {
+                  setValue("collected", Number(e.target.value));
+                }}
               />
               <TextField
                 label="Change"
@@ -239,7 +241,7 @@ export default function ShoppingCartDrawer({
           Make Payment
         </Button>
       </Stack>
-    </>
+    </Box>
   );
   return (
     <div>

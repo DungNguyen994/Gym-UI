@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, Grid, Stack } from "@mui/material";
+import { Box, Button, Grid, Stack, FormControl } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -60,6 +60,7 @@ export default function MemberDetails() {
     }),
     [membershipTypeOptions]
   );
+
   const methods = useForm<Member>({
     resolver: yupResolver(validationSchema),
     defaultValues: isAddNew ? addNewDefaultValues : member,
@@ -115,7 +116,7 @@ export default function MemberDetails() {
         setIsSubmitting
       );
     } else {
-      onSave(data, (member.photo as string) || "");
+      onSave(data, (member?.photo as string) || "");
     }
   };
 
@@ -133,47 +134,49 @@ export default function MemberDetails() {
         getMembershipTypeLoading) && <LoadingSpinner />}
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Grid container direction="row" borderBottom="1px solid #e3e3e3">
-              <LeftPanel isAddNew={isAddNew} member={member} />
-              <Grid item xs={12} md={9} lg={7}>
-                <Information
-                  isAddNew={isAddNew}
-                  memberships={member?.memberships || []}
-                />
-              </Grid>
-              {(isAddNew || hasNewMembership) && (
-                <Grid item xs={12} xl={3}>
-                  <SaleSummary />
+          <FormControl>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Grid container direction="row" borderBottom="1px solid #e3e3e3">
+                <LeftPanel isAddNew={isAddNew} member={member} />
+                <Grid item xs={12} md={9} lg={7}>
+                  <Information
+                    isAddNew={isAddNew}
+                    memberships={member?.memberships || []}
+                  />
                 </Grid>
-              )}
-            </Grid>
-            <Stack
-              className="edit-btn"
-              spacing={2}
-              direction="row-reverse"
-              mt={2}
-            >
-              <Button
-                variant="contained"
-                color="warning"
-                disabled={!isAddNew && !isDirty}
-                type="submit"
+                {(isAddNew || hasNewMembership) && (
+                  <Grid item xs={12} xl={3}>
+                    <SaleSummary />
+                  </Grid>
+                )}
+              </Grid>
+              <Stack
+                className="edit-btn"
+                spacing={2}
+                direction="row-reverse"
+                mt={2}
               >
-                Save
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  reset();
-                }}
-                disabled={!isAddNew && !isDirty}
-              >
-                Cancel
-              </Button>
-            </Stack>
-          </LocalizationProvider>
+                <Button
+                  variant="contained"
+                  color="warning"
+                  disabled={!isAddNew && !isDirty}
+                  type="submit"
+                >
+                  Save
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    reset();
+                  }}
+                  disabled={!isAddNew && !isDirty}
+                >
+                  Cancel
+                </Button>
+              </Stack>
+            </LocalizationProvider>
+          </FormControl>
         </form>
       </FormProvider>
     </Box>

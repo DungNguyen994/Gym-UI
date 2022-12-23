@@ -66,7 +66,7 @@ export default function MemberCard({ member, onDelete }: Props) {
         >
           <Stack direction="row">
             <Image
-              src={photo as string}
+              src={(photo as string) || "/blank-profile.png"}
               width={100}
               height={130}
               showLoading
