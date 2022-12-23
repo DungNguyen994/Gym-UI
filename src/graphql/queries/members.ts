@@ -13,6 +13,7 @@ export const GET_MEMBERS = gql`
         status
         remainingDays
         currentMembershipType
+        createdAt
       }
       errors {
         message

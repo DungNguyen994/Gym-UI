@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/client";
 import { Login, ShoppingCart } from "@mui/icons-material";
 import {
   Button,
@@ -7,11 +8,16 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
+import LoadingSpinner from "../../../../Generic Components/LoadingSpinner";
+import SuccessAlert from "../../../../Generic Components/SuccessAlert";
 import {
   MEMBERSHIP_STATUS,
   MEMBERSHIP_STATUS_DESCRIPTION,
 } from "../../../../constants";
+import { CHECK_IN } from "../../../../graphql/mutations/checkIn";
+import { VISIT_HISTORY } from "../../../../graphql/queries/visitHistory";
 import { Member, MembershipStatus } from "../../../../types";
 import { getRemainingTime } from "../../../../utils";
 import "./index.scss";
@@ -31,6 +37,20 @@ export default function LeftPanel({ member, isAddNew }: Props) {
   }
   const _photo = photoUrl || (photo as string);
   const fullName = firstName + " " + lastName;
+
+  const [checkIn, { data, loading }] = useMutation(CHECK_IN);
+  const [open, setOpen] = useState(false);
+  const onCheckIn = () => {
+    if (member?.id) {
+      checkIn({
+        variables: { memberId: member.id },
+        refetchQueries: [{ query: VISIT_HISTORY }],
+      }).then(() => {
+        setOpen(true);
+      });
+    }
+  };
+  const onClose = () => setOpen(false);
   return (
     <Grid
       item
@@ -41,6 +61,7 @@ export default function LeftPanel({ member, isAddNew }: Props) {
       borderRight=" 1px solid #e3e3e3"
       p={1}
     >
+      {loading && <LoadingSpinner />}
       <Stack sx={{ alignItems: "center" }} spacing={2}>
         {!isAddNew && <h2>{fullName}</h2>}{" "}
         <Card>
@@ -94,7 +115,12 @@ export default function LeftPanel({ member, isAddNew }: Props) {
             )}
             <hr className="divider" />
             <h4>Actions</h4>
-            <Button variant="contained" startIcon={<Login />} color="success">
+            <Button
+              variant="contained"
+              startIcon={<Login />}
+              color="success"
+              onClick={() => onCheckIn()}
+            >
               Check In
             </Button>
             <Button
@@ -107,6 +133,9 @@ export default function LeftPanel({ member, isAddNew }: Props) {
           </>
         )}
       </Stack>
+      <SuccessAlert open={open} onClose={onClose}>
+        {data?.checkIn?.data}
+      </SuccessAlert>
     </Grid>
   );
 }

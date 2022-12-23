@@ -147,3 +147,23 @@ export const calculateMoneyReceived = (
     []
   );
 };
+const monthlyMemberNumber = (month: number, members: Member[]) => {
+  return members.filter((p) => dayjs(p.createdAt).get("month") === month)
+    .length;
+};
+export const calculateTotalNewMemberByYear = (
+  year: number,
+  members: Member[] | undefined
+) => {
+  if (!members) return [];
+  const membersOfTheYear = members.filter(
+    (p) => dayjs(p.createdAt).get("year") === year
+  );
+  return [...Array(12).keys()].reduce(
+    (result: number[], month) => [
+      ...result,
+      monthlyMemberNumber(month, membersOfTheYear),
+    ],
+    []
+  );
+};

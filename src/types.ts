@@ -53,6 +53,7 @@ export type Member = {
   currentMembershipType: string;
   status: string;
   remainingDays: number;
+  createdAt?: string;
 };
 
 export type Product = {

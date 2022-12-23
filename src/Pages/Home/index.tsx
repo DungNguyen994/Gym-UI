@@ -4,6 +4,9 @@ import { Grid, Box, Stack } from "@mui/material";
 import { ProductSaleChart } from "./ProductSaleChart";
 import ActiveMemberCard from "./ActiveMemberCard";
 import ExpiredMemberCard from "./ExpiredMemberCard";
+import { NewMemberChart } from "./NewMemberCard";
+import OutOfStockCard from "./OutOfStockCard";
+import TodayVisitCard from "./TodayVisitCard";
 
 export default function Home() {
   return (
@@ -22,6 +25,15 @@ export default function Home() {
             </Grid>
             <Grid item xs={6}>
               <ExpiredMemberCard />
+            </Grid>
+            <Grid item xs={6}>
+              <OutOfStockCard />
+            </Grid>
+            <Grid item xs={6}>
+              <TodayVisitCard />
+            </Grid>
+            <Grid item xs={12}>
+              <NewMemberChart />
             </Grid>
           </Grid>
         </Grid>
