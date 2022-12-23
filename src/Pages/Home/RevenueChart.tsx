@@ -1,15 +1,32 @@
+import { useQuery } from "@apollo/client";
+import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import {
-  Chart as ChartJS,
+  Card,
+  CardContent,
+  CardHeader,
+  IconButton,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import {
   CategoryScale,
+  Chart as ChartJS,
+  Filler,
+  Legend,
+  LineElement,
   LinearScale,
   PointElement,
-  LineElement,
   Title,
   Tooltip,
-  Legend,
 } from "chart.js";
+import dayjs from "dayjs";
 import { Line } from "react-chartjs-2";
-import { Card, CardHeader, CardContent } from "@mui/material";
+import { useForm } from "react-hook-form";
+import LoadingSpinner from "../../Generic Components/LoadingSpinner";
+import { PAYMENTS } from "../../graphql/queries/payments";
+import { PaymentRes } from "../../types";
+import { calculateMoneyReceived } from "../../utils";
 
 ChartJS.register(
   CategoryScale,
@@ -18,6 +35,7 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
+  Filler,
   Legend
 );
 
@@ -33,27 +51,70 @@ export const options = {
   },
 };
 
-const labels = ["January", "February", "March", "April"];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Monthly Income of the gym",
-      data: [100, 200, 1000, 2000],
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-  ],
-};
+const labels = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 export function RevenueChart() {
+  const { data: paymentsRes, loading } = useQuery(PAYMENTS);
+  const payments = paymentsRes?.payments?.data as PaymentRes[];
+  const { register, watch, setValue } = useForm({
+    defaultValues: {
+      year: dayjs().get("year"),
+    },
+  });
+  const calculatedData = calculateMoneyReceived(
+    Number(watch("year")),
+    payments
+  );
+  const data = {
+    labels,
+    datasets: [
+      {
+        fill: true,
+        label: "Money Received",
+        data: calculatedData,
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+      },
+    ],
+  };
+  const title = (
+    <Stack direction="row" justifyContent="space-between">
+      <Typography variant="h5" sx={{ color: "#f54242", textAlign: "center" }}>
+        Money Received
+      </Typography>
+      <Stack direction="row" spacing={1}>
+        <IconButton onClick={() => setValue("year", watch("year") - 1)}>
+          <ArrowBackIos />
+        </IconButton>
+        <TextField
+          {...register("year")}
+          type="number"
+          variant="standard"
+          inputProps={{ style: { textAlign: "center", width: 100 } }}
+        />
+        <IconButton onClick={() => setValue("year", watch("year") + 1)}>
+          <ArrowForwardIos />
+        </IconButton>
+      </Stack>
+    </Stack>
+  );
   return (
     <Card>
-      <CardHeader
-        title="Money Received"
-        sx={{ color: "#f54242", textAlign: "center" }}
-      />
+      {loading && <LoadingSpinner />}
+      <CardHeader title={title} />
       <CardContent>
         <Line options={options} data={data} />
       </CardContent>

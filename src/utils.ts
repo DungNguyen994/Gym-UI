@@ -4,7 +4,7 @@ import RelativeTime from "dayjs/plugin/relativeTime";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "./config/firebase";
 import { MEMBERSHIP_STATUS, periodOptions } from "./constants";
-import { Member } from "./types";
+import { Member, PaymentRes } from "./types";
 import { round, subtract } from "lodash";
 
 export const getUniqueObjArray = (array: any[], key: string) => [
@@ -124,4 +124,26 @@ export const getButtonStatusColor = (value: string | undefined) => {
     : value === MEMBERSHIP_STATUS.EXPIRED
     ? "error"
     : "inherit";
+};
+
+const monthlyPayment = (month: number, payments: PaymentRes[]) => {
+  return payments
+    .filter((p) => dayjs(p.createdAt).get("month") === month)
+    .reduce((total, p) => total + p.total, 0);
+};
+export const calculateMoneyReceived = (
+  year: number,
+  payments: PaymentRes[] | undefined
+) => {
+  if (!payments) return [];
+  const paymentsOfTheYear = payments.filter(
+    (p) => dayjs(p.createdAt).get("year") === year
+  );
+  return [...Array(12).keys()].reduce(
+    (result: number[], month) => [
+      ...result,
+      monthlyPayment(month, paymentsOfTheYear),
+    ],
+    []
+  );
 };
