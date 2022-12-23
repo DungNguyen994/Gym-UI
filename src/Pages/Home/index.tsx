@@ -27,10 +27,10 @@ export default function Home() {
               <ExpiredMemberCard />
             </Grid>
             <Grid item xs={6}>
-              <OutOfStockCard />
+              <TodayVisitCard />
             </Grid>
             <Grid item xs={6}>
-              <TodayVisitCard />
+              <OutOfStockCard />
             </Grid>
             <Grid item xs={12}>
               <NewMemberChart />

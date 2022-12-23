@@ -26,6 +26,7 @@ import { GET_INVENTORY } from "../../graphql/queries/inventory";
 import { GET_MEMBERS } from "../../graphql/queries/members";
 import { PAYMENTS } from "../../graphql/queries/payments";
 import { Member, Product } from "../../types";
+import { useLocation } from "react-router-dom";
 
 interface Props {
   open: boolean;
@@ -51,9 +52,12 @@ export default function ShoppingCartDrawer({
   addOneItem,
   clearCart,
 }: Props) {
+  const { state } = useLocation();
+
   const { register, setValue, watch, handleSubmit } = useForm<FormValue>({
     defaultValues: {
       paymentMethod: PAYMENT_METHODS[0],
+      memberId: state?.memberId || "",
     },
   });
   const { data, loading } = useQuery(GET_MEMBERS);
@@ -98,6 +102,11 @@ export default function ShoppingCartDrawer({
       clearCart();
     });
   };
+  const memberOptions =
+    members?.map((m) => ({
+      label: `${m.firstName} ${m.lastName} (Phone: ${m.phoneNumber})`,
+      id: m.id,
+    })) || [];
   const content = (
     <Box>
       {(addPaymentLoading || loading) && <LoadingSpinner />}
@@ -169,15 +178,11 @@ export default function ShoppingCartDrawer({
         <Stack sx={{ padding: "20px" }}>
           <Autocomplete
             sx={{ mb: 2 }}
+            defaultValue={memberOptions.find((m) => m.id === state?.memberId)}
             onChange={(e, newValue) => setValue("memberId", newValue?.id || "")}
             disablePortal
             id="combo-box"
-            options={
-              members?.map((m) => ({
-                label: `${m.firstName} ${m.lastName} (Phone: ${m.phoneNumber})`,
-                id: m.id,
-              })) || []
-            }
+            options={memberOptions}
             fullWidth
             getOptionLabel={(member) => member.label}
             renderInput={(params) => (

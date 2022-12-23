@@ -7,9 +7,9 @@ import LoadingSpinner from "../../Generic Components/LoadingSpinner";
 import SearchBar from "../../Generic Components/SearchBar";
 import { GET_INVENTORY } from "../../graphql/queries/inventory";
 import { Product } from "../../types";
+import { searchData } from "../../utils";
 import ProductCard from "./ProductCard";
 import ShoppingCartDrawer from "./ShoppingCart";
-import { searchData } from "../../utils";
 
 export default function POS() {
   const { data, loading } = useQuery(GET_INVENTORY);

@@ -21,12 +21,15 @@ import { VISIT_HISTORY } from "../../../../graphql/queries/visitHistory";
 import { Member, MembershipStatus } from "../../../../types";
 import { getRemainingTime } from "../../../../utils";
 import "./index.scss";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../../../routes";
 
 interface Props {
   member?: Member;
   isAddNew?: boolean;
 }
 export default function LeftPanel({ member, isAddNew }: Props) {
+  const navigate = useNavigate();
   const { photo, firstName, lastName, status, remainingDays } =
     (member as Member) || {};
   const { register, watch } = useFormContext();
@@ -127,6 +130,9 @@ export default function LeftPanel({ member, isAddNew }: Props) {
               variant="contained"
               startIcon={<ShoppingCart />}
               color="warning"
+              onClick={() =>
+                navigate(ROUTES.POS, { state: { memberId: member?.id } })
+              }
             >
               Purchase
             </Button>

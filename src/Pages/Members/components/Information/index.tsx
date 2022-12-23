@@ -69,7 +69,6 @@ export default function Information({ isAddNew, memberships }: Props) {
 
   const membershipTypes = data?.membershipTypes?.data as MembershipType[];
   const membershipTypeOptions = membershipTypes?.map((m) => m.name) || [];
-  console.log(membershipTypeOptions);
   return (
     <div>
       {loading && <LoadingSpinner />}
