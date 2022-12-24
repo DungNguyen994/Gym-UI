@@ -77,7 +77,10 @@ export default function ShoppingCartDrawer({
   const collected = watch("collected");
   const collectMore =
     collected !== undefined && Number(collected || 0) < Number(total);
-  setValue("change", round(subtract(Number(collected), Number(total)), 2));
+  setValue(
+    "change",
+    collected ? round(subtract(Number(collected), Number(total)), 2) : 0
+  );
   const onSubmit: SubmitHandler<FormValue> = (data) => {
     const products = produce(selectedProducts, (draft) => {
       draft?.forEach((p) => {

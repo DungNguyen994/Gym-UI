@@ -10,6 +10,7 @@ import { Product } from "../../types";
 import { searchData } from "../../utils";
 import ProductCard from "./ProductCard";
 import ShoppingCartDrawer from "./ShoppingCart";
+import DialogModal from "../../Generic Components/Dialog";
 
 export default function POS() {
   const { data, loading } = useQuery(GET_INVENTORY);
@@ -22,6 +23,7 @@ export default function POS() {
   );
   const [searchedProducts, setSearchedProducts] = useState(products);
   const [openShoppingCart, setOpenShoppingCart] = useState(false);
+  const [outOfStockWarning, setOutOfStockWarning] = useState(false);
   const closeShoppingCart = () => setOpenShoppingCart(false);
   const [selectedProducts, setSelectedProducts] = useState<Product[]>();
   const totalQuantity =
@@ -37,8 +39,10 @@ export default function POS() {
         const foundProduct = draftState.find(
           (p) => p.productId === product.productId
         );
-        if (foundProduct && foundProduct.buyQuantity) {
-          foundProduct.buyQuantity++;
+        if (foundProduct && foundProduct.buyQuantity && foundProduct.quantity) {
+          if (foundProduct.quantity > foundProduct.buyQuantity)
+            foundProduct.buyQuantity++;
+          else setOutOfStockWarning(true);
           return draftState;
         } else return [...draftState, { ...product, buyQuantity: 1 }];
       }
@@ -110,6 +114,14 @@ export default function POS() {
           <ProductCard product={product} addToCart={onAddToCart} />
         ))}
       </Grid>
+      <DialogModal
+        title="Info!"
+        open={outOfStockWarning}
+        handleClose={() => setOutOfStockWarning(false)}
+        content="You have selected all stocks available for the item!"
+        noLabel="Close"
+        disableYes
+      />
     </Box>
   );
 }
