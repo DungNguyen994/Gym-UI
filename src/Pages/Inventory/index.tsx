@@ -89,17 +89,7 @@ export default function Inventory() {
         <SearchBar placeholder="Search Product..." onSearch={onSearch} />
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Stack direction="row" spacing={2}>
-              {isStockIn && (
-                <Button
-                  variant="contained"
-                  startIcon={<SaveAlt />}
-                  color="warning"
-                  type="submit"
-                >
-                  Save
-                </Button>
-              )}
+            <Stack direction="row" spacing={2} mb={1}>
               <Button
                 variant="contained"
                 startIcon={isStockIn ? <Cancel /> : <Add />}
@@ -110,6 +100,16 @@ export default function Inventory() {
               >
                 {isStockIn ? "Cancel" : "Stock In"}
               </Button>
+              {isStockIn && (
+                <Button
+                  variant="contained"
+                  startIcon={<SaveAlt />}
+                  color="warning"
+                  type="submit"
+                >
+                  Save
+                </Button>
+              )}
             </Stack>
             {isStockIn && <StockInForm />}
           </form>
