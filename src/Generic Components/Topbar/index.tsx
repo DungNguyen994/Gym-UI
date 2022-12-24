@@ -80,7 +80,7 @@ export default function Topbar() {
                 noWrap
                 component="div"
                 sx={{ cursor: "pointer" }}
-                minWidth={{ md: "10%" }}
+                minWidth={{ lg: "20%", xl: "10%" }}
                 onClick={() => navigate(ROUTES.HOME, { replace: true })}
               >
                 Gym Bot
