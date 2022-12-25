@@ -114,7 +114,7 @@ export default function SaleSummary() {
               error={hasCollectedError}
               type="number"
               helperText={hasCollectedError && errorMessage}
-              required
+              required={paymentMethod === PAYMENT_METHODS[0]}
             />
             <TextField
               label="Change"

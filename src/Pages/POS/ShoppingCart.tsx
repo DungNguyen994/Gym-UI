@@ -229,7 +229,7 @@ export default function ShoppingCartDrawer({
                 sx={{ marginTop: "20px" }}
                 error={collectMore}
                 helperText={collectMore && "Please collect more money!"}
-                required
+                required={paymentMethod === PAYMENT_METHODS[0]}
                 type="number"
                 onChange={(e) => {
                   setValue("collected", Number(e.target.value));
