@@ -11,4 +11,5 @@ export const ROUTES = {
   VISIT: "/visit-history",
   PAYMENTS: "/payments",
   SETTINGS: "/settings",
+  LOGIN: "/login",
 };

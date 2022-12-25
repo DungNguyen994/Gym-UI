@@ -9,6 +9,7 @@ import { getAuthUser, setUser } from "../Redux-toolkit/features/Auth/authSlice";
 import { getPersit } from "../Redux-toolkit/features/Persit/persitSlice";
 import { useAppDispatch, useAppSelector } from "../Redux-toolkit/hooks";
 import { TokenPayload } from "./Login";
+import { ROUTES } from "../routes";
 
 export default function PersitLogin() {
   const [refresh, { loading }] = useLazyQuery(REFRESH_TOKEN, {
@@ -31,6 +32,9 @@ export default function PersitLogin() {
         const { user } = jwtDecode(accessToken) as TokenPayload;
         const { username, role, fullName } = user;
         dispatch(setUser({ username, role, accessToken, fullName }));
+      } else {
+        navigate(ROUTES.LOGIN, { replace: true });
+        dispatch(setUser(undefined));
       }
     };
     if (persit && !token) getToken();

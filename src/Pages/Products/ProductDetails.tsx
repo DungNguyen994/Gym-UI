@@ -13,6 +13,7 @@ import { uploadPhoto } from "../../utils";
 import Information from "./Information";
 import LeftPanel from "./LeftPanel";
 import { validationSchema } from "./validationSchema";
+import { GET_INVENTORY } from "../../graphql/queries/inventory";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -41,6 +42,7 @@ function ProductDetails() {
       refetchQueries: [
         { query: GET_PRODUCTS },
         { query: GET_PRODUCT, variables: { productId: id } },
+        { query: GET_INVENTORY },
       ],
     }).finally(() => {
       setIsSubmitting(false);

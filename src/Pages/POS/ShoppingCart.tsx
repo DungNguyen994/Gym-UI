@@ -71,7 +71,11 @@ export default function ShoppingCartDrawer({
     selectedProducts?.reduce((total, product) => {
       return (
         total +
-        (product.buyQuantity ? product.buyQuantity * product.unitPrice : 0)
+        (product.buyQuantity
+          ? product.buyQuantity *
+            product.unitPrice *
+            round(subtract(1, (product?.discountPercent || 0) / 100), 2)
+          : 0)
       );
     }, 0) || 0;
   const collected = watch("collected");
@@ -125,6 +129,7 @@ export default function ShoppingCartDrawer({
                 <TableCell>Product</TableCell>
                 <TableCell align="center">Quantity</TableCell>
                 <TableCell align="center">Price</TableCell>
+                <TableCell align="center">Discount</TableCell>
                 <TableCell align="right">Total</TableCell>
                 <TableCell align="center"></TableCell>
               </TableRow>
@@ -157,9 +162,17 @@ export default function ShoppingCartDrawer({
                   </TableCell>
                   <TableCell align="center">${product.unitPrice}</TableCell>
                   <TableCell align="center">
+                    {product.discountPercent || 0}%
+                  </TableCell>
+                  <TableCell align="right">
                     $
                     {product.buyQuantity
-                      ? product.buyQuantity * product.unitPrice
+                      ? product.buyQuantity *
+                        product.unitPrice *
+                        round(
+                          subtract(1, (product?.discountPercent || 0) / 100),
+                          2
+                        )
                       : 0}
                   </TableCell>
                   <TableCell align="center">

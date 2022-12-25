@@ -43,7 +43,6 @@ export default function Information() {
             prefix={<AttachMoney />}
             fieldName="unitPrice"
             required
-            type="number"
             lg={12}
             md={12}
           />
