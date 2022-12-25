@@ -1,17 +1,21 @@
-import { Cancel, Mail, Notifications, Settings } from "@mui/icons-material";
+import { Cancel, Settings } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
-  Badge,
+  Avatar,
   Box,
   IconButton,
+  Menu,
+  MenuItem,
   Toolbar,
-  Typography,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getAuthUser } from "../../Redux-toolkit/features/Auth/authSlice";
 import { ROUTES } from "../../routes";
 import MobileSideBar from "../Sidebar/MobileSideBar";
 import "./index.scss";
@@ -69,6 +73,18 @@ export default function Topbar() {
   const navigate = useNavigate();
 
   const closeSidebar = () => setIsMobileMenuOpen(false);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+  const authUser = useSelector(getAuthUser);
+  const fullName =
+    authUser?.firstName && authUser?.lastName
+      ? `${authUser.firstName} ${authUser.lastName}`
+      : authUser?.username || "";
   return (
     <Box>
       <Stack direction="row">
@@ -94,24 +110,6 @@ export default function Topbar() {
               </Typography>
               <Box sx={{ flexGrow: 1 }} />
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
-                <IconButton
-                  size="large"
-                  aria-label="show 4 new mails"
-                  color="inherit"
-                >
-                  <Badge badgeContent={4} color="error">
-                    <Mail />
-                  </Badge>
-                </IconButton>
-                <IconButton
-                  size="large"
-                  aria-label="show 17 new notifications"
-                  color="inherit"
-                >
-                  <Badge badgeContent={17} color="error">
-                    <Notifications />
-                  </Badge>
-                </IconButton>
                 <Tooltip title="Settings">
                   <IconButton
                     size="large"
@@ -120,6 +118,13 @@ export default function Topbar() {
                     onClick={() => navigate(ROUTES.SETTINGS, { replace: true })}
                   >
                     <Settings />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+              <Box>
+                <Tooltip title={fullName}>
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="User Profile" src="/profile-icon.png" />
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -140,6 +145,31 @@ export default function Topbar() {
               open={isMobileMenuOpen}
               closeSidebar={closeSidebar}
             />
+            <Menu
+              sx={{ mt: "45px" }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              <MenuItem
+                onClick={() => navigate(ROUTES.USERPROFILE, { replace: true })}
+              >
+                <Typography textAlign="center">Edit Profile</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">Change Password</Typography>
+              </MenuItem>
+            </Menu>
           </AppBar>
         </Box>
       </Stack>

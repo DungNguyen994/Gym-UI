@@ -28,7 +28,8 @@ interface Inputs {
 interface User {
   username: string;
   role: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
 }
 
 export interface TokenPayload {
@@ -64,8 +65,14 @@ export default function Login() {
   useEffect(() => {
     if (token) {
       const { user } = jwt_decode(token) as TokenPayload;
-      const { username, role, fullName } = user;
-      const authUser = { username, role, accessToken: token, fullName };
+      const { username, role, firstName, lastName } = user;
+      const authUser = {
+        username,
+        role,
+        accessToken: token,
+        firstName,
+        lastName,
+      };
       dispatch(setUser(authUser));
       navigate(from, { replace: true });
       reset();

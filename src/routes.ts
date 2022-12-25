@@ -12,4 +12,5 @@ export const ROUTES = {
   PAYMENTS: "/payments",
   SETTINGS: "/settings",
   LOGIN: "/login",
+  USERPROFILE: "/user-profile",
 };

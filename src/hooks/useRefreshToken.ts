@@ -22,8 +22,8 @@ export const useRefreshToken = () => {
   if (apiErr) navigate("/login", { replace: true, state: { from: location } });
   if (accessToken && accessToken !== currentToken) {
     const { user } = jwtDecode(accessToken) as TokenPayload;
-    const { username, role, fullName } = user;
-    dispatch(setUser({ username, role, accessToken, fullName }));
+    const { username, role, firstName, lastName } = user;
+    dispatch(setUser({ username, role, accessToken, firstName, lastName }));
   }
   return { refresh, accessToken };
 };

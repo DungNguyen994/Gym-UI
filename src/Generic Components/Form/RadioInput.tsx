@@ -27,7 +27,7 @@ export default function RadioInput({
   prefix,
   readonly,
 }: Props) {
-  const { register } = useFormContext();
+  const { setValue } = useFormContext();
   return (
     <Grid item xs={12} md={6}>
       <Stack direction="row" spacing={3} alignItems="center">
@@ -41,7 +41,7 @@ export default function RadioInput({
           <RadioGroup
             aria-labelledby="radio-buttons-group-label"
             defaultValue={defaultValue}
-            {...register(fieldName)}
+            onChange={(e) => setValue(fieldName, e.target.value)}
           >
             <Stack direction="row">
               <FormControlLabel

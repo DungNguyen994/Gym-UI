@@ -19,6 +19,7 @@ import VisitHistoryPage from "./Pages/VisitHistory";
 import Payments from "./Pages/Payments";
 import Settings from "./Pages/Settings";
 import Home from "./Pages/Home";
+import UserProfile from "./Pages/UserProfile";
 
 export default function App() {
   const client = usePrivateClient();
@@ -54,6 +55,7 @@ export default function App() {
               <Route path={ROUTES.VISIT} element={<VisitHistoryPage />} />
               <Route path={ROUTES.SETTINGS} element={<Settings />} />
               <Route path={ROUTES.PAYMENTS} element={<Payments />} />
+              <Route path={ROUTES.USERPROFILE} element={<UserProfile />} />
             </Route>
           </Route>
         </Route>

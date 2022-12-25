@@ -2,11 +2,12 @@ import { createSelector, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../../store";
 
-interface User {
+export interface User {
   username?: string;
   role?: string;
   accessToken?: string;
-  fullName?: string;
+  firstName?: string;
+  lastName?: string;
 }
 interface AuthState {
   user?: User;

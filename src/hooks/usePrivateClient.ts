@@ -40,8 +40,8 @@ export const usePrivateClient = () => {
       const accessToken = data?.refreshToken?.data;
       if (accessToken) {
         const { user } = jwtDecode(accessToken) as TokenPayload;
-        const { username, role, fullName } = user;
-        dispatch(setUser({ username, role, accessToken, fullName }));
+        const { username, role, firstName, lastName } = user;
+        dispatch(setUser({ username, role, accessToken, firstName, lastName }));
         return {
           hasError: false,
           headers: {

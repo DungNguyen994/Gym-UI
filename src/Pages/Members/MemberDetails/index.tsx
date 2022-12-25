@@ -126,7 +126,7 @@ export default function MemberDetails() {
     !isEqual(omitBy(getValues(), isNull), omitBy(member, isNull)) ||
     isFormDirty;
   return (
-    <Box p={1} width={{ xs: "95%", md: "80%", lg: "95%" }}>
+    <Box p={1} width={{ xs: "95%" }}>
       {(loading ||
         isSubmitting ||
         updateLoading ||

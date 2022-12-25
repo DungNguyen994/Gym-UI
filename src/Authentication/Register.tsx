@@ -60,12 +60,18 @@ export default function Register() {
   const { data: token, errors: apiErrors } = data?.register || {};
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  
+
   // user has registered successfully
   if (token) {
     const { user } = jwtDecode(token) as TokenPayload;
-    const { username, role, fullName } = user;
-    const authUser = { username, role, accessToken: token, fullName };
+    const { username, role, lastName, firstName } = user;
+    const authUser = {
+      username,
+      role,
+      accessToken: token,
+      firstName,
+      lastName,
+    };
     dispatch(setUser(authUser));
     navigate("/", { replace: true });
     reset();

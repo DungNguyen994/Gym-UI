@@ -9,9 +9,9 @@ import { ADD_PRODUCT } from "../../graphql/mutations/addProduct";
 import { GET_PRODUCTS } from "../../graphql/queries/products";
 import { Product } from "../../types";
 import { uploadPhoto } from "../../utils";
-import Information from "./Information";
-import LeftPanel from "./LeftPanel";
-import { validationSchema } from "./validationSchema";
+import Information from "../UserProfile/Information";
+import LeftPanel from "../UserProfile/LeftPanel";
+import { validationSchema } from "../UserProfile/validationSchema";
 
 function AddNewProduct() {
   const methods = useForm<Product>({

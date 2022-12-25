@@ -89,7 +89,7 @@ export default function SaleSummary() {
               <TableCell scope="row">{membershipType}</TableCell>
               <TableCell align="center">{term}</TableCell>
               <TableCell align="center">{discountPercent}%</TableCell>
-              <TableCell align="center">{formatCurrency(amount)}</TableCell>
+              <TableCell align="right">{formatCurrency(amount)}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
