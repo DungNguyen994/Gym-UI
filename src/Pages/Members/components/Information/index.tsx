@@ -56,7 +56,7 @@ export default function Information({ isAddNew, memberships }: Props) {
       numOfMonth = 1;
   }
   const endDate = startDate?.add(numOfMonth, "month");
-
+  const gender = watch("gender");
   useEffect(() => {
     if (
       endDate?.format(DATE_FORMAT) !==
@@ -110,7 +110,7 @@ export default function Information({ isAddNew, memberships }: Props) {
             prefix={<Wc />}
             fieldName="gender"
             options={GENDER_OPTIONS}
-            defaultValue={Gender.Male}
+            defaultValue={gender || Gender.Male}
           />
           {isAddNew && (
             <>
