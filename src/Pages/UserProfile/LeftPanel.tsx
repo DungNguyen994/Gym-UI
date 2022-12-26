@@ -1,14 +1,10 @@
-import { ArrowBack } from "@mui/icons-material";
-import { Box, Button, Stack, Card, CardMedia } from "@mui/material";
+import { Box, Button, Card, CardMedia, Stack } from "@mui/material";
 import { useFormContext } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../routes";
 
 interface Props {
-  isAddNew?: boolean;
   photo?: string;
 }
-export default function LeftPanel({ isAddNew = true, photo }: Props) {
+export default function LeftPanel({ photo }: Props) {
   const { register, watch } = useFormContext();
   const photoValue = watch("photo");
   let photoUrl;
@@ -16,7 +12,6 @@ export default function LeftPanel({ isAddNew = true, photo }: Props) {
     photoUrl = URL.createObjectURL(photoValue[0]);
   }
   const _photo = photoUrl || photo;
-  const navigate = useNavigate();
   return (
     <Box className="left-panel">
       <Stack sx={{ alignItems: "center" }} spacing={2}>
@@ -24,7 +19,7 @@ export default function LeftPanel({ isAddNew = true, photo }: Props) {
           <CardMedia
             component="img"
             sx={{ height: { md: 100, lg: 170, xl: 250 } }}
-            image={_photo || "/blank-product.png"}
+            image={_photo || "/profile-icon.png"}
             alt="profile"
           />
         </Card>
@@ -43,18 +38,9 @@ export default function LeftPanel({ isAddNew = true, photo }: Props) {
             sx={{ marginTop: "10px" }}
             size="small"
           >
-            {isAddNew ? "Choose Photo" : "Change Photo"}
+            {!photo ? "Choose Photo" : "Change Photo"}
           </Button>
         </label>
-        <hr className="divider" />
-        <Button
-          variant="contained"
-          startIcon={<ArrowBack />}
-          color="secondary"
-          onClick={() => navigate(ROUTES.PRODUCTS)}
-        >
-          Back
-        </Button>
       </Stack>
     </Box>
   );

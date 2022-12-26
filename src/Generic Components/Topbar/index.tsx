@@ -15,10 +15,13 @@ import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getAuthUser } from "../../Redux-toolkit/features/Auth/authSlice";
+import { User, getAuthUser } from "../../Redux-toolkit/features/Auth/authSlice";
 import { ROUTES } from "../../routes";
 import MobileSideBar from "../Sidebar/MobileSideBar";
 import "./index.scss";
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "../../graphql/queries/user";
+import LoadingSpinner from "../LoadingSpinner";
 
 export default function Topbar() {
   const location = useLocation();
@@ -54,6 +57,12 @@ export default function Topbar() {
     case ROUTES.SETTINGS:
       workItem = "Settings";
       break;
+    case ROUTES.USERPROFILE:
+      workItem = "User Details";
+      break;
+    case ROUTES.UPDATEPASSW0RD:
+      workItem = "Change Password";
+      break;
     default:
       workItem = "Home";
   }
@@ -81,13 +90,18 @@ export default function Topbar() {
     setAnchorElUser(null);
   };
   const authUser = useSelector(getAuthUser);
+  const { data, loading } = useQuery(GET_USER, {
+    variables: { username: authUser?.username },
+  });
+  const userInfo = data?.user?.data as User;
   const fullName =
-    authUser?.firstName && authUser?.lastName
-      ? `${authUser.firstName} ${authUser.lastName}`
-      : authUser?.username || "";
+    userInfo?.firstName && userInfo?.lastName
+      ? `${userInfo.firstName} ${userInfo.lastName}`
+      : userInfo?.username || "";
   return (
     <Box>
       <Stack direction="row">
+        {loading && <LoadingSpinner />}
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="fixed" style={{ background: "#11101d" }}>
             <Toolbar className="tool-bar">
@@ -121,10 +135,13 @@ export default function Topbar() {
                   </IconButton>
                 </Tooltip>
               </Box>
-              <Box>
+              <Box ml={1}>
                 <Tooltip title={fullName}>
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="User Profile" src="/profile-icon.png" />
+                    <Avatar
+                      alt="User Profile"
+                      src={(userInfo?.photo as string) || "/profile-icon.png"}
+                    />
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -166,7 +183,11 @@ export default function Topbar() {
               >
                 <Typography textAlign="center">Edit Profile</Typography>
               </MenuItem>
-              <MenuItem onClick={handleCloseUserMenu}>
+              <MenuItem
+                onClick={() =>
+                  navigate(ROUTES.UPDATEPASSW0RD, { replace: true })
+                }
+              >
                 <Typography textAlign="center">Change Password</Typography>
               </MenuItem>
             </Menu>

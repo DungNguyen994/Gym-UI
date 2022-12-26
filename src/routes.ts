@@ -13,4 +13,5 @@ export const ROUTES = {
   SETTINGS: "/settings",
   LOGIN: "/login",
   USERPROFILE: "/user-profile",
+  UPDATEPASSW0RD: "/update-password",
 };

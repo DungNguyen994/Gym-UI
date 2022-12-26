@@ -71,7 +71,7 @@ export default function LeftPanel({ member, isAddNew }: Props) {
           <CardMedia
             component="img"
             sx={{ height: { md: 100, lg: 170, xl: 250 } }}
-            image={_photo || "/blank-profile.png"}
+            image={_photo || "/profile-icon.png"}
             alt="profile"
           />
         </Card>

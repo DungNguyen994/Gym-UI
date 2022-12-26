@@ -3,11 +3,13 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../../store";
 
 export interface User {
+  id?: string;
   username?: string;
   role?: string;
   accessToken?: string;
   firstName?: string;
   lastName?: string;
+  photo?: FileList | string;
 }
 interface AuthState {
   user?: User;

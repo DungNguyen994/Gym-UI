@@ -1,4 +1,4 @@
-import { AttachMoney, Badge, Email, Phone } from "@mui/icons-material";
+import { Badge, Email, Phone } from "@mui/icons-material";
 import { Button, Grid, Stack } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import TextInput from "../../Generic Components/Form/TextInput";
@@ -23,7 +23,7 @@ export default function Information() {
           />
           <TextInput
             label="Last Name"
-            prefix={<AttachMoney />}
+            prefix={<Badge />}
             fieldName="lastName"
             required
             lg={12}
@@ -33,7 +33,6 @@ export default function Information() {
             label="Email"
             prefix={<Email />}
             fieldName="email"
-            type="number"
             lg={12}
             md={12}
           />

@@ -20,6 +20,7 @@ import Payments from "./Pages/Payments";
 import Settings from "./Pages/Settings";
 import Home from "./Pages/Home";
 import UserProfile from "./Pages/UserProfile";
+import ChangePassword from "./Pages/UserProfile/ChangePassword";
 
 export default function App() {
   const client = usePrivateClient();
@@ -56,6 +57,10 @@ export default function App() {
               <Route path={ROUTES.SETTINGS} element={<Settings />} />
               <Route path={ROUTES.PAYMENTS} element={<Payments />} />
               <Route path={ROUTES.USERPROFILE} element={<UserProfile />} />
+              <Route
+                path={ROUTES.UPDATEPASSW0RD}
+                element={<ChangePassword />}
+              />
             </Route>
           </Route>
         </Route>
