@@ -255,7 +255,11 @@ export default function ShoppingCartDrawer({
           <p className="bold size-l">Total</p>
           <p className="bold size-l">${total}</p>
         </Stack>
-        <Button variant="contained" type="submit">
+        <Button
+          variant="contained"
+          type="submit"
+          disabled={!selectedProducts || selectedProducts?.length === 0}
+        >
           Make Payment
         </Button>
       </Stack>

@@ -3,7 +3,10 @@ import { Box, Button, Tooltip, Snackbar, Alert } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { GridRenderCellParams, GridRowParams } from "@mui/x-data-grid/models";
 import { useNavigate } from "react-router-dom";
-import { MEMBERSHIP_STATUS_DESCRIPTION } from "../../../constants";
+import {
+  MEMBERSHIP_STATUS,
+  MEMBERSHIP_STATUS_DESCRIPTION,
+} from "../../../constants";
 import { ROUTES } from "../../../routes";
 import { Member, MembershipStatus } from "../../../types";
 import { getButtonStatusColor } from "../../../utils";
@@ -81,9 +84,16 @@ export default function TableView({ loading, data, onDelete }: Props) {
       getActions: (params: GridRowParams) => [
         <Tooltip title="Check In">
           <Login
-            color="success"
+            color={
+              params.row.status === MEMBERSHIP_STATUS.ACTIVE
+                ? "success"
+                : "inherit"
+            }
             sx={{ cursor: "pointer" }}
-            onClick={() => onCheckIn(params.id as string)}
+            onClick={() => {
+              if (params.row.status === MEMBERSHIP_STATUS.ACTIVE)
+                onCheckIn(params.id as string);
+            }}
           />
         </Tooltip>,
         <Tooltip title="Edit Member">

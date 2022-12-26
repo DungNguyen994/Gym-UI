@@ -123,7 +123,11 @@ export default function MemberCard({ member, onDelete }: Props) {
             <Delete color="error" />
           </Tooltip>
         </IconButton>
-        <IconButton className="checkin-icon" onClick={() => onCheckIn()}>
+        <IconButton
+          className="checkin-icon"
+          onClick={() => onCheckIn()}
+          disabled={status !== MEMBERSHIP_STATUS.ACTIVE}
+        >
           <Tooltip title="Check In">
             <Login color="success" />
           </Tooltip>
