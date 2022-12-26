@@ -120,9 +120,11 @@ function ChangePassword() {
           </Container>
         </form>
       </FormProvider>
-      <SuccessAlert open={open} onClose={() => setIsOpen(false)}>
-        {successMessage}
-      </SuccessAlert>
+      {!errorMessage && (
+        <SuccessAlert open={open} onClose={() => setIsOpen(false)}>
+          {successMessage}
+        </SuccessAlert>
+      )}
     </Box>
   );
 }
