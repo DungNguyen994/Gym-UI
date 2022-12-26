@@ -10,9 +10,9 @@ import { GET_PRODUCT } from "../../graphql/queries/product";
 import { GET_PRODUCTS } from "../../graphql/queries/products";
 import { Product } from "../../types";
 import { uploadPhoto } from "../../utils";
-import Information from "../UserProfile/Information";
-import LeftPanel from "../UserProfile/LeftPanel";
-import { validationSchema } from "../UserProfile/validationSchema";
+import Information from "./Information";
+import LeftPanel from "./LeftPanel";
+import { validationSchema } from "./validationSchema";
 import { GET_INVENTORY } from "../../graphql/queries/inventory";
 
 function ProductDetails() {
