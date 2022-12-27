@@ -1,4 +1,5 @@
 import { Autocomplete, Grid, Stack, SxProps, TextField } from "@mui/material";
+import { get } from "lodash";
 import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
 
@@ -34,7 +35,9 @@ export default function AutoComplete({
     register,
   } = useFormContext();
   const value = watch(fieldName);
-  const errorMessage = errors[fieldName]?.message as string | undefined;
+  const errorMessage = get(errors, `${fieldName}.message`) as
+    | string
+    | undefined;
   return (
     <Grid item xs={xs} md={md} lg={lg}>
       {readonly ? (
@@ -60,7 +63,7 @@ export default function AutoComplete({
               {...params}
               {...register(fieldName)}
               label={label}
-              error={Boolean(errors[fieldName]) && !value}
+              error={Boolean(get(errors, fieldName)) && !value}
               variant="standard"
               helperText={!value && errorMessage}
             />

@@ -3,6 +3,7 @@ import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Controller, useFormContext } from "react-hook-form";
 import { DATE_FORMAT } from "../../constants";
 import { CommonFieldProps } from "../../types";
+import { get } from "lodash";
 
 export const DateInput = ({
   fieldName,
@@ -16,7 +17,9 @@ export const DateInput = ({
   const {
     formState: { errors },
   } = useFormContext();
-  const errorMessage = errors[fieldName]?.message as string | undefined;
+  const errorMessage = get(errors, `${fieldName}.message`) as
+    | string
+    | undefined;
   return (
     <Grid item xs={xs} md={md} lg={lg}>
       <Controller
@@ -35,7 +38,7 @@ export const DateInput = ({
                   {...params}
                   variant="standard"
                   fullWidth
-                  error={Boolean(errors[fieldName])}
+                  error={Boolean(get(errors, fieldName))}
                   helperText={errorMessage}
                 />
               )}

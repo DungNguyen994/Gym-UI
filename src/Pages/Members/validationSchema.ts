@@ -15,5 +15,13 @@ export const validationSchema = yup
       .nullable()
       .typeError("Enter a valid date")
       .max(new Date(), "Birth Date can not be a future date"),
+    newMembership: yup.object({
+      membershipType: yup.string().required("Enter Membership Type"),
+      term: yup.string().required("Enter Term"),
+      startDate: yup
+        .date()
+        .required("Enter Start Date")
+        .typeError("You must specify a date"),
+    }),
   })
   .required();
