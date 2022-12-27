@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -27,17 +28,6 @@ import LoadingSpinner from "../../Generic Components/LoadingSpinner";
 import { PAYMENTS } from "../../graphql/queries/payments";
 import { PaymentRes } from "../../types";
 import { calculateMoneyReceived } from "../../utils";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Filler,
-  Legend
-);
 
 export const options = {
   responsive: true,
@@ -67,6 +57,16 @@ const labels = [
 ];
 
 export function RevenueChart() {
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Filler,
+    Legend
+  );
   const { data: paymentsRes, loading } = useQuery(PAYMENTS);
   const payments = paymentsRes?.payments?.data as PaymentRes[];
   const { register, watch, setValue } = useForm({
