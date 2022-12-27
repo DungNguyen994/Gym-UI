@@ -69,9 +69,8 @@ export default function MemberDetails() {
     handleSubmit,
     reset,
     getValues,
-    formState: { isDirty: isFormDirty, errors },
+    formState: { isDirty: isFormDirty },
   } = methods;
-  console.log(errors);
   useEffect(() => {
     if (!isAddNew) reset(member);
     else reset(addNewDefaultValues);
