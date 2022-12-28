@@ -1,16 +1,6 @@
 import { Dayjs } from "dayjs";
 import { ReactNode } from "react";
 
-interface Payment {
-  productName?: string;
-  membershipType?: string;
-  unitPrice?: number;
-  total: number;
-  collected: number;
-  change: number;
-  term?: string;
-  paymentMethod: string;
-}
 interface NewMembershipPayment {
   membershipType: string;
   total: number;
