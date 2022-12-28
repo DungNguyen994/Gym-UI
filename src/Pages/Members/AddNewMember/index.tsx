@@ -4,9 +4,11 @@ import { Box, Button, FormControl, Grid, Stack } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { isEmpty } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import LoadingSpinner from "../../../Generic Components/LoadingSpinner";
+import SuccessAlert from "../../../Generic Components/SuccessAlert";
 import { PAYMENT_METHODS, periodOptions } from "../../../constants";
 import { ADD_MEMBER } from "../../../graphql/mutations/addMember";
 import { GET_MEMBERS } from "../../../graphql/queries/members";
@@ -19,7 +21,6 @@ import LeftPanel from "../components/LeftPanel/LeftPanel";
 import SaleSummary from "../components/SaleSummary";
 import { createNewMemberPayload } from "../utils";
 import { validationSchema } from "../validationSchema";
-import SuccessAlert from "../../../Generic Components/SuccessAlert";
 
 export default function AddNewMember() {
   const { data: membershipTypeRes, loading: getMembershipTypeLoading } =
@@ -59,7 +60,7 @@ export default function AddNewMember() {
     defaultValues: addNewDefaultValues,
   });
 
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit, reset, setError } = methods;
 
   useEffect(() => {
     reset(addNewDefaultValues);
@@ -72,6 +73,20 @@ export default function AddNewMember() {
   });
 
   const successMessage = data?.addMember?.data;
+  const error = data?.addMember?.errors;
+  const membershipTypeError =
+    error?.pointer === "membership.membershipType" && error?.message;
+
+  useEffect(() => {
+    if (membershipTypeError)
+      setError(
+        "newMembership.membershipType",
+        {
+          message: membershipTypeError,
+        },
+        { shouldFocus: true }
+      );
+  }, [membershipTypeError, setError]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -80,9 +95,11 @@ export default function AddNewMember() {
     add({
       variables: newMember,
     })
-      .then(() => {
-        reset();
-        setOpenSuccessMessage(true);
+      .then(({ data }) => {
+        if (isEmpty(data?.addMember?.errors)) {
+          reset();
+          setOpenSuccessMessage(true);
+        }
       })
       .finally(() => {
         setIsSubmitting(false);

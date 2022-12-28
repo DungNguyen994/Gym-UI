@@ -5,8 +5,8 @@ import { storage } from "../../config/firebase";
 import { DATE_FORMAT } from "../../constants";
 import {
   Member,
-  NewMember,
   NewMemberForm,
+  NewMemberPayload,
   UpdateMemberPayload,
 } from "../../types";
 
@@ -14,17 +14,26 @@ export const createNewMemberPayload = (
   data: NewMemberForm,
   photoUrl?: string
 ) => {
-  const newData: NewMember = produce(data, (draftState) => {
-    if (data.birthDate && isDayjs(data.birthDate))
-      draftState.birthDate = data.birthDate.format(DATE_FORMAT);
-    draftState.photo = photoUrl;
-    if (data.payment && data.newMembership) {
-      draftState.payment.membershipType = data.newMembership.membershipType;
-      draftState.payment.term = data.newMembership.term;
-      draftState.payment.collected = Number(data.payment.collected);
-    }
-  });
-  return newData;
+  return {
+    birthDate: data.birthDate?.format(DATE_FORMAT),
+    firstName: data.firstName,
+    lastName: data.lastName,
+    photo: photoUrl,
+    newMembership: data.newMembership,
+    payment: {
+      membershipType: data.newMembership.membershipType,
+      term: data.newMembership.term,
+      collected: Number(data.payment.collected),
+      change: Number(data.payment.change),
+      total: Number(data.payment.total),
+      paymentMethod: data.payment.paymentMethod,
+    },
+    address: data.address,
+    note: data.note,
+    phoneNumber: data.phoneNumber,
+    email: data.email,
+    gender: data.gender,
+  } as NewMemberPayload;
 };
 export const createUpdateMemberPayload = (data: Member, photoUrl?: string) => {
   const newData: UpdateMemberPayload = produce(data, (draftState) => {

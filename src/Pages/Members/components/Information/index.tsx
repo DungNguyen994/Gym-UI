@@ -129,6 +129,7 @@ export default function Information({ isAddNew, memberships }: Props) {
                 fieldName="newMembership.term"
                 options={periodOptions}
                 defaultValue={periodOptions[0]}
+                required
               />
               {membershipTypeOptions.length > 0 && (
                 <AutoComplete
@@ -136,12 +137,14 @@ export default function Information({ isAddNew, memberships }: Props) {
                   fieldName="newMembership.membershipType"
                   options={membershipTypeOptions}
                   defaultValue={membershipTypeOptions[0]}
+                  required
                 />
               )}
               <DateInput
                 label="Start Date"
                 fieldName="newMembership.startDate"
                 prefix={<Start />}
+                required
               />
               <DateInput
                 label="End Date"

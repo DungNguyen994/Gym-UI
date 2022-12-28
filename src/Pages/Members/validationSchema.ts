@@ -1,5 +1,10 @@
 import * as yup from "yup";
-import { PAYMENT_METHODS, VALID_PHONE_REGEX } from "../../constants";
+import {
+  PAYMENT_METHODS,
+  VALID_PHONE_REGEX,
+  periodOptions,
+} from "../../constants";
+import dayjs from "dayjs";
 
 export const validationSchema = yup
   .object({
@@ -18,11 +23,12 @@ export const validationSchema = yup
     newMembership: yup
       .object({
         membershipType: yup.string().required("Enter Membership Type"),
-        term: yup.string().required("Enter Term"),
+        term: yup.string().oneOf(periodOptions, "Choose a valid term!"),
         startDate: yup
           .date()
           .required("Enter Start Date")
-          .typeError("You must specify a date"),
+          .typeError("You must specify a date")
+          .min(dayjs(), "Start Date can not be the past"),
       })
       .notRequired()
       .default(undefined),

@@ -38,7 +38,7 @@ export default function SaleSummary() {
   const foundMembershipType = membershipTypes?.find(
     (m) => m.name.toLocaleLowerCase() === membershipType?.toLocaleLowerCase()
   );
-  const pricePerMonth = foundMembershipType?.pricePerMonth || 1;
+  const pricePerMonth = foundMembershipType?.pricePerMonth || 0;
   const discountPercent = foundMembershipType?.discountPercent || 0;
 
   const amount = calculateAmount(term, pricePerMonth, discountPercent);

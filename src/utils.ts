@@ -39,6 +39,7 @@ export const calculateAmount = (
         pricePerMonth * 12 * round(subtract(1, discountPercent / 100), 2);
       break;
     default:
+      amount = "0.00";
   }
   return amount?.toString();
 };

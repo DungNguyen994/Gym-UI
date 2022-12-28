@@ -60,12 +60,25 @@ export type NewMember = {
   newMembership: NewMembership;
   payment: NewMembershipPayment;
 };
+export type NewMemberPayload = {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  gender?: string;
+  birthDate?: string;
+  email?: string;
+  address?: string;
+  photo?: string;
+  note?: string;
+  newMembership: NewMembership;
+  payment: NewMembershipPayment;
+};
 export type NewMemberForm = {
   firstName: string;
   lastName: string;
   phoneNumber: string;
   gender?: string;
-  birthDate?: Dayjs | string;
+  birthDate?: Dayjs;
   email?: string;
   address?: string;
   photo?: FileList | string;

@@ -13,6 +13,7 @@ export const DateInput = ({
   xs = 12,
   md = 6,
   lg = 6,
+  required,
 }: CommonFieldProps) => {
   const {
     formState: { errors },
@@ -38,6 +39,7 @@ export const DateInput = ({
                   {...params}
                   variant="standard"
                   fullWidth
+                  required={required}
                   error={Boolean(get(errors, fieldName))}
                   helperText={errorMessage}
                 />

@@ -2,7 +2,7 @@ import { Autocomplete, Grid, Stack, SxProps, TextField } from "@mui/material";
 import { get } from "lodash";
 import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
-import { PAYMENT_METHODS } from "../../constants";
+import { PAYMENT_METHODS, periodOptions } from "../../constants";
 
 interface Props {
   label: string;
@@ -36,8 +36,10 @@ export default function AutoComplete({
     setValue,
     formState: { errors },
     register,
+    clearErrors,
   } = useFormContext();
   const value = watch(fieldName);
+
   let errorMessage = get(errors, fieldName);
   if (
     fieldName === "payment.paymentMethod" &&
@@ -45,7 +47,9 @@ export default function AutoComplete({
   ) {
     errorMessage = undefined;
   }
-
+  if (fieldName === "newMembership.term" && periodOptions.includes(value)) {
+    errorMessage = undefined;
+  }
   return (
     <Grid item xs={xs} md={md} lg={lg}>
       {readonly ? (
@@ -60,7 +64,10 @@ export default function AutoComplete({
         <Autocomplete
           value={value}
           disablePortal
-          onChange={(e, newValue) => setValue(fieldName, newValue)}
+          onChange={(e, newValue) => {
+            setValue(fieldName, newValue);
+            clearErrors(fieldName);
+          }}
           id="combo-box"
           options={options}
           sx={sx}
