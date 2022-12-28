@@ -17,7 +17,7 @@ import {
   TextField,
 } from "@mui/material";
 import produce from "immer";
-import { round, subtract } from "lodash";
+import { get, round, subtract } from "lodash";
 import { SubmitHandler, useForm } from "react-hook-form";
 import LoadingSpinner from "../../Generic Components/LoadingSpinner";
 import { PAYMENT_METHODS } from "../../constants";
@@ -27,6 +27,10 @@ import { GET_MEMBERS } from "../../graphql/queries/members";
 import { PAYMENTS } from "../../graphql/queries/payments";
 import { Member, Product } from "../../types";
 import { useLocation } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { validationSchema } from "./validationSchema";
+import { useState } from "react";
+import SuccessAlert from "../../Generic Components/SuccessAlert";
 
 interface Props {
   open: boolean;
@@ -42,6 +46,7 @@ interface FormValue {
   change: number;
   paymentMethod: string;
   memberId?: string;
+  total: number;
 }
 export default function ShoppingCartDrawer({
   onClose,
@@ -54,7 +59,14 @@ export default function ShoppingCartDrawer({
 }: Props) {
   const { state } = useLocation();
 
-  const { register, setValue, watch, handleSubmit } = useForm<FormValue>({
+  const {
+    register,
+    setValue,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValue>({
+    resolver: yupResolver(validationSchema),
     defaultValues: {
       paymentMethod: PAYMENT_METHODS[0],
       memberId: state?.memberId || "",
@@ -63,10 +75,12 @@ export default function ShoppingCartDrawer({
   const { data, loading } = useQuery(GET_MEMBERS);
   const members = data?.members.data as Member[];
   const paymentMethod = watch("paymentMethod");
-  const [addPayment, { loading: addPaymentLoading }] = useMutation(
-    ADD_PAYMENT,
-    { refetchQueries: [{ query: GET_INVENTORY }, { query: PAYMENTS }] }
-  );
+  const [addPayment, { data: addPaymentRes, loading: addPaymentLoading }] =
+    useMutation(ADD_PAYMENT, {
+      refetchQueries: [{ query: GET_INVENTORY }, { query: PAYMENTS }],
+    });
+  const successMessage = addPaymentRes?.addPayment?.data;
+  const [openSuccessMessage, setOpenSuccessMessage] = useState(false);
   const total =
     selectedProducts?.reduce((total, product) => {
       return (
@@ -85,6 +99,7 @@ export default function ShoppingCartDrawer({
     "change",
     collected ? round(subtract(Number(collected), Number(total)), 2) : 0
   );
+  setValue("total", total);
   const onSubmit: SubmitHandler<FormValue> = (data) => {
     const products = produce(selectedProducts, (draft) => {
       draft?.forEach((p) => {
@@ -104,6 +119,7 @@ export default function ShoppingCartDrawer({
     addPayment({ variables: payload }).then(() => {
       onClose();
       clearCart();
+      setOpenSuccessMessage(true);
     });
   };
   const memberOptions =
@@ -217,6 +233,12 @@ export default function ShoppingCartDrawer({
                 {...params}
                 label="Payment Method"
                 variant="standard"
+                required
+                error={Boolean(get(errors, "paymentMethod"))}
+                helperText={
+                  Boolean(get(errors, "paymentMethod")) &&
+                  get(errors, "paymentMethod")?.message
+                }
               />
             )}
           />
@@ -290,6 +312,12 @@ export default function ShoppingCartDrawer({
       >
         {content}
       </Drawer>
+      <SuccessAlert
+        open={openSuccessMessage}
+        onClose={() => setOpenSuccessMessage(false)}
+      >
+        {successMessage}
+      </SuccessAlert>
     </div>
   );
 }
