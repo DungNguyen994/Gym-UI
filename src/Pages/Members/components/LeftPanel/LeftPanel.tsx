@@ -20,7 +20,6 @@ import { CHECK_IN } from "../../../../graphql/mutations/checkIn";
 import { VISIT_HISTORY } from "../../../../graphql/queries/visitHistory";
 import { Member, MembershipStatus } from "../../../../types";
 import { getRemainingTime } from "../../../../utils";
-import "./index.scss";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../../routes";
 
@@ -32,8 +31,8 @@ export default function LeftPanel({ member, isAddNew }: Props) {
   const navigate = useNavigate();
   const { photo, firstName, lastName, status, remainingDays } =
     (member as Member) || {};
-  const { register, watch } = useFormContext();
-  const photoValue = watch("photo");
+  const { register, watch } = useFormContext() || { register: () => {} };
+  const photoValue = watch && watch("photo");
   let photoUrl;
   if (photoValue && photoValue instanceof FileList && photoValue.length > 0) {
     photoUrl = URL.createObjectURL(photoValue[0]);
