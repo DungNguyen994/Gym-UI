@@ -15,15 +15,10 @@ import SearchBar from "../../../Generic Components/SearchBar";
 import { DELETE_MEMBER } from "../../../graphql/mutations/deleteMember";
 import { GET_MEMBERS } from "../../../graphql/queries/members";
 import { Member } from "../../../types";
-import { formatMemberTableData, searchData } from "../../../utils";
+import { formatMemberTableData, getFullName, searchData } from "../../../utils";
 import GridView from "./GridView";
 import TableView from "./TableView";
 import LoadingSpinner from "../../../Generic Components/LoadingSpinner";
-
-interface SelectedRow {
-  id?: string;
-  name?: string;
-}
 
 export default function MemberTable() {
   const { loading, data } = useQuery(GET_MEMBERS);
@@ -38,10 +33,10 @@ export default function MemberTable() {
   const [searchedRows, setSearchedRows] = useState(rows);
   const [openDialog, setOpenDialog] = useState(false);
   const [isGridView, setIsGridView] = useState(true);
-  const [selectedRow, setSelectedRow] = useState<SelectedRow>({});
+  const [selectedRow, setSelectedRow] = useState<Member>();
   const [viewType, setViewType] = useState("everyone");
   const handleDeleteMember = () => {
-    deleteMember({ variables: { deleteMemberId: selectedRow.id } });
+    deleteMember({ variables: { deleteMemberId: selectedRow?.id } });
     setOpenDialog(false);
   };
   const onDelete = (member: Member) => {
@@ -138,7 +133,10 @@ export default function MemberTable() {
       <DialogModal
         open={openDialog}
         title="Delete"
-        content={`Do you want to delete member: ${selectedRow.name} ?`}
+        content={`Do you want to delete member: ${getFullName(
+          selectedRow?.firstName,
+          selectedRow?.lastName
+        )} ?`}
         handleClose={() => {
           setOpenDialog(false);
         }}
