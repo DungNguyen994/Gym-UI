@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../../../Generic Components/LoadingSpinner";
+import SuccessAlert from "../../../Generic Components/SuccessAlert";
 import { UPDATE_MEMBER } from "../../../graphql/mutations/updateMember";
 import { GET_MEMBER } from "../../../graphql/queries/member";
 import { GET_MEMBERS } from "../../../graphql/queries/members";
@@ -18,7 +19,6 @@ import LeftPanel from "../components/LeftPanel/LeftPanel";
 import SaleSummary from "../components/SaleSummary";
 import { createUpdateMemberPayload } from "../utils";
 import { validationSchema } from "../validationSchema";
-import SuccessAlert from "../../../Generic Components/SuccessAlert";
 
 export default function MemberDetails() {
   const { id } = useParams();
@@ -37,6 +37,7 @@ export default function MemberDetails() {
     getValues,
     setValue,
     formState: { isDirty: isFormDirty },
+    setError,
   } = methods;
 
   useEffect(() => {
@@ -51,6 +52,22 @@ export default function MemberDetails() {
   const successMessage = updateRes?.updateMember?.data;
   const [openSuccessMessage, setOpenSuccessMessage] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const error = updateRes?.updateMember?.errors;
+  const membershipTypeError =
+    error?.pointer === "membership.membershipType" && error?.message;
+
+  useEffect(() => {
+    if (membershipTypeError)
+      setError(
+        "newMembership.membershipType",
+        {
+          message: membershipTypeError,
+        },
+        { shouldFocus: true }
+      );
+  }, [membershipTypeError, setError]);
+
   const onSave = (data: Member, photoUrl: string) => {
     const updatedMember = createUpdateMemberPayload(data, photoUrl);
     update({
@@ -60,9 +77,11 @@ export default function MemberDetails() {
         { query: GET_MEMBERS },
       ],
     })
-      .then(() => {
-        setOpenSuccessMessage(true);
-        setValue("newMembership", undefined);
+      .then(({ data }) => {
+        if (isEmpty(data?.updateMember?.errors)) {
+          setOpenSuccessMessage(true);
+          setValue("newMembership", undefined);
+        }
       })
       .finally(() => setIsSubmitting(false));
   };
