@@ -1,19 +1,19 @@
+import { useMutation } from "@apollo/client";
 import { Delete, Edit, Login } from "@mui/icons-material";
-import { Box, Button, Tooltip, Snackbar, Alert } from "@mui/material";
+import { Alert, Box, Button, Snackbar, Tooltip } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { GridRenderCellParams, GridRowParams } from "@mui/x-data-grid/models";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   MEMBERSHIP_STATUS,
   MEMBERSHIP_STATUS_DESCRIPTION,
 } from "../../../constants";
+import { CHECK_IN } from "../../../graphql/mutations/checkIn";
+import { VISIT_HISTORY } from "../../../graphql/queries/visitHistory";
 import { ROUTES } from "../../../routes";
 import { Member, MembershipStatus } from "../../../types";
-import { getButtonStatusColor } from "../../../utils";
-import { useMutation } from "@apollo/client";
-import { CHECK_IN } from "../../../graphql/mutations/checkIn";
-import { useState } from "react";
-import { VISIT_HISTORY } from "../../../graphql/queries/visitHistory";
+import { getButtonStatusColor, getFullName } from "../../../utils";
 
 interface Props {
   loading: boolean;
@@ -39,7 +39,13 @@ export default function TableView({ loading, data, onDelete }: Props) {
   if (data.length === 0)
     return <h3 style={{ marginLeft: "15px" }}>No Members Found!</h3>;
   const columns = [
-    { field: "name", headerName: "Name", width: 230 },
+    {
+      field: "name",
+      headerName: "Name",
+      width: 230,
+      renderCell: (params: GridRenderCellParams<string>) =>
+        getFullName(params.row?.firstName, params.row?.lastName),
+    },
     {
       field: "phoneNumber",
       headerName: "Phone Number",
