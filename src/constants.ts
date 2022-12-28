@@ -9,7 +9,7 @@ export const PAYMENT_METHODS = [
   "Checks",
   "Debit Cards",
   "Credit Cards",
-  "Mobile payments",
+  "Mobile Payments",
   "Electronic Bank Transfers",
 ];
 export const SHOW_OPTIONS = ["All", "Active", "Inactive"];

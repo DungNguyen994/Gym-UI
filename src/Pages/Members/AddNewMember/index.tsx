@@ -3,70 +3,93 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, FormControl, Grid, Stack } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { isEmpty, isEqual, isNull, omitBy } from "lodash";
+import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
 import LoadingSpinner from "../../../Generic Components/LoadingSpinner";
-import { UPDATE_MEMBER } from "../../../graphql/mutations/updateMember";
-import { GET_MEMBER } from "../../../graphql/queries/member";
+import { PAYMENT_METHODS, periodOptions } from "../../../constants";
+import { ADD_MEMBER } from "../../../graphql/mutations/addMember";
 import { GET_MEMBERS } from "../../../graphql/queries/members";
-import { Member } from "../../../types";
+import { GET_MEMBERSHIP_TYPES } from "../../../graphql/queries/membershipTypes";
+import { PAYMENTS } from "../../../graphql/queries/payments";
+import { MembershipType, NewMemberForm } from "../../../types";
 import { uploadPhoto } from "../../../utils";
 import Information from "../components/Information";
 import LeftPanel from "../components/LeftPanel/LeftPanel";
 import SaleSummary from "../components/SaleSummary";
-import { createUpdateMemberPayload } from "../utils";
+import { createNewMemberPayload } from "../utils";
 import { validationSchema } from "../validationSchema";
 import SuccessAlert from "../../../Generic Components/SuccessAlert";
 
-export default function MemberDetails() {
-  const { id } = useParams();
-  const { data, loading: getMemberLoading } = useQuery(GET_MEMBER, {
-    variables: { memberId: id },
-  });
-  const member = useMemo(() => data?.member?.data as Member, [data]);
+export default function AddNewMember() {
+  const { data: membershipTypeRes, loading: getMembershipTypeLoading } =
+    useQuery(GET_MEMBERSHIP_TYPES);
 
-  const methods = useForm<Member>({
+  const membershipTypes = membershipTypeRes?.membershipTypes
+    ?.data as MembershipType[];
+
+  const membershipTypeOptions = useMemo(
+    () => membershipTypes?.map((m) => m.name) || [],
+    [membershipTypes]
+  );
+
+  const addNewDefaultValues = useMemo(
+    () => ({
+      newMembership: {
+        startDate: dayjs(),
+        membershipType: membershipTypeOptions[0],
+        term: periodOptions[0],
+      },
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      gender: "Male",
+      payment: {
+        paymentMethod: PAYMENT_METHODS[0],
+        membershipType: "",
+        term: "",
+      },
+    }),
+    [membershipTypeOptions]
+  );
+
+  const methods = useForm<NewMemberForm>({
     resolver: yupResolver(validationSchema),
-    defaultValues: member,
+    defaultValues: addNewDefaultValues,
   });
-  const {
-    handleSubmit,
-    reset,
-    getValues,
-    setValue,
-    formState: { isDirty: isFormDirty },
-  } = methods;
+
+  const { handleSubmit, reset } = methods;
 
   useEffect(() => {
-    reset(member);
-  }, [member, reset]);
-  const [update, { data: updateRes, loading: updateLoading }] = useMutation(
-    UPDATE_MEMBER,
-    {
-      refetchQueries: [{ query: GET_MEMBERS }],
-    }
-  );
-  const successMessage = updateRes?.updateMember?.data;
+    reset(addNewDefaultValues);
+  }, [reset, addNewDefaultValues]);
+
   const [openSuccessMessage, setOpenSuccessMessage] = useState(false);
+
+  const [add, { data, loading }] = useMutation(ADD_MEMBER, {
+    refetchQueries: [{ query: GET_MEMBERS }, { query: PAYMENTS }],
+  });
+
+  const successMessage = data?.addMember?.data;
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const onSave = (data: Member, photoUrl: string) => {
-    const updatedMember = createUpdateMemberPayload(data, photoUrl);
-    update({
-      variables: updatedMember,
-      refetchQueries: [
-        { query: GET_MEMBER, variables: { memberId: id } },
-        { query: GET_MEMBERS },
-      ],
+
+  const onSave = (data: NewMemberForm, photoUrl: string) => {
+    const newMember = createNewMemberPayload(data, photoUrl);
+    add({
+      variables: newMember,
     })
       .then(() => {
+        reset();
         setOpenSuccessMessage(true);
-        setValue("newMembership", undefined);
       })
-      .finally(() => setIsSubmitting(false));
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
-  const onSubmit: SubmitHandler<Member> = (data) => {
+
+  const onSubmit: SubmitHandler<NewMemberForm> = (data) => {
     if (data.photo instanceof FileList && data.photo.length > 0) {
       setIsSubmitting(true);
       uploadPhoto(
@@ -78,19 +101,13 @@ export default function MemberDetails() {
         setIsSubmitting
       );
     } else {
-      onSave(data, (member?.photo as string) || "");
+      onSave(data, "");
     }
   };
 
-  const hasNewMembership = methods.watch("newMembership");
-
-  const isDirty =
-    !isEqual(omitBy(getValues(), isNull), omitBy(member, isNull)) ||
-    isFormDirty;
-
   return (
     <Box p={1} width={{ xs: "95%" }}>
-      {(isSubmitting || updateLoading || getMemberLoading) && (
+      {(loading || isSubmitting || getMembershipTypeLoading) && (
         <LoadingSpinner />
       )}
       <FormProvider {...methods}>
@@ -98,15 +115,13 @@ export default function MemberDetails() {
           <FormControl>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Grid container direction="row" borderBottom="1px solid #e3e3e3">
-                <LeftPanel member={member} />
+                <LeftPanel isAddNew={true} />
                 <Grid item xs={12} md={9} lg={7}>
-                  <Information memberships={member?.memberships || []} />
+                  <Information isAddNew={true} />
                 </Grid>
-                {hasNewMembership && (
-                  <Grid item xs={12} xl={3}>
-                    <SaleSummary />
-                  </Grid>
-                )}
+                <Grid item xs={12} xl={3}>
+                  <SaleSummary />
+                </Grid>
               </Grid>
               <Stack
                 className="edit-btn"
@@ -114,12 +129,7 @@ export default function MemberDetails() {
                 direction="row-reverse"
                 mt={2}
               >
-                <Button
-                  variant="contained"
-                  color="warning"
-                  disabled={!isDirty}
-                  type="submit"
-                >
+                <Button variant="contained" color="warning" type="submit">
                   Save
                 </Button>
                 <Button
@@ -128,7 +138,6 @@ export default function MemberDetails() {
                   onClick={() => {
                     reset();
                   }}
-                  disabled={!isDirty}
                 >
                   Cancel
                 </Button>

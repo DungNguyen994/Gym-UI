@@ -22,16 +22,17 @@ import {
   MEMBERSHIP_STATUS_DESCRIPTION,
 } from "../../../constants";
 import { CHECK_IN } from "../../../graphql/mutations/checkIn";
+import { VISIT_HISTORY } from "../../../graphql/queries/visitHistory";
 import { ROUTES } from "../../../routes";
 import { Member, MembershipStatus } from "../../../types";
+import { getFullName } from "../../../utils";
 import "./index.scss";
-import { VISIT_HISTORY } from "../../../graphql/queries/visitHistory";
 interface Props {
   member: Member;
   onDelete: (member: Member) => void;
 }
 export default function MemberCard({ member, onDelete }: Props) {
-  const { photo, name, phoneNumber, status } = member;
+  const { photo, phoneNumber, status, firstName, lastName } = member;
   const navigate = useNavigate();
   const [checkIn, { data, loading }] = useMutation(CHECK_IN);
   const [open, setOpen] = useState(false);
@@ -86,7 +87,7 @@ export default function MemberCard({ member, onDelete }: Props) {
                 <Stack justifyContent="space-between" height="100%">
                   <Stack>
                     <Typography component="div" variant="h5">
-                      {name}
+                      {getFullName(firstName, lastName)}
                     </Typography>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <Phone fontSize="small" />

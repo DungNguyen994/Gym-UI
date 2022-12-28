@@ -2,6 +2,7 @@ import { Autocomplete, Grid, Stack, SxProps, TextField } from "@mui/material";
 import { get } from "lodash";
 import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
+import { PAYMENT_METHODS } from "../../constants";
 
 interface Props {
   label: string;
@@ -14,6 +15,7 @@ interface Props {
   xs?: number;
   md?: number;
   lg?: number;
+  required?: boolean;
 }
 
 export default function AutoComplete({
@@ -27,6 +29,7 @@ export default function AutoComplete({
   xs = 12,
   md = 6,
   lg = 6,
+  required,
 }: Props) {
   const {
     watch,
@@ -35,9 +38,14 @@ export default function AutoComplete({
     register,
   } = useFormContext();
   const value = watch(fieldName);
-  const errorMessage = get(errors, `${fieldName}.message`) as
-    | string
-    | undefined;
+  let errorMessage = get(errors, fieldName);
+  if (
+    fieldName === "payment.paymentMethod" &&
+    PAYMENT_METHODS.includes(value)
+  ) {
+    errorMessage = undefined;
+  }
+
   return (
     <Grid item xs={xs} md={md} lg={lg}>
       {readonly ? (
@@ -63,9 +71,12 @@ export default function AutoComplete({
               {...params}
               {...register(fieldName)}
               label={label}
-              error={Boolean(get(errors, fieldName)) && !value}
+              required={required}
+              error={Boolean(errorMessage)}
               variant="standard"
-              helperText={!value && errorMessage}
+              helperText={
+                Boolean(errorMessage) && errorMessage?.message?.toString()
+              }
             />
           )}
         />

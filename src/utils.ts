@@ -69,8 +69,8 @@ export const uploadPhoto = (
     );
   }
 };
-export const getRemainingTime = (days: number) => {
-  if (days <= 0) return "";
+export const getRemainingTime = (days: number | undefined) => {
+  if (!days || days <= 0) return "";
   dayjs.extend(RelativeTime);
   return dayjs().add(days, "day").fromNow();
 };
@@ -88,9 +88,16 @@ export const formatMemberTableData = (data: Member[] | undefined) => {
   if (!data) return [];
   return data.map((member) => ({
     ...member,
-    name: member.firstName + " " + member.lastName,
     remainingTime: getRemainingTime(member.remainingDays),
   }));
+};
+
+export const getFullName = (
+  firstName: string | undefined,
+  lastName: string | undefined
+) => {
+  if (!firstName || !lastName) return "";
+  else return `${firstName} ${lastName}`;
 };
 export const searchData = (data: any[], value: string, blacklist: string[]) =>
   data.reduce((result, item) => {

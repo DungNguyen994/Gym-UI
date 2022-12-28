@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { VALID_PHONE_REGEX } from "../../constants";
+import { PAYMENT_METHODS, VALID_PHONE_REGEX } from "../../constants";
 
 export const validationSchema = yup
   .object({
@@ -23,6 +23,26 @@ export const validationSchema = yup
           .date()
           .required("Enter Start Date")
           .typeError("You must specify a date"),
+      })
+      .notRequired()
+      .default(undefined),
+    payment: yup
+      .object({
+        paymentMethod: yup
+          .string()
+          .oneOf(PAYMENT_METHODS, "Choose a valid payment method!"),
+        total: yup.number().required(),
+        collected: yup
+          .number()
+          .typeError("Please enter a number")
+          .when("paymentMethod", {
+            is: PAYMENT_METHODS[0],
+            then: yup
+              .number()
+              .typeError("Please enter a number")
+              .required("Please collect Money")
+              .min(yup.ref("total"), "Please collect more money!"),
+          }),
       })
       .notRequired()
       .default(undefined),

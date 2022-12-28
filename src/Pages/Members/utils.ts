@@ -1,41 +1,50 @@
-import dayjs from "dayjs";
+import { isDayjs } from "dayjs";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import produce from "immer";
 import { storage } from "../../config/firebase";
 import { DATE_FORMAT } from "../../constants";
-import { Member } from "../../types";
+import {
+  Member,
+  NewMember,
+  NewMemberForm,
+  UpdateMemberPayload,
+} from "../../types";
 
-export const mapMemberPayload = (data: Member, photoUrl?: string) => {
-  const newData = produce(data, (draftState) => {
-    if (draftState.birthDate instanceof Date) {
-      draftState.birthDate = dayjs(draftState.birthDate).format(DATE_FORMAT);
-    }
+export const createNewMemberPayload = (
+  data: NewMemberForm,
+  photoUrl?: string
+) => {
+  const newData: NewMember = produce(data, (draftState) => {
+    if (data.birthDate && isDayjs(data.birthDate))
+      draftState.birthDate = data.birthDate.format(DATE_FORMAT);
     draftState.photo = photoUrl;
-    if (draftState.payment && draftState.newMembership) {
-      draftState.payment.membershipType =
-        draftState.newMembership.membershipType;
-      draftState.payment.term = draftState.newMembership.term;
-      draftState.payment.collected = Number(draftState.payment.collected);
+    if (data.payment && data.newMembership) {
+      draftState.payment.membershipType = data.newMembership.membershipType;
+      draftState.payment.term = data.newMembership.term;
+      draftState.payment.collected = Number(data.payment.collected);
     }
   });
   return newData;
 };
-export const mapUpdateMemberPayload = (data: Member, photoUrl?: string) => {
-  const newData = produce(data, (draftState) => {
-    if (draftState.birthDate instanceof Date) {
-      draftState.birthDate = dayjs(draftState.birthDate).format(DATE_FORMAT);
+export const createUpdateMemberPayload = (data: Member, photoUrl?: string) => {
+  const newData: UpdateMemberPayload = produce(data, (draftState) => {
+    if (isDayjs(data.birthDate)) {
+      draftState.birthDate = data.birthDate.format(DATE_FORMAT);
     }
     draftState.photo = photoUrl;
-    if (draftState.payment && draftState.newMembership) {
-      draftState.payment.membershipType =
-        draftState.newMembership.membershipType;
-      draftState.payment.term = draftState.newMembership.term;
+    if (data.payment && data.newMembership) {
+      draftState.payment = data.payment;
+      draftState.payment.membershipType = data.newMembership.membershipType;
+      draftState.payment.term = data.newMembership.term;
       draftState.payment.collected = Number(draftState.payment.collected);
     }
     if (draftState.newMembership) {
       delete draftState.newMembership.isNew;
       delete draftState.newMembership.id;
     }
+    delete draftState.remainingDays;
+    delete draftState.status;
+    delete draftState.createdAt;
   });
   return newData;
 };

@@ -22,6 +22,7 @@ import Home from "./Pages/Home";
 import UserProfile from "./Pages/UserProfile";
 import ChangePassword from "./Pages/UserProfile/ChangePassword";
 import NotFound from "./Pages/NotFound";
+import AddNewMember from "./Pages/Members/AddNewMember";
 
 export default function App() {
   const client = usePrivateClient();
@@ -47,7 +48,7 @@ export default function App() {
             <Route path="/" element={<Layout />}>
               <Route path={ROUTES.HOME} element={<Home />} />
               <Route path={ROUTES.FINDMEMBER} element={<FindMember />} />
-              <Route path={ROUTES.ADDMEMBER} element={<MemberDetails />} />
+              <Route path={ROUTES.ADDMEMBER} element={<AddNewMember />} />
               <Route path={ROUTES.EDITMEMBER} element={<MemberDetails />} />
               <Route path={ROUTES.POS} element={<POS />} />
               <Route path={ROUTES.INVENTORY} element={<Inventory />} />

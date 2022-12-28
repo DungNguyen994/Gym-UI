@@ -208,7 +208,7 @@ export default function MembershipTable({ memberships }: Props) {
       (membership) => membership.status === MEMBERSHIP_STATUS.ACTIVE
     );
     setValue("newMembership", {
-      membershipType: "Standard",
+      membershipType: membershipTypes[0].name,
       term: "1 Month",
       startDate: hasOneActiveMembership ? dayjs(maxEndDate) : dayjs(),
       endDate: hasOneActiveMembership
@@ -286,6 +286,7 @@ export default function MembershipTable({ memberships }: Props) {
               fontWeight: "700",
             },
           }}
+          getRowId={(row) => row.startDate}
           initialState={{
             sorting: {
               sortModel: [{ field: "startDate", sort: "desc" }],

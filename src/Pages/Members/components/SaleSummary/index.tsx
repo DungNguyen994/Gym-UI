@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import {
   Box,
   Divider,
@@ -11,27 +12,26 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import { round, subtract } from "lodash";
-import { useFormContext } from "react-hook-form";
+import { get, round, subtract } from "lodash";
+import { useEffect } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 import AutoComplete from "../../../../Generic Components/Form/AutoComplete";
+import LoadingSpinner from "../../../../Generic Components/LoadingSpinner";
 import { PAYMENT_METHODS } from "../../../../constants";
-import { calculateAmount, formatCurrency } from "../../../../utils";
-import "./index.scss";
-import { useQuery } from "@apollo/client";
 import { GET_MEMBERSHIP_TYPES } from "../../../../graphql/queries/membershipTypes";
 import { MembershipType } from "../../../../types";
-import LoadingSpinner from "../../../../Generic Components/LoadingSpinner";
+import { calculateAmount, formatCurrency } from "../../../../utils";
+import "./index.scss";
 
 export default function SaleSummary() {
   const {
     register,
-    watch,
     setValue,
     formState: { errors },
   } = useFormContext();
-  const term = watch("newMembership.term");
-  const membershipType = watch("newMembership.membershipType");
-  const paymentMethod = watch("payment.paymentMethod");
+  const term = useWatch({ name: "newMembership.term" });
+  const membershipType = useWatch({ name: "newMembership.membershipType" });
+  const paymentMethod = useWatch({ name: "payment.paymentMethod" });
   const { data, loading } = useQuery(GET_MEMBERSHIP_TYPES);
 
   const membershipTypes = data?.membershipTypes?.data as MembershipType[];
@@ -43,18 +43,16 @@ export default function SaleSummary() {
 
   const amount = calculateAmount(term, pricePerMonth, discountPercent);
   const total = formatCurrency(amount);
-  const collected = watch("payment.collected");
-  const hasCollectedError = collected
-    ? Number(collected) < Number(amount)
-    : false;
-  const change =
-    !hasCollectedError && collected
+  const collected = useWatch({ name: "payment.collected" });
+  useEffect(() => {
+    const change = collected
       ? round(subtract(Number(collected), Number(amount)), 2)
-      : undefined;
-  setValue("payment.change", change);
-  setValue("payment.total", amount ? Number(amount) : 0);
-  const errorMessage = (errors["payment.collected"]?.message ||
-    "Please collect more money") as string;
+      : 0;
+    setValue("payment.change", change);
+    setValue("payment.total", amount ? Number(amount) : 0);
+  }, [amount, collected, setValue]);
+  const errorMessage = get(errors, "payment.collected");
+
   return (
     <Box
       className="sale-summary"
@@ -101,6 +99,7 @@ export default function SaleSummary() {
           label="Payment Method"
           options={PAYMENT_METHODS}
           defaultValue={PAYMENT_METHODS[0]}
+          required
           sx={{ marginTop: "20px" }}
         />
         {paymentMethod === PAYMENT_METHODS[0] && (
@@ -111,9 +110,11 @@ export default function SaleSummary() {
               {...register("payment.collected")}
               InputProps={{ startAdornment: "$" }}
               sx={{ marginTop: "20px" }}
-              error={hasCollectedError}
+              error={Boolean(errorMessage)}
               type="number"
-              helperText={hasCollectedError && errorMessage}
+              helperText={
+                Boolean(errorMessage) && errorMessage?.message?.toString()
+              }
               required={paymentMethod === PAYMENT_METHODS[0]}
             />
             <TextField
