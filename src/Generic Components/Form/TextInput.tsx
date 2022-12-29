@@ -18,8 +18,9 @@ export default function TextInput({
   const {
     register,
     formState: { errors },
-  } = useFormContext();
-  const errorMessage = errors[fieldName]?.message as string | undefined;
+  } = useFormContext() || { register: () => {}, formState: {} };
+  const errorMessage =
+    errors && (errors[fieldName]?.message as string | undefined);
   return (
     <Grid item xs={xs} md={md} lg={lg}>
       <Stack direction="row" spacing={3} alignItems="flex-end">
@@ -37,7 +38,7 @@ export default function TextInput({
             variant="standard"
             {...register(fieldName)}
             required={required}
-            error={Boolean(errors[fieldName])}
+            error={Boolean(errors && errors[fieldName])}
             defaultValue={defaultValue}
             helperText={errorMessage}
             sx={{ width: "100%" }}

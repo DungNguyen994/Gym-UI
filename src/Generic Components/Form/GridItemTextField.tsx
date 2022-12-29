@@ -14,7 +14,7 @@ export default function GridItemTextField({
   const {
     register,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext() || { register: () => {}, formState: {} };
   const errorMessage = errors[fieldName]?.message as string | undefined;
   return (
     <Grid item xs={9} md={6}>

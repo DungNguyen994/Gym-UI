@@ -175,3 +175,24 @@ export const calculateTotalNewMemberByYear = (
     []
   );
 };
+
+export const getNumOfMonth = (term: string) => {
+  let result;
+  switch (term) {
+    case periodOptions[0]:
+      result = 1;
+      break;
+    case periodOptions[1]:
+      result = 3;
+      break;
+    case periodOptions[2]:
+      result = 6;
+      break;
+    case periodOptions[3]:
+      result = 12;
+      break;
+    default:
+      result = 1;
+  }
+  return result;
+};

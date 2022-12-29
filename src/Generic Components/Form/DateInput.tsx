@@ -17,7 +17,7 @@ export const DateInput = ({
 }: CommonFieldProps) => {
   const {
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext() || { formState: {} };
   const errorMessage = get(errors, `${fieldName}.message`) as
     | string
     | undefined;

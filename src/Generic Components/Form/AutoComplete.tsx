@@ -37,7 +37,7 @@ export default function AutoComplete({
     formState: { errors },
     register,
     clearErrors,
-  } = useFormContext();
+  } = useFormContext() || { register: () => {}, formState: {} };
   const value = watch(fieldName);
 
   let errorMessage = get(errors, fieldName);

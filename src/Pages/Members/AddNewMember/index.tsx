@@ -132,9 +132,9 @@ export default function AddNewMember() {
           <FormControl>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Grid container direction="row" borderBottom="1px solid #e3e3e3">
-                <LeftPanel isAddNew={true} />
+                <LeftPanel isAddNew />
                 <Grid item xs={12} md={9} lg={7}>
-                  <Information isAddNew={true} />
+                  <Information isAddNew />
                 </Grid>
                 <Grid item xs={12} xl={3}>
                   <SaleSummary />

@@ -27,7 +27,7 @@ export default function RadioInput({
   prefix,
   readonly,
 }: Props) {
-  const { setValue } = useFormContext();
+  const { setValue } = useFormContext() || {};
   return (
     <Grid item xs={12} md={6}>
       <Stack direction="row" spacing={3} alignItems="center">

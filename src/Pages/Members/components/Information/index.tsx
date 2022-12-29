@@ -9,7 +9,7 @@ import {
   Start,
   Wc,
 } from "@mui/icons-material";
-import { Grid, Stack } from "@mui/material";
+import { Grid, Stack, Divider } from "@mui/material";
 import { Dayjs } from "dayjs";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -24,10 +24,10 @@ import {
 } from "../../../../constants";
 import { Gender, Membership, MembershipType } from "../../../../types";
 import MembershipTable from "../MembershipTable";
-import "./index.scss";
 import { useQuery } from "@apollo/client";
 import { GET_MEMBERSHIP_TYPES } from "../../../../graphql/queries/membershipTypes";
 import LoadingSpinner from "../../../../Generic Components/LoadingSpinner";
+import { getNumOfMonth } from "../../../../utils";
 
 interface Props {
   isAddNew?: boolean;
@@ -35,27 +35,10 @@ interface Props {
 }
 
 export default function Information({ isAddNew, memberships }: Props) {
-  const { watch, setValue } = useFormContext();
+  const { watch, setValue } = useFormContext() || { watch: () => {} };
   const startDate = watch("newMembership.startDate") as Dayjs;
   const term = watch("newMembership.term");
-  let numOfMonth = 1;
-  switch (term) {
-    case "1 Month":
-      numOfMonth = 1;
-      break;
-    case "3 Months":
-      numOfMonth = 3;
-      break;
-    case "6 Months":
-      numOfMonth = 6;
-      break;
-    case "1 Year":
-      numOfMonth = 12;
-      break;
-    default:
-      numOfMonth = 1;
-  }
-  const endDate = startDate?.add(numOfMonth, "month");
+  const endDate = startDate?.add(getNumOfMonth(term), "month");
   const gender = watch("gender");
   useEffect(() => {
     if (
@@ -72,8 +55,9 @@ export default function Information({ isAddNew, memberships }: Props) {
   return (
     <div>
       {loading && <LoadingSpinner />}
-      <Stack className="member-info">
+      <Stack p={1}>
         <h1 className="header">{isAddNew ? "New Member" : "Edit Member"}</h1>
+        <Divider sx={{ mb: 2 }} />
         <Grid container spacing={4}>
           <TextInput
             label="First Name"

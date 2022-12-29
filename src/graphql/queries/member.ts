@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_MEMBER = gql`
-  query ($memberId: ID!) {
+  query getMember($memberId: ID!) {
     member(id: $memberId) {
       data {
         address
