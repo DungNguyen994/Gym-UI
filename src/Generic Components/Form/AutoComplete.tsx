@@ -35,7 +35,6 @@ export default function AutoComplete({
     watch,
     setValue,
     formState: { errors },
-    register,
     clearErrors,
   } = useFormContext() || { register: () => {}, formState: {} };
   const value = watch(fieldName);
@@ -76,7 +75,6 @@ export default function AutoComplete({
           renderInput={(params) => (
             <TextField
               {...params}
-              {...register(fieldName)}
               label={label}
               required={required}
               error={Boolean(errorMessage)}
