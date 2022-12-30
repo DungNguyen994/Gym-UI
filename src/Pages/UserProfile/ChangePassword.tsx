@@ -10,6 +10,7 @@ import SuccessAlert from "../../Generic Components/SuccessAlert";
 import { User, getAuthUser } from "../../Redux-toolkit/features/Auth/authSlice";
 import { UPDATE_PASSWORD } from "../../graphql/mutations/updatePasword";
 import { GET_USER } from "../../graphql/queries/user";
+import { isEmpty } from "lodash";
 
 interface FormType {
   currentPassword: string;
@@ -54,9 +55,11 @@ function ChangePassword() {
         password: data.password,
         currentPassword: data.currentPassword,
       },
-    }).then(() => {
-      reset();
-      setIsOpen(true);
+    }).then(({ data }) => {
+      if (isEmpty(data?.changePassword?.errors)) {
+        reset();
+        setIsOpen(true);
+      }
     });
   };
 

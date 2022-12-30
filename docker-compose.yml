@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  gym-ui:
+    container_name: gym-ui
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
