@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Grid, Stack } from "@mui/material";
+import { Box, Grid, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -72,7 +72,7 @@ function UserProfile() {
   };
 
   return (
-    <div>
+    <Box>
       <FormProvider {...methods}>
         {(loading || updateLoading || isSubmitting) && <LoadingSpinner />}
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -91,7 +91,7 @@ function UserProfile() {
       <SuccessAlert open={open} onClose={() => setIsOpen(false)}>
         {successMessage}
       </SuccessAlert>
-    </div>
+    </Box>
   );
 }
 
