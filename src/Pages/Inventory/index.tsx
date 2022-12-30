@@ -13,6 +13,7 @@ import { InventoryType, Product } from "../../types";
 import { searchData } from "../../utils";
 import StockInForm from "./StockInForm";
 import { validationSchema } from "./validationSchema";
+import SuccessAlert from "../../Generic Components/SuccessAlert";
 
 export default function Inventory() {
   const [isStockIn, setIsStockIn] = useState(false);
@@ -57,8 +58,12 @@ export default function Inventory() {
   const methods = useForm<InventoryType>({
     resolver: yupResolver(validationSchema),
   });
+  const [openSuccessMessage, setOpenSuccessMessage] = useState(false);
   const { handleSubmit, reset } = methods;
-  const [stockIn, { loading: stockInLoading }] = useMutation(STOCK_IN);
+  const [stockIn, { data: stockInRes, loading: stockInLoading }] =
+    useMutation(STOCK_IN);
+
+  const successMessage = stockInRes?.stockIn?.data;
 
   const onSubmit: SubmitHandler<InventoryType> = (data) => {
     stockIn({
@@ -66,6 +71,7 @@ export default function Inventory() {
       refetchQueries: [{ query: GET_INVENTORY }],
     }).then(() => {
       reset();
+      setOpenSuccessMessage(true);
     });
   };
 
@@ -132,6 +138,12 @@ export default function Inventory() {
           />
         </Box>
       </Stack>
+      <SuccessAlert
+        open={openSuccessMessage}
+        onClose={() => setOpenSuccessMessage(false)}
+      >
+        {successMessage}
+      </SuccessAlert>
     </Box>
   );
 }

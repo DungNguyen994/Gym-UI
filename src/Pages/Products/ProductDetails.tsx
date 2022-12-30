@@ -14,6 +14,7 @@ import Information from "./Information";
 import LeftPanel from "./LeftPanel";
 import { validationSchema } from "./validationSchema";
 import { GET_INVENTORY } from "../../graphql/queries/inventory";
+import SuccessAlert from "../../Generic Components/SuccessAlert";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -30,8 +31,10 @@ function ProductDetails() {
     reset(product);
   }, [product, reset]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [updateProduct, { loading: updateLoading }] =
+  const [openSuccessMessage, setOpenSuccessMessage] = useState(false);
+  const [updateProduct, { data: updateRes, loading: updateLoading }] =
     useMutation(UPDATE_PRODUCT);
+  const successMessage = updateRes?.updateProduct?.data;
   const onSave = (data: Product, photoUrl: string) => {
     updateProduct({
       variables: {
@@ -44,9 +47,13 @@ function ProductDetails() {
         { query: GET_PRODUCT, variables: { productId: id } },
         { query: GET_INVENTORY },
       ],
-    }).finally(() => {
-      setIsSubmitting(false);
-    });
+    })
+      .then(() => {
+        setOpenSuccessMessage(true);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
   const onSubmit: SubmitHandler<Product> = (data) => {
     if (data.photo instanceof FileList && data.photo.length > 0) {
@@ -81,6 +88,12 @@ function ProductDetails() {
           </Grid>
         </form>
       </FormProvider>
+      <SuccessAlert
+        open={openSuccessMessage}
+        onClose={() => setOpenSuccessMessage(false)}
+      >
+        {successMessage}
+      </SuccessAlert>
     </div>
   );
 }

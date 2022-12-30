@@ -12,6 +12,7 @@ import { uploadPhoto } from "../../utils";
 import Information from "./Information";
 import LeftPanel from "./LeftPanel";
 import { validationSchema } from "./validationSchema";
+import SuccessAlert from "../../Generic Components/SuccessAlert";
 
 function AddNewProduct() {
   const methods = useForm<Product>({
@@ -22,7 +23,9 @@ function AddNewProduct() {
     },
   });
   const { handleSubmit, reset } = methods;
-  const [addProduct, { loading }] = useMutation(ADD_PRODUCT);
+  const [openSuccessMessage, setOpenSuccessMessage] = useState(false);
+  const [addProduct, { data, loading }] = useMutation(ADD_PRODUCT);
+  const successMessage = data?.addProduct?.data;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const onSave = (data: Product, photoUrl: string) => {
     addProduct({
@@ -35,6 +38,7 @@ function AddNewProduct() {
     })
       .then(() => {
         reset();
+        setOpenSuccessMessage(true);
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -78,6 +82,12 @@ function AddNewProduct() {
           </Grid>
         </form>
       </FormProvider>
+      <SuccessAlert
+        open={openSuccessMessage}
+        onClose={() => setOpenSuccessMessage(false)}
+      >
+        {successMessage}
+      </SuccessAlert>
     </Box>
   );
 }

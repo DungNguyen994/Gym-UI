@@ -14,12 +14,15 @@ import { GET_PRODUCTS } from "../../graphql/queries/products";
 import { ROUTES } from "../../routes";
 import { Product } from "../../types";
 import { searchData } from "../../utils";
+import SuccessAlert from "../../Generic Components/SuccessAlert";
 
 export default function Products() {
   const { data, loading } = useQuery(GET_PRODUCTS);
   const rows = useMemo(() => (data?.products?.data as Product[]) || [], [data]);
-  const [deleteProduct, { loading: deleteLoading }] =
+  const [openSuccessMessage, setOpenSuccessMessage] = useState(false);
+  const [deleteProduct, { data: deleteRes, loading: deleteLoading }] =
     useMutation(DELELE_PRODUCT);
+  const successMessage = deleteRes?.deleteProduct?.data;
   const [selectedProduct, setSelectedProduct] = useState<Product>();
   const [openDialog, setOpenDialog] = useState(false);
   const onDeleteProduct = () => {
@@ -27,6 +30,8 @@ export default function Products() {
       deleteProduct({
         variables: { deleteProductId: selectedProduct?.id },
         refetchQueries: [{ query: GET_PRODUCTS }],
+      }).then(() => {
+        setOpenSuccessMessage(true);
       });
     setOpenDialog(false);
   };
@@ -139,6 +144,12 @@ export default function Products() {
           }}
           handleContinue={onDeleteProduct}
         />
+        <SuccessAlert
+          open={openSuccessMessage}
+          onClose={() => setOpenSuccessMessage(false)}
+        >
+          {successMessage}
+        </SuccessAlert>
       </Stack>
     </Box>
   );
