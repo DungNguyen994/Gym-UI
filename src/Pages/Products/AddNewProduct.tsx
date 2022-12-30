@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Grid, Stack } from "@mui/material";
+import { Grid, Stack, Box } from "@mui/material";
 import { useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { PRODUCT_TYPES } from "../../constants";
@@ -57,7 +57,7 @@ function AddNewProduct() {
     }
   };
   return (
-    <div className="new-product">
+    <Box p={1}>
       {(loading || isSubmitting) && <LoadingSpinner />}
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -78,7 +78,7 @@ function AddNewProduct() {
           </Grid>
         </form>
       </FormProvider>
-    </div>
+    </Box>
   );
 }
 

@@ -65,6 +65,7 @@ export default function MembershipTable({ memberships }: Props) {
             defaultValue={membershipTypeOptions[0]}
             md={12}
             lg={12}
+            required
           />
         ) : (
           params.value
@@ -83,6 +84,7 @@ export default function MembershipTable({ memberships }: Props) {
             defaultValue={periodOptions[0]}
             md={12}
             lg={12}
+            required
           />
         ) : (
           params.value
@@ -101,6 +103,7 @@ export default function MembershipTable({ memberships }: Props) {
             xs={12}
             md={12}
             lg={12}
+            required
           />
         ) : (
           dayjs(params.value).format(DATE_FORMAT)

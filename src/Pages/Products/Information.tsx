@@ -17,70 +17,68 @@ export default function Information() {
     reset,
   } = useFormContext();
   return (
-    <div>
-      <Stack className="member-info">
-        <h1 className="header">Product Details</h1>
-        <Grid container spacing={4}>
-          <AutoComplete
-            label="Product Type"
-            prefix={<Category />}
-            fieldName="productType"
-            options={PRODUCT_TYPES}
-            defaultValue={PRODUCT_TYPES[0]}
-            lg={12}
-            md={12}
-          />
-          <TextInput
-            label="Product Name"
-            prefix={<Badge />}
-            fieldName="productName"
-            required
-            lg={12}
-            md={12}
-          />
-          <TextInput
-            label="Unit Price"
-            prefix={<AttachMoney />}
-            fieldName="unitPrice"
-            required
-            lg={12}
-            md={12}
-          />
-          <TextInput
-            label="Discount Percentage"
-            prefix={<Discount />}
-            fieldName="discountPercent"
-            type="number"
-            lg={12}
-            md={12}
-          />
-          <TextInput
-            label="Supplier"
-            prefix={<PrecisionManufacturing />}
-            fieldName="supplier"
-            lg={12}
-            md={12}
-          />
-        </Grid>
-        <Stack className="edit-btn" spacing={2} direction="row">
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => reset()}
-            disabled={!isDirty}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            color="warning"
-            type="submit"
-            disabled={!isDirty}
-          >
-            Save
-          </Button>
-        </Stack>
+    <Stack p={1}>
+      <h1 style={{ marginBottom: "10px" }}>Product Details</h1>
+      <Grid container spacing={4}>
+        <AutoComplete
+          label="Product Type"
+          prefix={<Category />}
+          fieldName="productType"
+          options={PRODUCT_TYPES}
+          defaultValue={PRODUCT_TYPES[0]}
+          lg={12}
+          md={12}
+        />
+        <TextInput
+          label="Product Name"
+          prefix={<Badge />}
+          fieldName="productName"
+          required
+          lg={12}
+          md={12}
+        />
+        <TextInput
+          label="Unit Price"
+          prefix={<AttachMoney />}
+          fieldName="unitPrice"
+          required
+          lg={12}
+          md={12}
+        />
+        <TextInput
+          label="Discount Percentage"
+          prefix={<Discount />}
+          fieldName="discountPercent"
+          type="number"
+          lg={12}
+          md={12}
+        />
+        <TextInput
+          label="Supplier"
+          prefix={<PrecisionManufacturing />}
+          fieldName="supplier"
+          lg={12}
+          md={12}
+        />
+      </Grid>
+      <Stack className="edit-btn" spacing={2} direction="row-reverse" mt={2}>
+        <Button
+          variant="contained"
+          color="warning"
+          type="submit"
+          disabled={!isDirty}
+        >
+          Save
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => reset()}
+          disabled={!isDirty}
+        >
+          Cancel
+        </Button>
       </Stack>
-    </div>
+    </Stack>
   );
 }
