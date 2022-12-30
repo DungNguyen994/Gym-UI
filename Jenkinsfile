@@ -4,14 +4,18 @@ pipeline{
     stages{
         stage('build'){
             steps{
-              sh 'npm install'      
-              sh 'npm run build'      
+                nodejs("Node"){
+                    sh 'yarn'      
+                    sh 'yarn'      
+                }
             }
         }
         
         stage('test'){
             steps{
-                sh 'npm run test'
+                nodejs("Node"){
+                    sh 'yarn test'
+                }
             }
         }
     }
