@@ -99,6 +99,7 @@ export default function Login() {
         >
           <TextField
             label="Username"
+            id="username-input"
             variant="standard"
             fullWidth
             error={Boolean(
@@ -108,7 +109,7 @@ export default function Login() {
             {...register("username")}
           />
           <TextField
-            id="standard-password-input"
+            id="password-input"
             label="Password"
             type="password"
             error={Boolean(
@@ -143,7 +144,11 @@ export default function Login() {
           </Button>
           <Typography>
             Don't have an account?{" "}
-            <Link classes="cursor" onClick={() => navigate("/register")}>
+            <Link
+              id="register"
+              classes="cursor"
+              onClick={() => navigate("/register")}
+            >
               Register Now
             </Link>
           </Typography>
