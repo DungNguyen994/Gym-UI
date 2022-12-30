@@ -3,11 +3,16 @@ pipeline{
 
     stages{
         stage('build'){
-            echo 'yarn'
+            steps{
+              sh 'yarn'      
+              sh 'yarn build'      
+            }
         }
         
         stage('test'){
-            echo 'yarn test'
+            steps{
+                sh 'yarn test'
+            }
         }
     }
 }
