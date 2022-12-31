@@ -1,23 +1,17 @@
 pipeline{
     agent any
+    tools{
+        nodejs "Node"
+        docker "docker"
+    }
     stages{
         stage('build'){
             steps{
-                nodejs("Node"){
-                    sh 'yarn'      
-                    sh 'yarn'      
-                }
+                sh 'yarn'      
             }
         }
         
         stage('Testing'){ 
-            agent {
-            // this image provides everything needed to run Cypress
-                docker {
-                    image 'cypress/base:latest'
-                }   
-            }
-
              environment {
                 CYPRESS_RECORD_KEY = credentials('cypress-record-key')
             } 
