@@ -50,7 +50,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "cypress": "cypress open"
+    "cypress": "cypress open",
+    "test:ci:record": "cypress run --record"
   },
   "eslintConfig": {
     "extends": [
