@@ -18,7 +18,7 @@ pipeline{
         
         stage('Testing'){
             steps{
-              sh "npx cypress run --browser ${BROWSER} --spec ${SPEC}"
+              sh "yarn run cypress open --browser ${BROWSER} --spec ${SPEC}"
             }
         }
     }
