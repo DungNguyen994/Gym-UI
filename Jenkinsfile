@@ -1,9 +1,9 @@
 pipeline{
-    agent any
-    
-    parameters{
-        string(name: 'SPEC', defaultValue: "cypress/e2e/**/**", description: "Enter the script path that you want to execute")
-        choice(name: "BROWSER", choices: ['chrome', 'edge', 'firefox'], description: "Choose the browser where you want to execute the scripts")
+    agent {
+    // this image provides everything needed to run Cypress
+         docker {
+            image 'cypress/base:latest'
+        }
     }
 
     stages{
@@ -17,8 +17,11 @@ pipeline{
         }
         
         stage('Testing'){
+             environment {
+                CYPRESS_RECORD_KEY = credentials('cypress-record-key')
+            } 
             steps{
-              sh "yarn run cypress open --browser ${BROWSER} --spec ${SPEC}"
+              sh "yarn test:ci:record"
             }
         }
     }
