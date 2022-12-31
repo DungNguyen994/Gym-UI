@@ -1,11 +1,5 @@
 pipeline{
-    agent {
-    // this image provides everything needed to run Cypress
-         docker {
-            image 'cypress/base:latest'
-        }
-    }
-
+    agent any
     stages{
         stage('build'){
             steps{
@@ -16,7 +10,14 @@ pipeline{
             }
         }
         
-        stage('Testing'){
+        stage('Testing'){ 
+            agent {
+            // this image provides everything needed to run Cypress
+                docker {
+                    image 'cypress/base:latest'
+                }   
+            }
+
              environment {
                 CYPRESS_RECORD_KEY = credentials('cypress-record-key')
             } 
