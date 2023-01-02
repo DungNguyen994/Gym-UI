@@ -4,25 +4,29 @@ pipeline{
         nodejs "Node"
     }
     stages{
-        stage('build'){
+        stage('Building'){
             steps{
                 sh 'yarn'      
             }
         }
-        
         stage('Testing'){ 
-            agent {
-                // this image provides everything needed to run Cypress
-                docker {
-                    image 'cypress/base:latest'
-                }
-            }
-            environment {
-                CYPRESS_RECORD_KEY = credentials('cypress-record-key')
-            } 
             steps{
-              sh "yarn add cypress"
-              sh "yarn test:ci:record"
+              sh "yarn test"
+            }
+        }
+        stage('Docker Build'){ 
+            steps{
+              sh "docker build -t gym-ui ."
+            }
+        }
+        stage('Docker Push'){ 
+            steps{
+                script{
+                    withCredentials([string(credentialsId: 'docker-hub-pwd', variable: 'dockerhubpwd')]){
+                        sh 'docker login -u worknoplay994@gmail.com -p ${dockerhubpwd}'
+                    }
+                    sh "docker push dungnguyen94/dung-nguyen-repo:gym-ui"
+                }
             }
         }
     }
