@@ -21,6 +21,7 @@ pipeline{
                 CYPRESS_RECORD_KEY = credentials('cypress-record-key')
             } 
             steps{
+              sh "yarn add cypress"
               sh "yarn test:ci:record"
             }
         }
